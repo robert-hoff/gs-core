@@ -41,174 +41,192 @@ import javax.xml.stream.XMLStreamException;
 import org.graphstream.stream.AttributeSink;
 
 public class GEXFAttributes implements GEXFElement, AttributeSink {
-	GEXF root;
+  GEXF root;
 
-	ClassType type;
-	Mode mode;
+  ClassType type;
+  Mode mode;
 
-	HashMap<String, GEXFAttribute> attributes;
+  HashMap<String, GEXFAttribute> attributes;
 
-	public GEXFAttributes(GEXF root, ClassType type) {
-		this.root = root;
+  public GEXFAttributes(GEXF root, ClassType type) {
+    this.root = root;
 
-		this.type = type;
-		this.mode = Mode.STATIC;
-		this.attributes = new HashMap<String, GEXFAttribute>();
+    this.type = type;
+    this.mode = Mode.STATIC;
+    this.attributes = new HashMap<String, GEXFAttribute>();
 
-		root.addAttributeSink(this);
-	}
+    root.addAttributeSink(this);
+  }
 
-	protected void checkAttribute(String key, Object value) {
-		AttrType type = detectType(value);
+  protected void checkAttribute(String key, Object value) {
+    AttrType type = detectType(value);
 
-		if (!attributes.containsKey(key))
-			attributes.put(key, new GEXFAttribute(root, key, type));
-		else {
-			GEXFAttribute a = attributes.get(key);
+    if (!attributes.containsKey(key)) {
+      attributes.put(key, new GEXFAttribute(root, key, type));
+    } else {
+      GEXFAttribute a = attributes.get(key);
 
-			if (a.type != type && value != null)
-				a.type = AttrType.STRING;
-		}
-	}
+      if (a.type != type && value != null) {
+        a.type = AttrType.STRING;
+      }
+    }
+  }
 
-	protected AttrType detectType(Object value) {
-		if (value == null)
-			return AttrType.STRING;
+  protected AttrType detectType(Object value) {
+    if (value == null) {
+      return AttrType.STRING;
+    }
 
-		if (value instanceof Integer || value instanceof Short)
-			return AttrType.INTEGER;
-		else if (value instanceof Long)
-			return AttrType.LONG;
-		else if (value instanceof Float)
-			return AttrType.FLOAT;
-		else if (value instanceof Double)
-			return AttrType.DOUBLE;
-		else if (value instanceof Boolean)
-			return AttrType.BOOLEAN;
-		else if (value instanceof URL || value instanceof URI)
-			return AttrType.ANYURI;
-		else if (value.getClass().isArray() || value instanceof Collection)
-			return AttrType.LISTSTRING;
+    if (value instanceof Integer || value instanceof Short) {
+      return AttrType.INTEGER;
+    } else if (value instanceof Long) {
+      return AttrType.LONG;
+    } else if (value instanceof Float) {
+      return AttrType.FLOAT;
+    } else if (value instanceof Double) {
+      return AttrType.DOUBLE;
+    } else if (value instanceof Boolean) {
+      return AttrType.BOOLEAN;
+    } else if (value instanceof URL || value instanceof URI) {
+      return AttrType.ANYURI;
+    } else if (value.getClass().isArray() || value instanceof Collection) {
+      return AttrType.LISTSTRING;
+    }
 
-		return AttrType.STRING;
-	}
+    return AttrType.STRING;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		if (attributes.size() == 0)
-			return;
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    if (attributes.size() == 0) {
+      return;
+    }
 
-		stream.startElement("attributes");
-		stream.stream.writeAttribute("class", type.qname);
+    stream.startElement("attributes");
+    stream.stream.writeAttribute("class", type.qname);
 
-		for (GEXFAttribute attribute : attributes.values())
-			attribute.export(stream);
+    for (GEXFAttribute attribute : attributes.values()) {
+      attribute.export(stream);
+    }
 
-		stream.endElement(); // ATTRIBUTES
-	}
+    stream.endElement(); // ATTRIBUTES
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.AttributeSink#nodeAttributeAdded(java.lang.String,
-	 * long, java.lang.String, java.lang.String, java.lang.Object)
-	 */
-	public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
-		if (type == ClassType.NODE)
-			checkAttribute(attribute, value);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.AttributeSink#nodeAttributeAdded(java.lang.String,
+   * long, java.lang.String, java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
+    if (type == ClassType.NODE) {
+      checkAttribute(attribute, value);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.AttributeSink#nodeAttributeChanged(java.lang.String ,
-	 * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
-			Object newValue) {
-		if (type == ClassType.NODE)
-			checkAttribute(attribute, newValue);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.AttributeSink#nodeAttributeChanged(java.lang.String ,
+   * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
+   */
+  @Override
+  public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
+      Object newValue) {
+    if (type == ClassType.NODE) {
+      checkAttribute(attribute, newValue);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.AttributeSink#edgeAttributeAdded(java.lang.String,
-	 * long, java.lang.String, java.lang.String, java.lang.Object)
-	 */
-	public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
-		if (type == ClassType.EDGE)
-			checkAttribute(attribute, value);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.AttributeSink#edgeAttributeAdded(java.lang.String,
+   * long, java.lang.String, java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
+    if (type == ClassType.EDGE) {
+      checkAttribute(attribute, value);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.AttributeSink#edgeAttributeChanged(java.lang.String ,
-	 * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
-			Object newValue) {
-		if (type == ClassType.EDGE)
-			checkAttribute(attribute, newValue);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.AttributeSink#edgeAttributeChanged(java.lang.String ,
+   * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
+   */
+  @Override
+  public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
+      Object newValue) {
+    if (type == ClassType.EDGE) {
+      checkAttribute(attribute, newValue);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.AttributeSink#nodeAttributeRemoved(java.lang.String ,
-	 * long, java.lang.String, java.lang.String)
-	 */
-	public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.AttributeSink#nodeAttributeRemoved(java.lang.String ,
+   * long, java.lang.String, java.lang.String)
+   */
+  @Override
+  public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.AttributeSink#graphAttributeAdded(java.lang.String ,
-	 * long, java.lang.String, java.lang.Object)
-	 */
-	public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.AttributeSink#graphAttributeAdded(java.lang.String ,
+   * long, java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.AttributeSink#graphAttributeChanged(java.lang.
-	 * String, long, java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue,
-			Object newValue) {
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.AttributeSink#graphAttributeChanged(java.lang.
+   * String, long, java.lang.String, java.lang.Object, java.lang.Object)
+   */
+  @Override
+  public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue, Object newValue) {
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.AttributeSink#graphAttributeRemoved(java.lang.
-	 * String, long, java.lang.String)
-	 */
-	public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.AttributeSink#graphAttributeRemoved(java.lang.
+   * String, long, java.lang.String)
+   */
+  @Override
+  public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.AttributeSink#edgeAttributeRemoved(java.lang.String ,
-	 * long, java.lang.String, java.lang.String)
-	 */
-	public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.AttributeSink#edgeAttributeRemoved(java.lang.String ,
+   * long, java.lang.String, java.lang.String)
+   */
+  @Override
+  public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
+  }
 }

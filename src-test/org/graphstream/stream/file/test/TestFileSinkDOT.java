@@ -36,23 +36,25 @@ import org.junit.Test;
 
 public class TestFileSinkDOT extends TestFileSinkBase {
 
-	public void setup() {
-		input = new FileSourceDOT();
-		output = new FileSinkDOT();
-		formatHandleDynamics = false;
-		formatHandlesEdgesIDs = false;
-	}
+  @Override
+  public void setup() {
+    input = new FileSourceDOT();
+    output = new FileSinkDOT();
+    formatHandleDynamics = false;
+    formatHandlesEdgesIDs = false;
+  }
 
-	protected String graphFileExtension() {
-		return ".dot";
-	}
+  @Override
+  protected String graphFileExtension() {
+    return ".dot";
+  }
 
-	@Override
-	@Test
-	public void test_DirectedTriangle() {
-		((FileSinkDOT) output).setDirected(true);
-		super.test_DirectedTriangle();
-		((FileSinkDOT) output).setDirected(false);
-	}
+  @Override
+  @Test
+  public void test_DirectedTriangle() {
+    ((FileSinkDOT) output).setDirected(true);
+    super.test_DirectedTriangle();
+    ((FileSinkDOT) output).setDirected(false);
+  }
 
 }

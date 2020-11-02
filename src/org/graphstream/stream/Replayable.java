@@ -52,63 +52,64 @@ package org.graphstream.stream;
  * </pre>
  */
 public interface Replayable {
-	/**
-	 * Get a controller to replay the graph.
-	 *
-	 * @return a new replay controller
-	 */
-	Controller getReplayController();
+  /**
+   * Get a controller to replay the graph.
+   *
+   * @return a new replay controller
+   */
+  Controller getReplayController();
 
-	/**
-	 * A controller used to replay a source. Controller should be used as a source
-	 * by adding sinks on it. When sinks are set, a call to {@link #replay()} send
-	 * events describing the current state of the original source to sinks.
-	 */
-	public static interface Controller extends Source {
-		/**
-		 * Replay events describing the current state of the object being built by the
-		 * source.
-		 */
-		void replay();
+  /**
+   * A controller used to replay a source. Controller should be used as a source
+   * by adding sinks on it. When sinks are set, a call to {@link #replay()} send
+   * events describing the current state of the original source to sinks.
+   */
+  public static interface Controller extends Source {
+    /**
+     * Replay events describing the current state of the object being built by the
+     * source.
+     */
+    void replay();
 
-		/**
-		 * Same as {@link #replay(Sink)} but you can set the id of the source sent in
-		 * events.
-		 *
-		 * @param sourceId
-		 *            id of the event source
-		 */
-		void replay(String sourceId);
-	}
+    /**
+     * Same as {@link #replay(Sink)} but you can set the id of the source sent in
+     * events.
+     *
+     * @param sourceId
+     *          id of the event source
+     */
+    void replay(String sourceId);
+  }
 
-	/**
-	 * Util method to replay a replayable source into a sink.
-	 *
-	 * @param source
-	 *            a source implementing the Replayable interface
-	 * @param sink
-	 *            sink which will receive the events produced by the replay
-	 */
-	public static void replay(Replayable source, Sink sink) {
-		Controller controller = source.getReplayController();
+  /**
+   * Util method to replay a replayable source into a sink.
+   *
+   * @param source
+   *          a source implementing the Replayable interface
+   * @param sink
+   *          sink which will receive the events produced by the replay
+   */
+  public static void replay(Replayable source, Sink sink) {
+    Controller controller = source.getReplayController();
 
-		controller.addSink(sink);
-		controller.replay();
-		controller.removeSink(sink);
-	}
+    controller.addSink(sink);
+    controller.replay();
+    controller.removeSink(sink);
+  }
 
-	/**
-	 * Same as {@link #replay(Replayable, Sink)} but the first parameter is just a
-	 * {@link org.graphstream.stream.Source} and it will be replayed only if the
-	 * Replayable interface is implemented.
-	 *
-	 * @param source
-	 *            a source
-	 * @param sink
-	 *            sink which will receive the events produced by the replay
-	 */
-	public static void tryReplay(Source source, Sink sink) {
-		if (source instanceof Replayable)
-			replay((Replayable) source, sink);
-	}
+  /**
+   * Same as {@link #replay(Replayable, Sink)} but the first parameter is just a
+   * {@link org.graphstream.stream.Source} and it will be replayed only if the
+   * Replayable interface is implemented.
+   *
+   * @param source
+   *          a source
+   * @param sink
+   *          sink which will receive the events produced by the replay
+   */
+  public static void tryReplay(Source source, Sink sink) {
+    if (source instanceof Replayable) {
+      replay((Replayable) source, sink);
+    }
+  }
 }

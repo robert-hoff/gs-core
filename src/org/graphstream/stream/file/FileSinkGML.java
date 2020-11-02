@@ -55,181 +55,206 @@ import java.util.regex.Pattern;
  * </p>
  */
 public class FileSinkGML extends FileSinkBase {
-	// Attributes
+  // Attributes
 
-	/** Alias on the output OutputStream. */
-	protected PrintWriter out;
+  /** Alias on the output OutputStream. */
+  protected PrintWriter out;
 
-	protected String nodeToFinish = null;
+  protected String nodeToFinish = null;
 
-	protected String edgeToFinish = null;
+  protected String edgeToFinish = null;
 
-	// Construction
+  // Construction
 
-	public FileSinkGML() {
-		// NOP
-	}
+  public FileSinkGML() {
+    // NOP
+  }
 
-	// File format events
+  // File format events
 
-	@Override
-	protected void outputHeader() throws IOException {
-		out = (PrintWriter) output;
+  @Override
+  protected void outputHeader() throws IOException {
+    out = (PrintWriter) output;
 
-		out.printf("graph [%n");
-	}
+    out.printf("graph [%n");
+  }
 
-	@Override
-	protected void outputEndOfFile() throws IOException {
-		ensureToFinish();
-		out.printf("]%n");
-	}
+  @Override
+  protected void outputEndOfFile() throws IOException {
+    ensureToFinish();
+    out.printf("]%n");
+  }
 
-	// Attribute events
+  // Attribute events
 
-	public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
-		ensureToFinish();
+  @Override
+  public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
+    ensureToFinish();
 
-		String val = valueToString(value);
-		attribute = keyToString(attribute);
+    String val = valueToString(value);
+    attribute = keyToString(attribute);
 
-		if (val != null) {
-			out.printf("\t%s %s%n", attribute, val);
-		}
-	}
+    if (val != null) {
+      out.printf("\t%s %s%n", attribute, val);
+    }
+  }
 
-	public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue,
-			Object newValue) {
-		ensureToFinish();
-		// GML is not a dynamic file format ?
-	}
+  @Override
+  public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue, Object newValue) {
+    ensureToFinish();
+    // GML is not a dynamic file format ?
+  }
 
-	public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
-		ensureToFinish();
-		// GML is not a dynamic file format ?
-	}
+  @Override
+  public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
+    ensureToFinish();
+    // GML is not a dynamic file format ?
+  }
 
-	public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
-		if (nodeToFinish != null && nodeToFinish.equals(nodeId)) {
-			String val = valueToString(value);
-			attribute = keyToString(attribute);
+  @Override
+  public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
+    if (nodeToFinish != null && nodeToFinish.equals(nodeId)) {
+      String val = valueToString(value);
+      attribute = keyToString(attribute);
 
-			if (val != null) {
-				out.printf("\t\t%s %s%n", attribute, val);
-			}
-		} else {
-			ensureToFinish();
-		}
-	}
+      if (val != null) {
+        out.printf("\t\t%s %s%n", attribute, val);
+      }
+    } else {
+      ensureToFinish();
+    }
+  }
 
-	public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
-			Object newValue) {
-		if (edgeToFinish != null)
-			ensureToFinish();
-		// GML is not a dynamic file format ?
-	}
+  @Override
+  public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
+      Object newValue) {
+    if (edgeToFinish != null)
+     {
+      ensureToFinish();
+    // GML is not a dynamic file format ?
+    }
+  }
 
-	public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
-		if (edgeToFinish != null)
-			ensureToFinish();
-		// GML is not a dynamic file format ?
-	}
+  @Override
+  public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
+    if (edgeToFinish != null)
+     {
+      ensureToFinish();
+    // GML is not a dynamic file format ?
+    }
+  }
 
-	public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
-		if (edgeToFinish != null && edgeToFinish.equals(edgeId)) {
-			String val = valueToString(value);
-			attribute = keyToString(attribute);
+  @Override
+  public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
+    if (edgeToFinish != null && edgeToFinish.equals(edgeId)) {
+      String val = valueToString(value);
+      attribute = keyToString(attribute);
 
-			if (val != null) {
-				out.printf("\t\t%s %s%n", attribute, val);
-			}
-		} else {
-			ensureToFinish();
-		}
-	}
+      if (val != null) {
+        out.printf("\t\t%s %s%n", attribute, val);
+      }
+    } else {
+      ensureToFinish();
+    }
+  }
 
-	public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
-			Object newValue) {
-		if (nodeToFinish != null)
-			ensureToFinish();
-		// GML is not a dynamic file format ?
-	}
+  @Override
+  public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
+      Object newValue) {
+    if (nodeToFinish != null)
+     {
+      ensureToFinish();
+    // GML is not a dynamic file format ?
+    }
+  }
 
-	public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
-		if (nodeToFinish != null)
-			ensureToFinish();
-		// GML is not a dynamic file format ?
-	}
+  @Override
+  public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
+    if (nodeToFinish != null)
+     {
+      ensureToFinish();
+    // GML is not a dynamic file format ?
+    }
+  }
 
-	// Element events
+  // Element events
 
-	public void nodeAdded(String sourceId, long timeId, String nodeId) {
-		ensureToFinish();
-		out.printf("\tnode [%n");
-		out.printf("\t\tid \"%s\"%n", nodeId);
-		nodeToFinish = nodeId;
-	}
+  @Override
+  public void nodeAdded(String sourceId, long timeId, String nodeId) {
+    ensureToFinish();
+    out.printf("\tnode [%n");
+    out.printf("\t\tid \"%s\"%n", nodeId);
+    nodeToFinish = nodeId;
+  }
 
-	public void nodeRemoved(String sourceId, long timeId, String nodeId) {
-		ensureToFinish();
-	}
+  @Override
+  public void nodeRemoved(String sourceId, long timeId, String nodeId) {
+    ensureToFinish();
+  }
 
-	public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
-			boolean directed) {
-		ensureToFinish();
-		out.printf("\tedge [%n");
-		out.printf("\t\tid \"%s\"%n", edgeId);
-		out.printf("\t\tsource \"%s\"%n", fromNodeId);
-		out.printf("\t\ttarget \"%s\"%n", toNodeId);
-		edgeToFinish = edgeId;
-	}
+  @Override
+  public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+      boolean directed) {
+    ensureToFinish();
+    out.printf("\tedge [%n");
+    out.printf("\t\tid \"%s\"%n", edgeId);
+    out.printf("\t\tsource \"%s\"%n", fromNodeId);
+    out.printf("\t\ttarget \"%s\"%n", toNodeId);
+    edgeToFinish = edgeId;
+  }
 
-	public void edgeRemoved(String sourceId, long timeId, String edgeId) {
-		ensureToFinish();
-	}
+  @Override
+  public void edgeRemoved(String sourceId, long timeId, String edgeId) {
+    ensureToFinish();
+  }
 
-	public void graphCleared(String sourceId, long timeId) {
-		// Ah ah ah !!
-	}
+  @Override
+  public void graphCleared(String sourceId, long timeId) {
+    // Ah ah ah !!
+  }
 
-	public void stepBegins(String sourceId, long timeId, double step) {
-		// NOP
-	}
+  @Override
+  public void stepBegins(String sourceId, long timeId, double step) {
+    // NOP
+  }
 
-	// Commands
+  // Commands
 
-	Pattern forbiddenKeyChars = Pattern.compile(".*[^a-zA-Z0-9-_.].*");
+  Pattern forbiddenKeyChars = Pattern.compile(".*[^a-zA-Z0-9-_.].*");
 
-	protected String keyToString(String key) {
-		if (forbiddenKeyChars.matcher(key).matches())
-			return "\"" + key.replace("\"", "\\\"") + "\"";
+  protected String keyToString(String key) {
+    if (forbiddenKeyChars.matcher(key).matches()) {
+      return "\"" + key.replace("\"", "\\\"") + "\"";
+    }
 
-		return key;
-	}
+    return key;
+  }
 
-	protected String valueToString(Object value) {
-		if (value == null)
-			return null;
+  protected String valueToString(Object value) {
+    if (value == null) {
+      return null;
+    }
 
-		if (value instanceof Number) {
-			double val = ((Number) value).doubleValue();
-			if ((val - ((int) val)) == 0)
-				return String.format(Locale.US, "%d", (int) val);
-			else
-				return String.format(Locale.US, "%f", val);
-		}
+    if (value instanceof Number) {
+      double val = ((Number) value).doubleValue();
+      if ((val - ((int) val)) == 0) {
+        return String.format(Locale.US, "%d", (int) val);
+      } else {
+        return String.format(Locale.US, "%f", val);
+      }
+    }
 
-		return String.format("\"%s\"", value.toString().replaceAll("\n|\r|\"", " "));
-	}
+    return String.format("\"%s\"", value.toString().replaceAll("\n|\r|\"", " "));
+  }
 
-	protected void ensureToFinish() {
-		assert ((nodeToFinish != null && edgeToFinish == null) || (nodeToFinish == null && edgeToFinish != null)
-				|| (nodeToFinish == null && edgeToFinish == null));
+  protected void ensureToFinish() {
+    assert ((nodeToFinish != null && edgeToFinish == null) || (nodeToFinish == null && edgeToFinish != null)
+        || (nodeToFinish == null && edgeToFinish == null));
 
-		if (nodeToFinish != null || edgeToFinish != null) {
-			out.printf("\t]%n");
-			nodeToFinish = null;
-			edgeToFinish = null;
-		}
-	}
+    if (nodeToFinish != null || edgeToFinish != null) {
+      out.printf("\t]%n");
+      nodeToFinish = null;
+      edgeToFinish = null;
+    }
+  }
 }

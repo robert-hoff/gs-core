@@ -33,9 +33,7 @@
  */
 package org.graphstream.stream;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 
 /**
  * A simple source of graph events that takes an existing graph and creates a
@@ -72,35 +70,35 @@ import org.graphstream.graph.Node;
  * </p>
  */
 public class GraphReplay extends SourceBase implements Source {
-	public GraphReplay(String id) {
-		super(id);
-	}
+  public GraphReplay(String id) {
+    super(id);
+  }
 
-	/**
-	 * Echo each element and attribute of the graph to the registered sinks.
-	 *
-	 * @param graph
-	 *            The graph to export.
-	 */
-	public void replay(Graph graph) {
-		graph.attributeKeys().forEach(key -> sendGraphAttributeAdded(sourceId, key, graph.getAttribute(key)));
+  /**
+   * Echo each element and attribute of the graph to the registered sinks.
+   *
+   * @param graph
+   *          The graph to export.
+   */
+  public void replay(Graph graph) {
+    graph.attributeKeys().forEach(key -> sendGraphAttributeAdded(sourceId, key, graph.getAttribute(key)));
 
-		graph.nodes().forEach(node -> {
-			String nodeId = node.getId();
-			sendNodeAdded(sourceId, nodeId);
+    graph.nodes().forEach(node -> {
+      String nodeId = node.getId();
+      sendNodeAdded(sourceId, nodeId);
 
-			if (node.getAttributeCount() > 0)
-				node.attributeKeys()
-						.forEach(key -> sendNodeAttributeAdded(sourceId, nodeId, key, node.getAttribute(key)));
-		});
+      if (node.getAttributeCount() > 0) {
+        node.attributeKeys().forEach(key -> sendNodeAttributeAdded(sourceId, nodeId, key, node.getAttribute(key)));
+      }
+    });
 
-		graph.edges().forEach(edge -> {
-			String edgeId = edge.getId();
-			sendEdgeAdded(sourceId, edgeId, edge.getNode0().getId(), edge.getNode1().getId(), edge.isDirected());
+    graph.edges().forEach(edge -> {
+      String edgeId = edge.getId();
+      sendEdgeAdded(sourceId, edgeId, edge.getNode0().getId(), edge.getNode1().getId(), edge.isDirected());
 
-			if (edge.getAttributeCount() > 0)
-				edge.attributeKeys()
-						.forEach(key -> sendEdgeAttributeAdded(sourceId, edgeId, key, edge.getAttribute(key)));
-		});
-	}
+      if (edge.getAttributeCount() > 0) {
+        edge.attributeKeys().forEach(key -> sendEdgeAttributeAdded(sourceId, edgeId, key, edge.getAttribute(key)));
+      }
+    });
+  }
 }

@@ -43,129 +43,133 @@ import java.util.HashSet;
  * </p>
  */
 public class Rule {
-	// Attributes
+  // Attributes
 
-	/**
-	 * The match.
-	 */
-	public Selector selector;
+  /**
+   * The match.
+   */
+  public Selector selector;
 
-	/**
-	 * The style.
-	 */
-	public Style style;
+  /**
+   * The style.
+   */
+  public Style style;
 
-	/**
-	 * Optionally, the rule can store all the style groups it participates in.
-	 */
-	public HashSet<String> groups;
+  /**
+   * Optionally, the rule can store all the style groups it participates in.
+   */
+  public HashSet<String> groups;
 
-	// Constructors
+  // Constructors
 
-	protected Rule() {
-	}
+  protected Rule() {
+  }
 
-	/**
-	 * New rule with a matcher.
-	 * 
-	 * @param selector
-	 *            The rule selector.
-	 */
-	public Rule(Selector selector) {
-		this.selector = selector;
-	}
+  /**
+   * New rule with a matcher.
+   * 
+   * @param selector
+   *          The rule selector.
+   */
+  public Rule(Selector selector) {
+    this.selector = selector;
+  }
 
-	public Rule(Selector selector, Rule parent) {
-		this.selector = selector;
-		this.style = new Style(parent);
-	}
+  public Rule(Selector selector, Rule parent) {
+    this.selector = selector;
+    this.style = new Style(parent);
+  }
 
-	/**
-	 * This rule style.
-	 * 
-	 * @return The rule style.
-	 */
-	public Style getStyle() {
-		return style;
-	}
+  /**
+   * This rule style.
+   * 
+   * @return The rule style.
+   */
+  public Style getStyle() {
+    return style;
+  }
 
-	/**
-	 * The group this rule participate in, maybe null if the rule does not
-	 * participate in any group.
-	 * 
-	 * @return The group set or null.
-	 */
-	public HashSet<String> getGroups() {
-		return groups;
-	}
+  /**
+   * The group this rule participate in, maybe null if the rule does not
+   * participate in any group.
+   * 
+   * @return The group set or null.
+   */
+  public HashSet<String> getGroups() {
+    return groups;
+  }
 
-	/**
-	 * True if this rule selector match the given identifier.
-	 * 
-	 * @param identifier
-	 *            The identifier to test for the match.
-	 * @return True if matching.
-	 */
-	public boolean matchId(String identifier) {
-		String ident = selector.getId();
+  /**
+   * True if this rule selector match the given identifier.
+   * 
+   * @param identifier
+   *          The identifier to test for the match.
+   * @return True if matching.
+   */
+  public boolean matchId(String identifier) {
+    String ident = selector.getId();
 
-		if (ident != null)
-			return ident.equals(identifier);
+    if (ident != null) {
+      return ident.equals(identifier);
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	/**
-	 * Change the style.
-	 * 
-	 * @param style
-	 *            A style specification.
-	 */
-	public void setStyle(Style style) {
-		this.style = style;
-	}
+  /**
+   * Change the style.
+   * 
+   * @param style
+   *          A style specification.
+   */
+  public void setStyle(Style style) {
+    this.style = style;
+  }
 
-	/**
-	 * Specify that this rule participates in the given style group.
-	 * 
-	 * @param groupId
-	 *            The group unique identifier.
-	 */
-	public void addGroup(String groupId) {
-		if (groups == null)
-			groups = new HashSet<String>();
-		groups.add(groupId);
-	}
+  /**
+   * Specify that this rule participates in the given style group.
+   * 
+   * @param groupId
+   *          The group unique identifier.
+   */
+  public void addGroup(String groupId) {
+    if (groups == null) {
+      groups = new HashSet<String>();
+    }
+    groups.add(groupId);
+  }
 
-	/**
-	 * Remove this rule from the style group.
-	 * 
-	 * @param groupId
-	 *            The group unique identifier.
-	 */
-	public void removeGroup(String groupId) {
-		if (groups != null)
-			groups.remove(groupId);
-	}
+  /**
+   * Remove this rule from the style group.
+   * 
+   * @param groupId
+   *          The group unique identifier.
+   */
+  public void removeGroup(String groupId) {
+    if (groups != null) {
+      groups.remove(groupId);
+    }
+  }
 
-	@Override
-	public String toString() {
-		return toString(-1);
-	}
+  @Override
+  public String toString() {
+    return toString(-1);
+  }
 
-	public String toString(int level) {
-		StringBuilder builder = new StringBuilder();
-		String prefix = "";
+  public String toString(int level) {
+    StringBuilder builder = new StringBuilder();
+    String prefix = "";
 
-		if (level > 0) {
-			for (int i = 0; i < level; i++)
-				prefix += "    ";
-		}
+    if (level > 0) {
+      for (int i = 0; i < level; i++) {
+        prefix += "    ";
+      }
+    }
 
-		builder.append(prefix);
-		builder.append(selector.toString());
-		builder.append(style.toString(level + 1));
+    builder.append(prefix);
+    builder.append(selector.toString());
+    builder.append(style.toString(level + 1));
 
-		return builder.toString();
-	}
+    return builder.toString();
+  }
 }

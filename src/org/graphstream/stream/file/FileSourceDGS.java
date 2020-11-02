@@ -61,68 +61,71 @@ import org.graphstream.util.parser.ParserFactory;
  * @see FileSource
  */
 public class FileSourceDGS extends FileSourceParser {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSourceParser#getNewParserFactory()
-	 */
-	public ParserFactory getNewParserFactory() {
-		return new ParserFactory() {
-			public Parser newParser(Reader reader) {
-				return new DGSParser(FileSourceDGS.this, reader);
-			}
-		};
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSourceParser#getNewParserFactory()
+   */
+  @Override
+  public ParserFactory getNewParserFactory() {
+    return new ParserFactory() {
+      @Override
+      public Parser newParser(Reader reader) {
+        return new DGSParser(FileSourceDGS.this, reader);
+      }
+    };
+  }
 
-	@Override
-	public boolean nextStep() throws IOException {
-		try {
-			return ((DGSParser) parser).nextStep();
-		} catch (ParseException e) {
-			throw new IOException(e);
-		}
-	}
+  @Override
+  public boolean nextStep() throws IOException {
+    try {
+      return ((DGSParser) parser).nextStep();
+    } catch (ParseException e) {
+      throw new IOException(e);
+    }
+  }
 
-	@Override
-	protected Reader createReaderForFile(String filename) throws IOException {
-		InputStream is = null;
+  @Override
+  protected Reader createReaderForFile(String filename) throws IOException {
+    InputStream is = null;
 
-		is = new FileInputStream(filename);
+    is = new FileInputStream(filename);
 
-		if (is.markSupported())
-			is.mark(128);
+    if (is.markSupported()) {
+      is.mark(128);
+    }
 
-		try {
-			is = new GZIPInputStream(is);
-		} catch (IOException e1) {
-			//
-			// This is not a gzip input.
-			// But gzip has eat some bytes so we reset the stream
-			// or close and open it again.
-			//
-			if (is.markSupported()) {
-				try {
-					is.reset();
-				} catch (IOException e2) {
-					//
-					// Dirty but we hope do not get there
-					//
-					e2.printStackTrace();
-				}
-			} else {
-				try {
-					is.close();
-				} catch (IOException e2) {
-					//
-					// Dirty but we hope do not get there
-					//
-					e2.printStackTrace();
-				}
+    try {
+      is = new GZIPInputStream(is);
+    } catch (IOException e1) {
+      //
+      // This is not a gzip input.
+      // But gzip has eat some bytes so we reset the stream
+      // or close and open it again.
+      //
+      if (is.markSupported()) {
+        try {
+          is.reset();
+        } catch (IOException e2) {
+          //
+          // Dirty but we hope do not get there
+          //
+          e2.printStackTrace();
+        }
+      } else {
+        try {
+          is.close();
+        } catch (IOException e2) {
+          //
+          // Dirty but we hope do not get there
+          //
+          e2.printStackTrace();
+        }
 
-				is = new FileInputStream(filename);
-			}
-		}
+        is = new FileInputStream(filename);
+      }
+    }
 
-		return new BufferedReader(new InputStreamReader(is));
-	}
+    return new BufferedReader(new InputStreamReader(is));
+  }
 }

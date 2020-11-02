@@ -34,44 +34,46 @@ package org.graphstream.stream.file.gexf;
 import javax.xml.stream.XMLStreamException;
 
 public class GEXFAttValue implements GEXFElement {
-	GEXF root;
+  GEXF root;
 
-	String forId;
-	String value;
+  String forId;
+  String value;
 
-	double start;
-	double end;
+  double start;
+  double end;
 
-	public GEXFAttValue(GEXF root, String forId, String value) {
-		this.root = root;
-		this.forId = forId;
-		this.value = value;
-		this.start = root.step;
-		this.end = Double.NaN;
-	}
+  public GEXFAttValue(GEXF root, String forId, String value) {
+    this.root = root;
+    this.forId = forId;
+    this.value = value;
+    this.start = root.step;
+    this.end = Double.NaN;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		stream.startElement("attvalue");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    stream.startElement("attvalue");
 
-		stream.stream.writeAttribute("for", forId);
-		stream.stream.writeAttribute("value", value);
+    stream.stream.writeAttribute("for", forId);
+    stream.stream.writeAttribute("value", value);
 
-		if (Double.isNaN(end))
-			end = root.step;
+    if (Double.isNaN(end)) {
+      end = root.step;
+    }
 
-		if (root.isExtensionEnable(Extension.DYNAMICS)) {
-			stream.stream.writeAttribute("start", root.getTimeFormat().format.format(start));
-			stream.stream.writeAttribute("end", root.getTimeFormat().format.format(end));
-		}
+    if (root.isExtensionEnable(Extension.DYNAMICS)) {
+      stream.stream.writeAttribute("start", root.getTimeFormat().format.format(start));
+      stream.stream.writeAttribute("end", root.getTimeFormat().format.format(end));
+    }
 
-		stream.endElement(); // ATTVALUE
-	}
+    stream.endElement(); // ATTVALUE
+  }
 
 }

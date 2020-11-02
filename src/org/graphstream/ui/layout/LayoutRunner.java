@@ -73,183 +73,185 @@ import java.util.logging.Logger;
  */
 public class LayoutRunner extends Thread {
 
-	/**
-	 * class level logger
-	 */
-	private static final Logger logger = Logger.getLogger(LayoutRunner.class.getSimpleName());
+  /**
+   * class level logger
+   */
+  private static final Logger logger = Logger.getLogger(LayoutRunner.class.getSimpleName());
 
-	/**
-	 * The layout algorithm.
-	 */
-	protected Layout layout = null;
+  /**
+   * The layout algorithm.
+   */
+  protected Layout layout = null;
 
-	/**
-	 * The proxy on the source of graph events.
-	 */
-	protected ThreadProxyPipe pumpPipe = null;
+  /**
+   * The proxy on the source of graph events.
+   */
+  protected ThreadProxyPipe pumpPipe = null;
 
-	/**
-	 * The meaning of life.
-	 */
-	protected boolean loop = true;
+  /**
+   * The meaning of life.
+   */
+  protected boolean loop = true;
 
-	/**
-	 * The time to wait between each layout invocation, when the layout stabilized.
-	 */
-	protected long longNap = 80;
+  /**
+   * The time to wait between each layout invocation, when the layout stabilized.
+   */
+  protected long longNap = 80;
 
-	/**
-	 * The time to wait between each layout invocation, when the layout is not yet
-	 * stabilized.
-	 */
-	protected long shortNap = 10;
+  /**
+   * The time to wait between each layout invocation, when the layout is not yet
+   * stabilized.
+   */
+  protected long shortNap = 10;
 
-	/**
-	 * New layout runner that listens at the given source and compute a layout on
-	 * its graph structure in a distinct thread.
-	 * 
-	 * @param source
-	 *            The source of graph events.
-	 * @param layout
-	 *            The layout algorithm to use.
-	 */
-	public LayoutRunner(Source source, Layout layout) {
-		this(source, layout, true);
-	}
+  /**
+   * New layout runner that listens at the given source and compute a layout on
+   * its graph structure in a distinct thread.
+   * 
+   * @param source
+   *          The source of graph events.
+   * @param layout
+   *          The layout algorithm to use.
+   */
+  public LayoutRunner(Source source, Layout layout) {
+    this(source, layout, true);
+  }
 
-	/**
-	 * New layout runner that listen at the given source and compute a layout on its
-	 * graph structure in a distinct thread.
-	 * 
-	 * @param source
-	 *            The source of graph events.
-	 * @param layout
-	 *            The layout algorithm to use.
-	 * @param start
-	 *            Start the layout thread immediately ? Else the start() method must
-	 *            be called later.
-	 */
-	public LayoutRunner(Source source, Layout layout, boolean start) {
-		this.layout = layout;
-		this.pumpPipe = new ThreadProxyPipe();
-		this.pumpPipe.addSink(layout);
+  /**
+   * New layout runner that listen at the given source and compute a layout on its
+   * graph structure in a distinct thread.
+   * 
+   * @param source
+   *          The source of graph events.
+   * @param layout
+   *          The layout algorithm to use.
+   * @param start
+   *          Start the layout thread immediately ? Else the start() method must
+   *          be called later.
+   */
+  public LayoutRunner(Source source, Layout layout, boolean start) {
+    this.layout = layout;
+    this.pumpPipe = new ThreadProxyPipe();
+    this.pumpPipe.addSink(layout);
 
-		if (start)
-			start();
+    if (start) {
+      start();
+    }
 
-		this.pumpPipe.init(source);
-	}
+    this.pumpPipe.init(source);
+  }
 
-	/**
-	 * New layout runner that listen at the given graph and compute a layout on its
-	 * graph structure in a distinct thread. A pipe is still created to listen at
-	 * the graph. This means that the graph is never directly used.
-	 * 
-	 * @param graph
-	 *            The source of graph events.
-	 * @param layout
-	 *            The layout algorithm to use.
-	 * @param start
-	 *            Start the layout thread immediately ? Else the start() method must
-	 *            be called later.
-	 * @param replay
-	 *            If the graph already contains some data, replay events to create
-	 *            the data, this is mostly always needed.
-	 */
-	public LayoutRunner(Graph graph, Layout layout, boolean start, boolean replay) {
-		this.layout = layout;
-		this.pumpPipe = new ThreadProxyPipe();
-		this.pumpPipe.addSink(layout);
+  /**
+   * New layout runner that listen at the given graph and compute a layout on its
+   * graph structure in a distinct thread. A pipe is still created to listen at
+   * the graph. This means that the graph is never directly used.
+   * 
+   * @param graph
+   *          The source of graph events.
+   * @param layout
+   *          The layout algorithm to use.
+   * @param start
+   *          Start the layout thread immediately ? Else the start() method must
+   *          be called later.
+   * @param replay
+   *          If the graph already contains some data, replay events to create the
+   *          data, this is mostly always needed.
+   */
+  public LayoutRunner(Graph graph, Layout layout, boolean start, boolean replay) {
+    this.layout = layout;
+    this.pumpPipe = new ThreadProxyPipe();
+    this.pumpPipe.addSink(layout);
 
-		if (start)
-			start();
+    if (start) {
+      start();
+    }
 
-		this.pumpPipe.init(graph, replay);
-	}
+    this.pumpPipe.init(graph, replay);
+  }
 
-	/**
-	 * Pipe out whose input is connected to the layout algorithm. You can safely
-	 * connect as a sink to it to receive events of the layout from a distinct
-	 * thread.
-	 */
-	public ProxyPipe newLayoutPipe() {
-		ThreadProxyPipe tpp = new ThreadProxyPipe();
-		tpp.init(layout);
+  /**
+   * Pipe out whose input is connected to the layout algorithm. You can safely
+   * connect as a sink to it to receive events of the layout from a distinct
+   * thread.
+   */
+  public ProxyPipe newLayoutPipe() {
+    ThreadProxyPipe tpp = new ThreadProxyPipe();
+    tpp.init(layout);
 
-		return tpp;
-	}
+    return tpp;
+  }
 
-	@Override
-	public void run() {
-		String layoutName = layout.getLayoutAlgorithmName();
+  @Override
+  public void run() {
+    String layoutName = layout.getLayoutAlgorithmName();
 
-		while (loop) {
-			double limit = layout.getStabilizationLimit();
+    while (loop) {
+      double limit = layout.getStabilizationLimit();
 
-			pumpPipe.pump();
-			if (limit > 0) {
-				if (layout.getStabilization() > limit) {
-					nap(longNap);
-				} else {
-					layout.compute();
-					nap(shortNap);
-				}
-			} else {
-				layout.compute();
-				nap(shortNap);
-			}
-		}
-		logger.info(String.format("Layout '%s' process stopped.", layoutName));
-	}
+      pumpPipe.pump();
+      if (limit > 0) {
+        if (layout.getStabilization() > limit) {
+          nap(longNap);
+        } else {
+          layout.compute();
+          nap(shortNap);
+        }
+      } else {
+        layout.compute();
+        nap(shortNap);
+      }
+    }
+    logger.info(String.format("Layout '%s' process stopped.", layoutName));
+  }
 
-	/**
-	 * Release any link to the source of events and stop the layout proces. The
-	 * thread will end after this method has been called.
-	 */
-	public void release() {
-		pumpPipe.unregisterFromSource();
-		pumpPipe.removeSink(layout);
-		pumpPipe = null;
-		loop = false;
+  /**
+   * Release any link to the source of events and stop the layout proces. The
+   * thread will end after this method has been called.
+   */
+  public void release() {
+    pumpPipe.unregisterFromSource();
+    pumpPipe.removeSink(layout);
+    pumpPipe = null;
+    loop = false;
 
-		if (Thread.currentThread() != this) {
-			try {
-				this.join();
-			} catch (Exception e) {
-				logger.log(Level.WARNING, "Unable to stop/release layout.", e);
-			}
-		}
+    if (Thread.currentThread() != this) {
+      try {
+        this.join();
+      } catch (Exception e) {
+        logger.log(Level.WARNING, "Unable to stop/release layout.", e);
+      }
+    }
 
-		layout = null;
-	}
+    layout = null;
+  }
 
-	/**
-	 * Sleep for the given period of time in milliseconds.
-	 * 
-	 * @param ms
-	 *            The number of milliseconds to wait.
-	 */
-	protected void nap(long ms) {
-		try {
-			Thread.sleep(ms);
-		} catch (Exception e) {
-		}
-	}
+  /**
+   * Sleep for the given period of time in milliseconds.
+   * 
+   * @param ms
+   *          The number of milliseconds to wait.
+   */
+  protected void nap(long ms) {
+    try {
+      Thread.sleep(ms);
+    } catch (Exception e) {
+    }
+  }
 
-	/**
-	 * Configure the time to wait between each layout invocation. The long nap
-	 * configures the time to wait when the last layout invocation indicated the
-	 * layout was stabilized, the short nap is used in the other case.
-	 * 
-	 * @param longNap
-	 *            The time to wait between stabilized layout invocations, by default
-	 *            80.
-	 * @param shortNap
-	 *            The time to wait between non stabilized layout invocations, by
-	 *            default 10.
-	 */
-	public void setNaps(long longNap, long shortNap) {
-		this.longNap = longNap;
-		this.shortNap = shortNap;
-	}
+  /**
+   * Configure the time to wait between each layout invocation. The long nap
+   * configures the time to wait when the last layout invocation indicated the
+   * layout was stabilized, the short nap is used in the other case.
+   * 
+   * @param longNap
+   *          The time to wait between stabilized layout invocations, by default
+   *          80.
+   * @param shortNap
+   *          The time to wait between non stabilized layout invocations, by
+   *          default 10.
+   */
+  public void setNaps(long longNap, long shortNap) {
+    this.longNap = longNap;
+    this.shortNap = shortNap;
+  }
 }

@@ -41,29 +41,29 @@ import org.graphstream.ui.graphicGraph.GraphicGraph;
  * @see org.graphstream.ui.view.View#setBackLayerRenderer(LayerRenderer)
  */
 public interface LayerRenderer<G> {
-	/**
-	 * Render something under or above the graph.
-	 * 
-	 * @param graphics
-	 *            The graphics module used to draw (Graphics2D for example, when
-	 *            using Swing).
-	 * @param graph
-	 *            The graphic representation of the graph.
-	 * @param px2Gu
-	 *            The ratio to pass from pixels to graph units.
-	 * @param widthPx
-	 *            The width in pixels of the view port.
-	 * @param heightPx
-	 *            The height in pixels of the view port.
-	 * @param minXGu
-	 *            The minimum visible point abscissa of the graph in graph units.
-	 * @param minYGu
-	 *            The minimum visible point ordinate of the graph in graph units.
-	 * @param maxXGu
-	 *            The maximum visible point abscissa of the graph in graph units.
-	 * @param maxYGu
-	 *            The maximum visible point ordinate of the graph in graph units.
-	 */
-	void render(G graphics, GraphicGraph graph, double px2Gu, int widthPx, int heightPx, double minXGu, double minYGu,
-			double maxXGu, double maxYGu);
+  /**
+   * Render something under or above the graph.
+   * 
+   * @param graphics
+   *          The graphics module used to draw (Graphics2D for example, when using
+   *          Swing).
+   * @param graph
+   *          The graphic representation of the graph.
+   * @param px2Gu
+   *          The ratio to pass from pixels to graph units.
+   * @param widthPx
+   *          The width in pixels of the view port.
+   * @param heightPx
+   *          The height in pixels of the view port.
+   * @param minXGu
+   *          The minimum visible point abscissa of the graph in graph units.
+   * @param minYGu
+   *          The minimum visible point ordinate of the graph in graph units.
+   * @param maxXGu
+   *          The maximum visible point abscissa of the graph in graph units.
+   * @param maxYGu
+   *          The maximum visible point ordinate of the graph in graph units.
+   */
+  void render(G graphics, GraphicGraph graph, double px2Gu, int widthPx, int heightPx, double minXGu, double minYGu,
+      double maxXGu, double maxYGu);
 }

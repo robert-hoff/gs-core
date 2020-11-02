@@ -40,22 +40,23 @@ import java.util.ArrayList;
  * Ordered set of colours.
  */
 public class Colors extends ArrayList<Color> {
-	private static final long serialVersionUID = -7218092114483593610L;
+  private static final long serialVersionUID = -7218092114483593610L;
 
-	/**
-	 * New empty colour set.
-	 */
-	public Colors() {
-	}
+  /**
+   * New empty colour set.
+   */
+  public Colors() {
+  }
 
-	/**
-	 * New copy of the other colour set.
-	 * 
-	 * @param others
-	 *            The other colour set to copy.
-	 */
-	public Colors(Colors others) {
-		for (Color color : others)
-			add(color);
-	}
+  /**
+   * New copy of the other colour set.
+   * 
+   * @param others
+   *          The other colour set to copy.
+   */
+  public Colors(Colors others) {
+    for (Color color : others) {
+      add(color);
+    }
+  }
 }

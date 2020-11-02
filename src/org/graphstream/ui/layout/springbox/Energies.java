@@ -60,130 +60,132 @@ package org.graphstream.ui.layout.springbox;
  * </p>
  */
 public class Energies {
-	/**
-	 * Global current energy (maybe actually updated). This is where users of this
-	 * class add energy for their current computation step. When finished this
-	 * energy value is stored in the energy buffer and cleared.
-	 */
-	protected double energy;
+  /**
+   * Global current energy (maybe actually updated). This is where users of this
+   * class add energy for their current computation step. When finished this
+   * energy value is stored in the energy buffer and cleared.
+   */
+  protected double energy;
 
-	/**
-	 * The last computed energy.
-	 */
-	protected double lastEnergy;
+  /**
+   * The last computed energy.
+   */
+  protected double lastEnergy;
 
-	/**
-	 * Memory. The number of energy values remembered.
-	 */
-	protected int energiesBuffer = 256;
+  /**
+   * Memory. The number of energy values remembered.
+   */
+  protected int energiesBuffer = 256;
 
-	/**
-	 * A circular array of the last values of energy.
-	 */
-	protected double[] energies = new double[energiesBuffer];
+  /**
+   * A circular array of the last values of energy.
+   */
+  protected double[] energies = new double[energiesBuffer];
 
-	/**
-	 * The current position in the energies array.
-	 */
-	protected int energiesPos = 0;
+  /**
+   * The current position in the energies array.
+   */
+  protected int energiesPos = 0;
 
-	/**
-	 * The sum of all memorized energies.
-	 */
-	protected double energySum = 0;
+  /**
+   * The sum of all memorized energies.
+   */
+  protected double energySum = 0;
 
-	/**
-	 * The last computed energy value.
-	 * 
-	 * @return The actual level of energy.
-	 */
-	public double getEnergy() {
-		return lastEnergy;
-	}
+  /**
+   * The last computed energy value.
+   * 
+   * @return The actual level of energy.
+   */
+  public double getEnergy() {
+    return lastEnergy;
+  }
 
-	/**
-	 * The number of energy values remembered, the memory.
-	 */
-	public int getBufferSize() {
-		return energiesBuffer;
-	}
+  /**
+   * The number of energy values remembered, the memory.
+   */
+  public int getBufferSize() {
+    return energiesBuffer;
+  }
 
-	/**
-	 * A number in [0..1] with 1 meaning fully stabilized.
-	 * 
-	 * @return A value that indicates the level of stabilization in [0-1].
-	 */
-	public double getStabilization() {
-		// The stability is attained when the global energy of the graph do not
-		// vary anymore.
+  /**
+   * A number in [0..1] with 1 meaning fully stabilized.
+   * 
+   * @return A value that indicates the level of stabilization in [0-1].
+   */
+  public double getStabilization() {
+    // The stability is attained when the global energy of the graph do not
+    // vary anymore.
 
-		int range = 200;
-		double eprev1 = getPreviousEnergyValue(range);
-		double eprev2 = getPreviousEnergyValue(range - 10);
-		double eprev3 = getPreviousEnergyValue(range - 20);
-		double eprev = (eprev1 + eprev2 + eprev3) / 3.0;
-		double diff = Math.abs(lastEnergy - eprev);
+    int range = 200;
+    double eprev1 = getPreviousEnergyValue(range);
+    double eprev2 = getPreviousEnergyValue(range - 10);
+    double eprev3 = getPreviousEnergyValue(range - 20);
+    double eprev = (eprev1 + eprev2 + eprev3) / 3.0;
+    double diff = Math.abs(lastEnergy - eprev);
 
-		diff = diff < 1 ? 1 : diff;
+    diff = diff < 1 ? 1 : diff;
 
-		return 1.0 / diff;
-	}
+    return 1.0 / diff;
+  }
 
-	/**
-	 * The average energy in the whole buffer.
-	 * 
-	 * @return The average energy.
-	 */
-	public double getAverageEnergy() {
-		return energySum / energies.length;
-	}
+  /**
+   * The average energy in the whole buffer.
+   * 
+   * @return The average energy.
+   */
+  public double getAverageEnergy() {
+    return energySum / energies.length;
+  }
 
-	/**
-	 * A previous energy value.
-	 * 
-	 * @param stepsBack
-	 *            The number of steps back in history. This number must not be
-	 *            larger than the size of the memory (energy buffer) else it is set
-	 *            to this size.
-	 * @return The energy value at stepsBack in time.
-	 */
-	public double getPreviousEnergyValue(int stepsBack) {
-		if (stepsBack >= energies.length)
-			stepsBack = energies.length - 1;
+  /**
+   * A previous energy value.
+   * 
+   * @param stepsBack
+   *          The number of steps back in history. This number must not be larger
+   *          than the size of the memory (energy buffer) else it is set to this
+   *          size.
+   * @return The energy value at stepsBack in time.
+   */
+  public double getPreviousEnergyValue(int stepsBack) {
+    if (stepsBack >= energies.length) {
+      stepsBack = energies.length - 1;
+    }
 
-		int pos = (energies.length + (energiesPos - stepsBack)) % energies.length;
+    int pos = (energies.length + (energiesPos - stepsBack)) % energies.length;
 
-		return energies[pos];
-	}
+    return energies[pos];
+  }
 
-	/**
-	 * Accumulate some energy in the current energy cell.
-	 * 
-	 * @param value
-	 *            The value to accumulate to the current cell.
-	 */
-	public void accumulateEnergy(double value) {
-		energy += value;
-	}
+  /**
+   * Accumulate some energy in the current energy cell.
+   * 
+   * @param value
+   *          The value to accumulate to the current cell.
+   */
+  public void accumulateEnergy(double value) {
+    energy += value;
+  }
 
-	/**
-	 * Add a the current accumulated energy value in the set.
-	 */
-	public void storeEnergy() {
-		energiesPos = (energiesPos + 1) % energies.length;
+  /**
+   * Add a the current accumulated energy value in the set.
+   */
+  public void storeEnergy() {
+    energiesPos = (energiesPos + 1) % energies.length;
 
-		energySum -= energies[energiesPos];
-		energies[energiesPos] = energy;
-		energySum += energy;
-		lastEnergy = energy;
-		energy = 0;
-	}
+    energySum -= energies[energiesPos];
+    energies[energiesPos] = energy;
+    energySum += energy;
+    lastEnergy = energy;
+    energy = 0;
+  }
 
-	/**
-	 * Randomize the energies array.
-	 */
-	protected void clearEnergies() {
-		for (int i = 0; i < energies.length; ++i)
-			energies[i] = ((Math.random() * 2000) - 1000);
-	}
+  /**
+   * Randomize the energies array.
+   */
+  protected void clearEnergies() {
+    for (int i = 0; i < energies.length; ++i) {
+      energies[i] = ((Math.random() * 2000) - 1000);
+    }
+  }
 }

@@ -7,35 +7,35 @@ import org.junit.Test;
 
 public class PathTest {
 
-	@Test(expected = IllegalArgumentException.class)
-	public void add_nodeHeadMustBeInEdge() {
-		Graph graph = createSimpleGraph();
-		Path path = new Path();
+  @Test(expected = IllegalArgumentException.class)
+  public void add_nodeHeadMustBeInEdge() {
+    Graph graph = createSimpleGraph();
+    Path path = new Path();
 
-		path.setRoot(graph.getNode("a"));
+    path.setRoot(graph.getNode("a"));
 
-		// this has to fail as there is no edge between nodes "a" and "c"
-		path.add(graph.getEdge("cd"));
-	}
+    // this has to fail as there is no edge between nodes "a" and "c"
+    path.add(graph.getEdge("cd"));
+  }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void add_whenAddingEdgeRootMustBeSet() {
-		Graph graph = createSimpleGraph();
-		Path path = new Path();
+  @Test(expected = IllegalArgumentException.class)
+  public void add_whenAddingEdgeRootMustBeSet() {
+    Graph graph = createSimpleGraph();
+    Path path = new Path();
 
-		// this has to fail as root of the path is not set
-		path.add(graph.getEdge("ab"));
-	}
+    // this has to fail as root of the path is not set
+    path.add(graph.getEdge("ab"));
+  }
 
-	private Graph createSimpleGraph() {
-		Graph graph = new DefaultGraph("test");
-		graph.setStrict(false);
-		graph.setAutoCreate(true);
+  private Graph createSimpleGraph() {
+    Graph graph = new DefaultGraph("test");
+    graph.setStrict(false);
+    graph.setAutoCreate(true);
 
-		graph.addEdge("ab", "a", "b");
-		graph.addEdge("bc", "b", "c");
-		graph.addEdge("cd", "c", "d");
+    graph.addEdge("ab", "a", "b");
+    graph.addEdge("bc", "b", "c");
+    graph.addEdge("cd", "c", "d");
 
-		return graph;
-	}
+    return graph;
+  }
 }

@@ -47,91 +47,91 @@ import org.miv.pherd.ntree.NTreeListener;
  * degree).
  */
 public class GraphCellData extends BarycenterCellData {
-	/**
-	 * Aggregate degree. The sum of the degrees of each node aggregated in this
-	 * barycenter.
-	 */
-	public double degree;
+  /**
+   * Aggregate degree. The sum of the degrees of each node aggregated in this
+   * barycenter.
+   */
+  public double degree;
 
-	/**
-	 * Aggregate degree. The sum of the degrees of each node aggregated in this
-	 * barycenter.
-	 */
-	public double getDegree() {
-		return degree;
-	}
+  /**
+   * Aggregate degree. The sum of the degrees of each node aggregated in this
+   * barycenter.
+   */
+  public double getDegree() {
+    return degree;
+  }
 
-	@Override
-	public CellData newCellData() {
-		return new GraphCellData();
-	}
+  @Override
+  public CellData newCellData() {
+    return new GraphCellData();
+  }
 
-	@Override
-	public void recompute() {
-		double x = 0;
-		double y = 0;
-		double z = 0;
-		double n = 0;
+  @Override
+  public void recompute() {
+    double x = 0;
+    double y = 0;
+    double z = 0;
+    double n = 0;
 
-		weight = 0;
-		degree = 0;
+    weight = 0;
+    degree = 0;
 
-		if (cell.isLeaf()) {
-			Iterator<? extends Particle> particles = cell.getParticles();
+    if (cell.isLeaf()) {
+      Iterator<? extends Particle> particles = cell.getParticles();
 
-			while (particles.hasNext()) {
-				NodeParticle particle = (NodeParticle) particles.next();
+      while (particles.hasNext()) {
+        NodeParticle particle = (NodeParticle) particles.next();
 
-				x += particle.getPosition().x;
-				y += particle.getPosition().y;
-				z += particle.getPosition().z;
+        x += particle.getPosition().x;
+        y += particle.getPosition().y;
+        z += particle.getPosition().z;
 
-				weight += particle.getWeight();
-				degree += particle.getEdges().size();
+        weight += particle.getWeight();
+        degree += particle.getEdges().size();
 
-				n++;
-			}
+        n++;
+      }
 
-			if (n > 0) {
-				x /= n;
-				y /= n;
-				z /= n;
-			}
+      if (n > 0) {
+        x /= n;
+        y /= n;
+        z /= n;
+      }
 
-			center.set(x, y, z);
-		} else {
-			double subcnt = cell.getSpace().getDivisions();
-			double totpop = cell.getPopulation();
-			int verif = 0;
+      center.set(x, y, z);
+    } else {
+      double subcnt = cell.getSpace().getDivisions();
+      double totpop = cell.getPopulation();
+      int verif = 0;
 
-			if (totpop > 0) {
-				for (int i = 0; i < subcnt; ++i) {
-					Cell subcell = cell.getSub(i);
-					GraphCellData data = (GraphCellData) subcell.getData();
-					double pop = subcell.getPopulation();
+      if (totpop > 0) {
+        for (int i = 0; i < subcnt; ++i) {
+          Cell subcell = cell.getSub(i);
+          GraphCellData data = (GraphCellData) subcell.getData();
+          double pop = subcell.getPopulation();
 
-					verif += pop;
+          verif += pop;
 
-					x += data.center.x * pop;
-					y += data.center.y * pop;
-					z += data.center.z * pop;
+          x += data.center.x * pop;
+          y += data.center.y * pop;
+          z += data.center.z * pop;
 
-					weight += data.weight;
-					degree += data.degree;
-				}
+          weight += data.weight;
+          degree += data.degree;
+        }
 
-				assert verif == totpop : "Discrepancy in population counts ?";
+        assert verif == totpop : "Discrepancy in population counts ?";
 
-				x /= totpop;
-				y /= totpop;
-				z /= totpop;
-			}
+        x /= totpop;
+        y /= totpop;
+        z /= totpop;
+      }
 
-			center.set(x, y, z);
-		}
+      center.set(x, y, z);
+    }
 
-		for (NTreeListener listener : cell.getTree().getListeners()) {
-			listener.cellData(cell.getId(), "barycenter", this);
-		}
-	}
+    for (NTreeListener listener : cell.getTree().getListeners()) {
+      listener.cellData(cell.getId(), "barycenter", this);
+    }
+  }
 }

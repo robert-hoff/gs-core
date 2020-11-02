@@ -61,243 +61,261 @@ import org.graphstream.ui.graphicGraph.stylesheet.StyleSheet;
  * </p>
  */
 public class FileSinkUnstyledSVG extends FileSinkBase {
-	// Attribute
+  // Attribute
 
-	/**
-	 * The output.
-	 */
-	protected PrintWriter out;
+  /**
+   * The output.
+   */
+  protected PrintWriter out;
 
-	/**
-	 * What element ?.
-	 */
-	protected enum What {
-		NODE, EDGE, OTHER
-	};
+  /**
+   * What element ?.
+   */
+  protected enum What {
+    NODE, EDGE, OTHER
+  };
 
-	/**
-	 * The positions of each node.
-	 */
-	protected HashMap<String, Point3> nodePos = new HashMap<String, Point3>();
+  /**
+   * The positions of each node.
+   */
+  protected HashMap<String, Point3> nodePos = new HashMap<String, Point3>();
 
-	// Construction
+  // Construction
 
-	public FileSinkUnstyledSVG() {
-		// NOP.
-	}
+  public FileSinkUnstyledSVG() {
+    // NOP.
+  }
 
-	// Command
+  // Command
 
-	@Override
-	public void end() throws IOException {
-		if (out != null) {
-			out.flush();
-			out.close();
-			out = null;
-		}
-	}
+  @Override
+  public void end() throws IOException {
+    if (out != null) {
+      out.flush();
+      out.close();
+      out = null;
+    }
+  }
 
-	// Command
+  // Command
 
-	@Override
-	protected void outputHeader() throws IOException {
-		out = (PrintWriter) output;
+  @Override
+  protected void outputHeader() throws IOException {
+    out = (PrintWriter) output;
 
-		out.printf("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>%n");
-		out.printf("<svg" + " xmlns:svg=\"http://www.w3.org/2000/svg\"" + " width=\"100%%\"" + " height=\"100%%\""
-				+ ">%n");
+    out.printf("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>%n");
+    out.printf("<svg" + " xmlns:svg=\"http://www.w3.org/2000/svg\"" + " width=\"100%%\"" + " height=\"100%%\"" + ">%n");
 
-		// TODO
-		// outputStyle( styleSheet );
-	}
+    // TODO
+    // outputStyle( styleSheet );
+  }
 
-	@Override
-	protected void outputEndOfFile() throws IOException {
-		outputNodes();
-		out.printf("</svg>%n");
-	}
+  @Override
+  protected void outputEndOfFile() throws IOException {
+    outputNodes();
+    out.printf("</svg>%n");
+  }
 
-	public void edgeAttributeAdded(String graphId, long timeId, String edgeId, String attribute, Object value) {
-		// NOP
-	}
+  @Override
+  public void edgeAttributeAdded(String graphId, long timeId, String edgeId, String attribute, Object value) {
+    // NOP
+  }
 
-	public void edgeAttributeChanged(String graphId, long timeId, String edgeId, String attribute, Object oldValue,
-			Object newValue) {
-		// NOP
-	}
+  @Override
+  public void edgeAttributeChanged(String graphId, long timeId, String edgeId, String attribute, Object oldValue,
+      Object newValue) {
+    // NOP
+  }
 
-	public void edgeAttributeRemoved(String graphId, long timeId, String edgeId, String attribute) {
-		// NOP
-	}
+  @Override
+  public void edgeAttributeRemoved(String graphId, long timeId, String edgeId, String attribute) {
+    // NOP
+  }
 
-	public void graphAttributeAdded(String graphId, long timeId, String attribute, Object value) {
-		// NOP
-	}
+  @Override
+  public void graphAttributeAdded(String graphId, long timeId, String attribute, Object value) {
+    // NOP
+  }
 
-	public void graphAttributeChanged(String graphId, long timeId, String attribute, Object oldValue, Object newValue) {
-		// NOP
-	}
+  @Override
+  public void graphAttributeChanged(String graphId, long timeId, String attribute, Object oldValue, Object newValue) {
+    // NOP
+  }
 
-	public void graphAttributeRemoved(String graphId, long timeId, String attribute) {
-		// NOP
-	}
+  @Override
+  public void graphAttributeRemoved(String graphId, long timeId, String attribute) {
+    // NOP
+  }
 
-	public void nodeAttributeAdded(String graphId, long timeId, String nodeId, String attribute, Object value) {
-		setNodePos(nodeId, attribute, value);
-	}
+  @Override
+  public void nodeAttributeAdded(String graphId, long timeId, String nodeId, String attribute, Object value) {
+    setNodePos(nodeId, attribute, value);
+  }
 
-	public void nodeAttributeChanged(String graphId, long timeId, String nodeId, String attribute, Object oldValue,
-			Object newValue) {
-		setNodePos(nodeId, attribute, newValue);
-	}
+  @Override
+  public void nodeAttributeChanged(String graphId, long timeId, String nodeId, String attribute, Object oldValue,
+      Object newValue) {
+    setNodePos(nodeId, attribute, newValue);
+  }
 
-	public void nodeAttributeRemoved(String graphId, long timeId, String nodeId, String attribute) {
-		// NOP
-	}
+  @Override
+  public void nodeAttributeRemoved(String graphId, long timeId, String nodeId, String attribute) {
+    // NOP
+  }
 
-	public void edgeAdded(String graphId, long timeId, String edgeId, String fromNodeId, String toNodeId,
-			boolean directed) {
-		Point3 p0 = nodePos.get(fromNodeId);
-		Point3 p1 = nodePos.get(toNodeId);
+  @Override
+  public void edgeAdded(String graphId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+      boolean directed) {
+    Point3 p0 = nodePos.get(fromNodeId);
+    Point3 p1 = nodePos.get(toNodeId);
 
-		if (p0 != null && p1 != null) {
-			out.printf("  <g id=\"%s\">%n", edgeId);
-			out.printf("    <line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\"/>%n", p0.x, p0.y, p1.x, p1.y);
-			out.printf("  </g>%n");
-		}
-	}
+    if (p0 != null && p1 != null) {
+      out.printf("  <g id=\"%s\">%n", edgeId);
+      out.printf("    <line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\"/>%n", p0.x, p0.y, p1.x, p1.y);
+      out.printf("  </g>%n");
+    }
+  }
 
-	public void edgeRemoved(String graphId, long timeId, String edgeId) {
-		// NOP
-	}
+  @Override
+  public void edgeRemoved(String graphId, long timeId, String edgeId) {
+    // NOP
+  }
 
-	public void graphCleared(String graphId, long timeId) {
-		// NOP
-	}
+  @Override
+  public void graphCleared(String graphId, long timeId) {
+    // NOP
+  }
 
-	public void nodeAdded(String graphId, long timeId, String nodeId) {
-		nodePos.put(nodeId, new Point3());
-	}
+  @Override
+  public void nodeAdded(String graphId, long timeId, String nodeId) {
+    nodePos.put(nodeId, new Point3());
+  }
 
-	public void nodeRemoved(String graphId, long timeId, String nodeId) {
-		nodePos.remove(nodeId);
-	}
+  @Override
+  public void nodeRemoved(String graphId, long timeId, String nodeId) {
+    nodePos.remove(nodeId);
+  }
 
-	public void stepBegins(String graphId, long timeId, double time) {
-		// NOP
-	}
+  @Override
+  public void stepBegins(String graphId, long timeId, double time) {
+    // NOP
+  }
 
-	// Utility
+  // Utility
 
-	protected void setNodePos(String nodeId, String attribute, Object value) {
-		Point3 p = nodePos.get(nodeId);
+  protected void setNodePos(String nodeId, String attribute, Object value) {
+    Point3 p = nodePos.get(nodeId);
 
-		double x, y, z;
-		if (p == null) {
-			x = Math.random();
-			y = Math.random();
-			z = 0;
-		} else {
-			x = p.x;
-			y = p.y;
-			z = p.z;
-		}
+    double x, y, z;
+    if (p == null) {
+      x = Math.random();
+      y = Math.random();
+      z = 0;
+    } else {
+      x = p.x;
+      y = p.y;
+      z = p.z;
+    }
 
-		if (attribute.equals("x")) {
-			if (value instanceof Number)
-				x = ((Number) value).floatValue();
-		} else if (attribute.equals("y")) {
-			if (value instanceof Number)
-				y = ((Number) value).floatValue();
-		} else if (attribute.equals("z")) {
-			if (value instanceof Number)
-				z = ((Number) value).floatValue();
-		}
+    if (attribute.equals("x")) {
+      if (value instanceof Number) {
+        x = ((Number) value).floatValue();
+      }
+    } else if (attribute.equals("y")) {
+      if (value instanceof Number) {
+        y = ((Number) value).floatValue();
+      }
+    } else if (attribute.equals("z")) {
+      if (value instanceof Number) {
+        z = ((Number) value).floatValue();
+      }
+    }
 
-		else if (attribute.equals("xy")) {
-			if (value instanceof Object[]) {
-				Object xy[] = ((Object[]) value);
+    else if (attribute.equals("xy")) {
+      if (value instanceof Object[]) {
+        Object xy[] = ((Object[]) value);
 
-				if (xy.length > 1) {
-					x = ((Number) xy[0]).floatValue();
-					y = ((Number) xy[1]).floatValue();
-				}
-			}
-		} else if (attribute.equals("xyz")) {
-			if (value instanceof Object[]) {
-				Object xyz[] = ((Object[]) value);
+        if (xy.length > 1) {
+          x = ((Number) xy[0]).floatValue();
+          y = ((Number) xy[1]).floatValue();
+        }
+      }
+    } else if (attribute.equals("xyz")) {
+      if (value instanceof Object[]) {
+        Object xyz[] = ((Object[]) value);
 
-				if (xyz.length > 1) {
-					x = ((Number) xyz[0]).floatValue();
-					y = ((Number) xyz[1]).floatValue();
-				}
+        if (xyz.length > 1) {
+          x = ((Number) xyz[0]).floatValue();
+          y = ((Number) xyz[1]).floatValue();
+        }
 
-				if (xyz.length > 2) {
-					z = ((Number) xyz[2]).floatValue();
-				}
-			}
-		}
-		nodePos.put(nodeId, new Point3(x, y, z));
-	}
+        if (xyz.length > 2) {
+          z = ((Number) xyz[2]).floatValue();
+        }
+      }
+    }
+    nodePos.put(nodeId, new Point3(x, y, z));
+  }
 
-	protected void outputStyle(String styleSheet) {
-		String style = null;
+  protected void outputStyle(String styleSheet) {
+    String style = null;
 
-		if (styleSheet != null) {
-			StyleSheet ssheet = new StyleSheet();
+    if (styleSheet != null) {
+      StyleSheet ssheet = new StyleSheet();
 
-			try {
-				if (styleSheet.startsWith("url(")) {
-					styleSheet = styleSheet.substring(5);
+      try {
+        if (styleSheet.startsWith("url(")) {
+          styleSheet = styleSheet.substring(5);
 
-					int pos = styleSheet.lastIndexOf(')');
+          int pos = styleSheet.lastIndexOf(')');
 
-					styleSheet = styleSheet.substring(0, pos);
+          styleSheet = styleSheet.substring(0, pos);
 
-					ssheet.parseFromFile(styleSheet);
-				} else {
-					ssheet.parseFromString(styleSheet);
-				}
+          ssheet.parseFromFile(styleSheet);
+        } else {
+          ssheet.parseFromString(styleSheet);
+        }
 
-				style = styleSheetToSVG(ssheet);
-			} catch (IOException e) {
-				e.printStackTrace();
-				ssheet = null;
-			}
-		}
+        style = styleSheetToSVG(ssheet);
+      } catch (IOException e) {
+        e.printStackTrace();
+        ssheet = null;
+      }
+    }
 
-		if (style == null)
-			style = "circle { fill: grey; stroke: none; } line { stroke-width: 1; stroke: black; }";
+    if (style == null) {
+      style = "circle { fill: grey; stroke: none; } line { stroke-width: 1; stroke: black; }";
+    }
 
-		out.printf("<defs><style type=\"text/css\"><![CDATA[%n");
-		out.printf("    %s%n", style);
-		out.printf("]]></style></defs>%n");
-	}
+    out.printf("<defs><style type=\"text/css\"><![CDATA[%n");
+    out.printf("    %s%n", style);
+    out.printf("]]></style></defs>%n");
+  }
 
-	protected void outputNodes() {
-		Iterator<? extends String> keys = nodePos.keySet().iterator();
+  protected void outputNodes() {
+    Iterator<? extends String> keys = nodePos.keySet().iterator();
 
-		while (keys.hasNext()) {
-			String key = keys.next();
-			Point3 pos = nodePos.get(key);
+    while (keys.hasNext()) {
+      String key = keys.next();
+      Point3 pos = nodePos.get(key);
 
-			out.printf("  <g id=\"%s\">%n", key);
-			out.printf("    <circle cx=\"%f\" cy=\"%f\" r=\"4\"/>%n", pos.x, pos.y);
-			out.printf("  </g>%n");
-		}
-	}
+      out.printf("  <g id=\"%s\">%n", key);
+      out.printf("    <circle cx=\"%f\" cy=\"%f\" r=\"4\"/>%n", pos.x, pos.y);
+      out.printf("  </g>%n");
+    }
+  }
 
-	protected String styleSheetToSVG(StyleSheet sheet) {
-		StringBuilder out = new StringBuilder();
+  protected String styleSheetToSVG(StyleSheet sheet) {
+    StringBuilder out = new StringBuilder();
 
-		addRule(out, sheet.getDefaultGraphRule());
+    addRule(out, sheet.getDefaultGraphRule());
 
-		return out.toString();
-	}
+    return out.toString();
+  }
 
-	protected void addRule(StringBuilder out, Rule rule) {
-		// Style style = rule.getStyle();
+  protected void addRule(StringBuilder out, Rule rule) {
+    // Style style = rule.getStyle();
 
-		// TODO
-	}
+    // TODO
+  }
 }

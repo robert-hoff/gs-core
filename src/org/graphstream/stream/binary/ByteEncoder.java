@@ -49,34 +49,34 @@ import java.nio.ByteBuffer;
  * @since 31/01/16.
  */
 public interface ByteEncoder extends Sink {
-	/**
-	 * Add a new transport to this encoder.
-	 *
-	 * @param transport
-	 *            the new transport
-	 */
-	void addTransport(Transport transport);
+  /**
+   * Add a new transport to this encoder.
+   *
+   * @param transport
+   *          the new transport
+   */
+  void addTransport(Transport transport);
 
-	/**
-	 * Remove an existing transport from this encoder.
-	 *
-	 * @param transport
-	 *            the transport to remove
-	 */
-	void removeTransport(Transport transport);
+  /**
+   * Remove an existing transport from this encoder.
+   *
+   * @param transport
+   *          the transport to remove
+   */
+  void removeTransport(Transport transport);
 
-	/**
-	 * Define the object that will be called after an event has been transformed
-	 * into a binary buffer.
-	 */
-	interface Transport {
-		/**
-		 * Called by the encoder once an event has been encoded. The buffer's position
-		 * and limit should be correctly set so the Transport just has to read it.
-		 *
-		 * @param buffer
-		 *            buffer that has to be transported
-		 */
-		void send(ByteBuffer buffer);
-	}
+  /**
+   * Define the object that will be called after an event has been transformed
+   * into a binary buffer.
+   */
+  interface Transport {
+    /**
+     * Called by the encoder once an event has been encoded. The buffer's position
+     * and limit should be correctly set so the Transport just has to read it.
+     *
+     * @param buffer
+     *          buffer that has to be transported
+     */
+    void send(ByteBuffer buffer);
+  }
 }

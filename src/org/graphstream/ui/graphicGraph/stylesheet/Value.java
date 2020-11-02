@@ -42,104 +42,107 @@ package org.graphstream.ui.graphicGraph.stylesheet;
  * </p>
  */
 public class Value extends Number {
-	// Attributes
+  // Attributes
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * The value.
-	 */
-	public double value;
+  /**
+   * The value.
+   */
+  public double value;
 
-	/**
-	 * The value units.
-	 */
-	public Style.Units units;
+  /**
+   * The value units.
+   */
+  public Style.Units units;
 
-	// Constructor
+  // Constructor
 
-	/**
-	 * New value.
-	 * 
-	 * @param units
-	 *            The value units.
-	 * @param value
-	 *            The value.
-	 */
-	public Value(Style.Units units, double value) {
-		this.value = value;
-		this.units = units;
-	}
+  /**
+   * New value.
+   * 
+   * @param units
+   *          The value units.
+   * @param value
+   *          The value.
+   */
+  public Value(Style.Units units, double value) {
+    this.value = value;
+    this.units = units;
+  }
 
-	/**
-	 * New copy of another value.
-	 * 
-	 * @param other
-	 *            The other value to copy.
-	 */
-	public Value(Value other) {
-		this.value = other.value;
-		this.units = other.units;
-	}
+  /**
+   * New copy of another value.
+   * 
+   * @param other
+   *          The other value to copy.
+   */
+  public Value(Value other) {
+    this.value = other.value;
+    this.units = other.units;
+  }
 
-	@Override
-	public float floatValue() {
-		return (float) value;
-	}
+  @Override
+  public float floatValue() {
+    return (float) value;
+  }
 
-	@Override
-	public double doubleValue() {
-		return value;
-	}
+  @Override
+  public double doubleValue() {
+    return value;
+  }
 
-	@Override
-	public int intValue() {
-		return (int) Math.round(value);
-	}
+  @Override
+  public int intValue() {
+    return (int) Math.round(value);
+  }
 
-	@Override
-	public long longValue() {
-		return Math.round(value);
-	}
+  @Override
+  public long longValue() {
+    return Math.round(value);
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
 
-		builder.append(value);
+    builder.append(value);
 
-		switch (units) {
-		case GU:
-			builder.append("gu");
-			break;
-		case PX:
-			builder.append("px");
-			break;
-		case PERCENTS:
-			builder.append("%");
-			break;
-		default:
-			builder.append("wtf (what's the fuck?)");
-			break;
-		}
+    switch (units) {
+      case GU:
+        builder.append("gu");
+        break;
+      case PX:
+        builder.append("px");
+        break;
+      case PERCENTS:
+        builder.append("%");
+        break;
+      default:
+        builder.append("wtf (what's the fuck?)");
+        break;
+    }
 
-		return builder.toString();
-	}
+    return builder.toString();
+  }
 
-	public boolean equals(Value o) {
-		if (o != this) {
-			if (!(o instanceof Value))
-				return false;
+  public boolean equals(Value o) {
+    if (o != this) {
+      if (!(o instanceof Value)) {
+        return false;
+      }
 
-			Value other = (Value) o;
+      Value other = o;
 
-			if (other.units != units)
-				return false;
+      if (other.units != units) {
+        return false;
+      }
 
-			if (other.value != value)
-				return false;
-		}
+      if (other.value != value) {
+        return false;
+      }
+    }
 
-		return true;
-	}
+    return true;
+  }
 }

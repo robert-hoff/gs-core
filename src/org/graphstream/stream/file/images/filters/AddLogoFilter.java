@@ -36,36 +36,41 @@ import java.io.IOException;
  * This filter adds a logo-picture on each outputted image.
  */
 public class AddLogoFilter implements Filter {
-	/**
-	 * The logo.
-	 */
-	private BufferedImage logo;
-	/**
-	 * Logo position on images.
-	 */
-	private int x, y;
+  /**
+   * The logo.
+   */
+  private BufferedImage logo;
+  /**
+   * Logo position on images.
+   */
+  private int x, y;
 
-	/**
-	 * Create a new filter to add a logo on top of images.
-	 *
-	 * @param logoFile path to the logo picture-file
-	 * @param x        x position of the logo (top-left corner is (0;0))
-	 * @param y        y position of the logo
-	 */
-	public AddLogoFilter(String logoFile, int x, int y) throws IOException {
-		File f = new File(logoFile);
+  /**
+   * Create a new filter to add a logo on top of images.
+   *
+   * @param logoFile
+   *          path to the logo picture-file
+   * @param x
+   *          x position of the logo (top-left corner is (0;0))
+   * @param y
+   *          y position of the logo
+   */
+  public AddLogoFilter(String logoFile, int x, int y) throws IOException {
+    File f = new File(logoFile);
 
-		if (f.exists())
-			this.logo = ImageIO.read(f);
-		else
-			this.logo = ImageIO.read(ClassLoader.getSystemResource(logoFile));
+    if (f.exists()) {
+      this.logo = ImageIO.read(f);
+    } else {
+      this.logo = ImageIO.read(ClassLoader.getSystemResource(logoFile));
+    }
 
-		this.x = x;
-		this.y = y;
-	}
+    this.x = x;
+    this.y = y;
+  }
 
-	public void apply(BufferedImage image) {
-		Graphics2D g = image.createGraphics();
-		g.drawImage(logo, x, y, null);
-	}
+  @Override
+  public void apply(BufferedImage image) {
+    Graphics2D g = image.createGraphics();
+    g.drawImage(logo, x, y, null);
+  }
 }

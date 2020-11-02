@@ -49,147 +49,147 @@ package org.graphstream.stream.file;
  * </p>
  */
 public class FileSinkDynamicGML extends FileSinkGML {
-	// Construction
+  // Construction
 
-	public FileSinkDynamicGML() {
-		// NOP
-	}
+  public FileSinkDynamicGML() {
+    // NOP
+  }
 
-	// Attribute events
+  // Attribute events
 
-	@Override
-	public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
-		ensureToFinish();
+  @Override
+  public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
+    ensureToFinish();
 
-		String val = valueToString(value);
+    String val = valueToString(value);
 
-		if (val != null) {
-			out.printf("\t%s %s%n", attribute, val);
-		}
-	}
+    if (val != null) {
+      out.printf("\t%s %s%n", attribute, val);
+    }
+  }
 
-	@Override
-	public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue,
-			Object newValue) {
-		ensureToFinish();
-		graphAttributeAdded(sourceId, timeId, attribute, newValue);
-	}
+  @Override
+  public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue, Object newValue) {
+    ensureToFinish();
+    graphAttributeAdded(sourceId, timeId, attribute, newValue);
+  }
 
-	@Override
-	public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
-		ensureToFinish();
-		out.printf("\t-%s%n", attribute);
-	}
+  @Override
+  public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
+    ensureToFinish();
+    out.printf("\t-%s%n", attribute);
+  }
 
-	@Override
-	public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
-		nodeAttributeChanged(sourceId, timeId, nodeId, attribute, null, value);
-	}
+  @Override
+  public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
+    nodeAttributeChanged(sourceId, timeId, nodeId, attribute, null, value);
+  }
 
-	@Override
-	public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
-			Object newValue) {
+  @Override
+  public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
+      Object newValue) {
 
-		if (nodeToFinish == null || (!nodeToFinish.equals(nodeId))) {
-			ensureToFinish();
-			out.printf("\t+node [%n");
-			out.printf("\t\tid \"%s\"%n", nodeId);
-			nodeToFinish = nodeId;
-		}
+    if (nodeToFinish == null || (!nodeToFinish.equals(nodeId))) {
+      ensureToFinish();
+      out.printf("\t+node [%n");
+      out.printf("\t\tid \"%s\"%n", nodeId);
+      nodeToFinish = nodeId;
+    }
 
-		if (newValue != null) {
-			String val = valueToString(newValue);
+    if (newValue != null) {
+      String val = valueToString(newValue);
 
-			if (val != null) {
-				out.printf("\t\t%s %s%n", attribute, val);
-			}
-		} else {
-			out.printf("\t\t-%s%n", attribute);
-		}
-	}
+      if (val != null) {
+        out.printf("\t\t%s %s%n", attribute, val);
+      }
+    } else {
+      out.printf("\t\t-%s%n", attribute);
+    }
+  }
 
-	@Override
-	public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
-		nodeAttributeChanged(sourceId, timeId, nodeId, attribute, null, null);
-	}
+  @Override
+  public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
+    nodeAttributeChanged(sourceId, timeId, nodeId, attribute, null, null);
+  }
 
-	@Override
-	public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
-		edgeAttributeChanged(sourceId, timeId, edgeId, attribute, null, value);
-	}
+  @Override
+  public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
+    edgeAttributeChanged(sourceId, timeId, edgeId, attribute, null, value);
+  }
 
-	@Override
-	public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
-			Object newValue) {
+  @Override
+  public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
+      Object newValue) {
 
-		if (edgeToFinish == null || (!edgeToFinish.equals(edgeId))) {
-			ensureToFinish();
-			out.printf("\t+edge [%n");
-			out.printf("\t\tid \"%s\"%n", edgeId);
-			edgeToFinish = edgeId;
-		}
+    if (edgeToFinish == null || (!edgeToFinish.equals(edgeId))) {
+      ensureToFinish();
+      out.printf("\t+edge [%n");
+      out.printf("\t\tid \"%s\"%n", edgeId);
+      edgeToFinish = edgeId;
+    }
 
-		if (newValue != null) {
-			String val = valueToString(newValue);
+    if (newValue != null) {
+      String val = valueToString(newValue);
 
-			if (val != null) {
-				out.printf("\t\t%s %s%n", attribute, val);
-			}
-		} else {
-			out.printf("\t\t-%s%n", attribute);
-		}
-	}
+      if (val != null) {
+        out.printf("\t\t%s %s%n", attribute, val);
+      }
+    } else {
+      out.printf("\t\t-%s%n", attribute);
+    }
+  }
 
-	@Override
-	public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
-		edgeAttributeChanged(sourceId, timeId, edgeId, attribute, null, null);
-	}
+  @Override
+  public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
+    edgeAttributeChanged(sourceId, timeId, edgeId, attribute, null, null);
+  }
 
-	// Element events
+  // Element events
 
-	@Override
-	public void nodeAdded(String sourceId, long timeId, String nodeId) {
-		ensureToFinish();
-		out.printf("\tnode [%n");
-		out.printf("\t\tid \"%s\"%n", nodeId);
-		nodeToFinish = nodeId;
-	}
+  @Override
+  public void nodeAdded(String sourceId, long timeId, String nodeId) {
+    ensureToFinish();
+    out.printf("\tnode [%n");
+    out.printf("\t\tid \"%s\"%n", nodeId);
+    nodeToFinish = nodeId;
+  }
 
-	@Override
-	public void nodeRemoved(String sourceId, long timeId, String nodeId) {
-		ensureToFinish();
-		out.printf("\t-node \"%s\"%n", nodeId);
-	}
+  @Override
+  public void nodeRemoved(String sourceId, long timeId, String nodeId) {
+    ensureToFinish();
+    out.printf("\t-node \"%s\"%n", nodeId);
+  }
 
-	@Override
-	public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
-			boolean directed) {
-		ensureToFinish();
-		out.printf("\tedge [%n");
-		out.printf("\t\tid \"%s\"%n", edgeId);
-		out.printf("\t\tsource \"%s\"%n", fromNodeId);
-		out.printf("\t\ttarget \"%s\"%n", toNodeId);
-		out.printf("\t\tdirected %s%n", directed ? "1" : "0");
-		edgeToFinish = edgeId;
-	}
+  @Override
+  public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+      boolean directed) {
+    ensureToFinish();
+    out.printf("\tedge [%n");
+    out.printf("\t\tid \"%s\"%n", edgeId);
+    out.printf("\t\tsource \"%s\"%n", fromNodeId);
+    out.printf("\t\ttarget \"%s\"%n", toNodeId);
+    out.printf("\t\tdirected %s%n", directed ? "1" : "0");
+    edgeToFinish = edgeId;
+  }
 
-	@Override
-	public void edgeRemoved(String sourceId, long timeId, String edgeId) {
-		ensureToFinish();
-		out.printf("\t-edge \"%s\"%n", edgeId);
-	}
+  @Override
+  public void edgeRemoved(String sourceId, long timeId, String edgeId) {
+    ensureToFinish();
+    out.printf("\t-edge \"%s\"%n", edgeId);
+  }
 
-	@Override
-	public void graphCleared(String sourceId, long timeId) {
-		// Ah ah ah !!
-	}
+  @Override
+  public void graphCleared(String sourceId, long timeId) {
+    // Ah ah ah !!
+  }
 
-	@Override
-	public void stepBegins(String sourceId, long timeId, double step) {
-		ensureToFinish();
-		if ((step - ((int) step)) == 0)
-			out.printf("\tstep %d%n", (int) step);
-		else
-			out.printf("\tstep %f%n", step);
-	}
+  @Override
+  public void stepBegins(String sourceId, long timeId, double step) {
+    ensureToFinish();
+    if ((step - ((int) step)) == 0) {
+      out.printf("\tstep %d%n", (int) step);
+    } else {
+      out.printf("\tstep %f%n", step);
+    }
+  }
 }

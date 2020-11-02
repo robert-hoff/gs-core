@@ -40,18 +40,18 @@ import org.graphstream.ui.view.View;
  * Utility to centralise the shortcuts and actions for all view instances.
  */
 public interface ShortcutManager {
-	/**
-	 * Make the manager active on the given graph and view.
-	 * 
-	 * @param graph
-	 *            The graph to control.
-	 * @param view
-	 *            The view to control.
-	 */
-	void init(GraphicGraph graph, View view);
+  /**
+   * Make the manager active on the given graph and view.
+   * 
+   * @param graph
+   *          The graph to control.
+   * @param view
+   *          The view to control.
+   */
+  void init(GraphicGraph graph, View view);
 
-	/**
-	 * Release the links between this manager and the view and the graph.
-	 */
-	void release();
+  /**
+   * Release the links between this manager and the view and the graph.
+   */
+  void release();
 }

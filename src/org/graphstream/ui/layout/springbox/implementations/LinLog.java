@@ -38,103 +38,104 @@ import org.graphstream.ui.layout.springbox.BarnesHutLayout;
 import org.graphstream.ui.layout.springbox.NodeParticle;
 
 public class LinLog extends BarnesHutLayout {
-	protected double k = 1;
+  protected double k = 1;
 
-	/**
-	 * Default general attraction factor.
-	 */
-	protected double aFactor = 1f;
+  /**
+   * Default general attraction factor.
+   */
+  protected double aFactor = 1f;
 
-	/**
-	 * Default general repulsion factor.
-	 */
-	protected double rFactor = 1f;
+  /**
+   * Default general repulsion factor.
+   */
+  protected double rFactor = 1f;
 
-	protected boolean edgeBased = true;
+  protected boolean edgeBased = true;
 
-	protected double maxR = 0.5;
+  protected double maxR = 0.5;
 
-	protected double a = 0;
+  protected double a = 0;
 
-	protected double r = -1.2;
+  protected double r = -1.2;
 
-	// protected
+  // protected
 
-	/**
-	 * New "LinLog" 2D Barnes-Hut simulation.
-	 */
-	public LinLog() {
-		this(false);
-	}
+  /**
+   * New "LinLog" 2D Barnes-Hut simulation.
+   */
+  public LinLog() {
+    this(false);
+  }
 
-	/**
-	 * New "LinLog" Barnes-Hut simulation.
-	 * 
-	 * @param is3D
-	 *            If true the simulation dimensions count is 3 else 2.
-	 */
-	public LinLog(boolean is3D) {
-		this(is3D, new Random(System.currentTimeMillis()));
-	}
+  /**
+   * New "LinLog" Barnes-Hut simulation.
+   * 
+   * @param is3D
+   *          If true the simulation dimensions count is 3 else 2.
+   */
+  public LinLog(boolean is3D) {
+    this(is3D, new Random(System.currentTimeMillis()));
+  }
 
-	/**
-	 * New "LinLog" Barnes-Hut simulation.
-	 * 
-	 * @param is3D
-	 *            If true the simulation dimensions count is 3 else 2.
-	 * @param randomNumberGenerator
-	 *            The random number generator to use.
-	 */
-	public LinLog(boolean is3D, Random randomNumberGenerator) {
-		super(is3D, randomNumberGenerator);
-		setQuality(1);
-		force = 3;
-	}
+  /**
+   * New "LinLog" Barnes-Hut simulation.
+   * 
+   * @param is3D
+   *          If true the simulation dimensions count is 3 else 2.
+   * @param randomNumberGenerator
+   *          The random number generator to use.
+   */
+  public LinLog(boolean is3D, Random randomNumberGenerator) {
+    super(is3D, randomNumberGenerator);
+    setQuality(1);
+    force = 3;
+  }
 
-	public void configure(double a, double r, boolean edgeBased, double force) {
-		this.a = a;
-		this.r = r;
-		this.edgeBased = edgeBased;
-		this.force = force;
-	}
+  public void configure(double a, double r, boolean edgeBased, double force) {
+    this.a = a;
+    this.r = r;
+    this.edgeBased = edgeBased;
+    this.force = force;
+  }
 
-	@Override
-	public String getLayoutAlgorithmName() {
-		return "LinLog";
-	}
+  @Override
+  public String getLayoutAlgorithmName() {
+    return "LinLog";
+  }
 
-	@Override
-	public void setQuality(double qualityLevel) {
-		super.setQuality(qualityLevel);
+  @Override
+  public void setQuality(double qualityLevel) {
+    super.setQuality(qualityLevel);
 
-		if (quality >= 1) {
-			viewZone = -1;
-		} else {
-			viewZone = k;
-		}
-	}
+    if (quality >= 1) {
+      viewZone = -1;
+    } else {
+      viewZone = k;
+    }
+  }
 
-	@Override
-	public void compute() {
-		if (viewZone > 0)
-			viewZone = area / 1.5;
-		super.compute();
-	}
+  @Override
+  public void compute() {
+    if (viewZone > 0) {
+      viewZone = area / 1.5;
+    }
+    super.compute();
+  }
 
-	@Override
-	protected void chooseNodePosition(NodeParticle n0, NodeParticle n1) {
-		// double delta = k * 0.1;
-		// if (n0.getEdges().size() == 1 && n1.getEdges().size() > 1) {
-		// org.miv.pherd.geom.Point3 pos = n1.getPosition();
-		// n0.moveTo(pos.x + delta, pos.y + delta, pos.z + delta);
-		// } else if (n1.getEdges().size() == 1 && n0.getEdges().size() > 1) {
-		// org.miv.pherd.geom.Point3 pos = n0.getPosition();
-		// n1.moveTo(pos.x + delta, pos.y + delta, pos.z + delta);
-		// }
-	}
+  @Override
+  protected void chooseNodePosition(NodeParticle n0, NodeParticle n1) {
+    // double delta = k * 0.1;
+    // if (n0.getEdges().size() == 1 && n1.getEdges().size() > 1) {
+    // org.miv.pherd.geom.Point3 pos = n1.getPosition();
+    // n0.moveTo(pos.x + delta, pos.y + delta, pos.z + delta);
+    // } else if (n1.getEdges().size() == 1 && n0.getEdges().size() > 1) {
+    // org.miv.pherd.geom.Point3 pos = n0.getPosition();
+    // n1.moveTo(pos.x + delta, pos.y + delta, pos.z + delta);
+    // }
+  }
 
-	@Override
-	public NodeParticle newNodeParticle(String id) {
-		return new LinLogNodeParticle(this, id);
-	}
+  @Override
+  public NodeParticle newNodeParticle(String id) {
+    return new LinLogNodeParticle(this, id);
+  }
 }

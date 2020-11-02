@@ -47,247 +47,247 @@ package org.graphstream.ui.geom;
  * @version 0.1
  */
 public class Point2 implements java.io.Serializable {
-	// Attributes
+  // Attributes
 
-	private static final long serialVersionUID = 965985679540486895L;
+  private static final long serialVersionUID = 965985679540486895L;
 
-	/**
-	 * X axis value.
-	 */
-	public double x;
+  /**
+   * X axis value.
+   */
+  public double x;
 
-	/**
-	 * Y axis value.
-	 */
-	public double y;
+  /**
+   * Y axis value.
+   */
+  public double y;
 
-	// Attributes -- Shared
+  // Attributes -- Shared
 
-	/**
-	 * Specific point at (0,0).
-	 */
-	public static final Point2 NULL_POINT2 = new Point2(0, 0);
+  /**
+   * Specific point at (0,0).
+   */
+  public static final Point2 NULL_POINT2 = new Point2(0, 0);
 
-	// Constructors
+  // Constructors
 
-	/**
-	 * New 2D point at (0,0).
-	 */
-	public Point2() {
-	}
+  /**
+   * New 2D point at (0,0).
+   */
+  public Point2() {
+  }
 
-	/**
-	 * New 2D point at (x,y).
-	 */
-	public Point2(double x, double y) {
-		set(x, y);
-	}
+  /**
+   * New 2D point at (x,y).
+   */
+  public Point2(double x, double y) {
+    set(x, y);
+  }
 
-	/**
-	 * New copy of other.
-	 */
-	public Point2(Point2 other) {
-		copy(other);
-	}
+  /**
+   * New copy of other.
+   */
+  public Point2(Point2 other) {
+    copy(other);
+  }
 
-	/**
-	 * New 2D point at (x,y).
-	 */
-	public void make(double x, double y) {
-		set(x, y);
-	}
+  /**
+   * New 2D point at (x,y).
+   */
+  public void make(double x, double y) {
+    set(x, y);
+  }
 
-	// Accessors
+  // Accessors
 
-	/**
-	 * Are all components to zero?.
-	 */
-	public boolean isZero() {
-		return (x == 0 && y == 0);
-	}
+  /**
+   * Are all components to zero?.
+   */
+  public boolean isZero() {
+    return (x == 0 && y == 0);
+  }
 
-	// /**
-	// * Is other equal to this ?
-	// */
-	// public boolean
-	// equals( const Point2 < double > & other ) const
-	// {
-	// return( x == other.x
-	// and y == other.y
-	// and z == other.z );
-	// }
+  // /**
+  // * Is other equal to this ?
+  // */
+  // public boolean
+  // equals( const Point2 < double > & other ) const
+  // {
+  // return( x == other.x
+  // and y == other.y
+  // and z == other.z );
+  // }
 
-	/**
-	 * Create a new point linear interpolation of this and <code>other</code>. The
-	 * new point is located between this and <code>other</code> if
-	 * <code>factor</code> is between 0 and 1 (0 yields this point, 1 yields the
-	 * <code>other</code> point).
-	 */
-	public Point2 interpolate(Point2 other, double factor) {
-		Point2 p = new Point2(x + ((other.x - x) * factor), y + ((other.y - y) * factor));
+  /**
+   * Create a new point linear interpolation of this and <code>other</code>. The
+   * new point is located between this and <code>other</code> if
+   * <code>factor</code> is between 0 and 1 (0 yields this point, 1 yields the
+   * <code>other</code> point).
+   */
+  public Point2 interpolate(Point2 other, double factor) {
+    Point2 p = new Point2(x + ((other.x - x) * factor), y + ((other.y - y) * factor));
 
-		return p;
-	}
+    return p;
+  }
 
-	/**
-	 * Distance between this and <code>other</code>.
-	 */
-	public double distance(Point2 other) {
-		double xx = other.x - x;
-		double yy = other.y - y;
-		return Math.abs(Math.sqrt((xx * xx) + (yy * yy)));
-	}
+  /**
+   * Distance between this and <code>other</code>.
+   */
+  public double distance(Point2 other) {
+    double xx = other.x - x;
+    double yy = other.y - y;
+    return Math.abs(Math.sqrt((xx * xx) + (yy * yy)));
+  }
 
-	// Commands
+  // Commands
 
-	/**
-	 * Make this a copy of other.
-	 */
-	public void copy(Point2 other) {
-		x = other.x;
-		y = other.y;
-	}
+  /**
+   * Make this a copy of other.
+   */
+  public void copy(Point2 other) {
+    x = other.x;
+    y = other.y;
+  }
 
-	/**
-	 * Like #moveTo().
-	 */
-	public void set(double x, double y) {
-		this.x = x;
-		this.y = y;
-	}
+  /**
+   * Like #moveTo().
+   */
+  public void set(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
 
-	// Commands -- moving
+  // Commands -- moving
 
-	/**
-	 * Move to absolute position (x,y).
-	 */
-	public void moveTo(double x, double y) {
-		this.x = x;
-		this.y = y;
-	}
+  /**
+   * Move to absolute position (x,y).
+   */
+  public void moveTo(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
 
-	/**
-	 * Move of given vector (dx,dy).
-	 */
-	public void move(double dx, double dy) {
-		this.x += dx;
-		this.y += dy;
-	}
+  /**
+   * Move of given vector (dx,dy).
+   */
+  public void move(double dx, double dy) {
+    this.x += dx;
+    this.y += dy;
+  }
 
-	/**
-	 * Move of given point <code>p</code>.
-	 */
-	public void move(Point2 p) {
-		this.x += p.x;
-		this.y += p.y;
-	}
+  /**
+   * Move of given point <code>p</code>.
+   */
+  public void move(Point2 p) {
+    this.x += p.x;
+    this.y += p.y;
+  }
 
-	/**
-	 * Move horizontally of dx.
-	 */
-	public void moveX(double dx) {
-		x += dx;
-	}
+  /**
+   * Move horizontally of dx.
+   */
+  public void moveX(double dx) {
+    x += dx;
+  }
 
-	/**
-	 * Move vertically of dy.
-	 */
-	public void moveY(double dy) {
-		y += dy;
-	}
+  /**
+   * Move vertically of dy.
+   */
+  public void moveY(double dy) {
+    y += dy;
+  }
 
-	/**
-	 * Scale of factor (sx,sy).
-	 */
-	public void scale(double sx, double sy) {
-		x *= sx;
-		y *= sy;
-	}
+  /**
+   * Scale of factor (sx,sy).
+   */
+  public void scale(double sx, double sy) {
+    x *= sx;
+    y *= sy;
+  }
 
-	/**
-	 * Scale by factor s.
-	 */
-	public void scale(Point2 s) {
-		x *= s.x;
-		y *= s.y;
-	}
+  /**
+   * Scale by factor s.
+   */
+  public void scale(Point2 s) {
+    x *= s.x;
+    y *= s.y;
+  }
 
-	/**
-	 * Change only abscissa at absolute coordinate x.
-	 */
-	public void setX(double x) {
-		this.x = x;
-	}
+  /**
+   * Change only abscissa at absolute coordinate x.
+   */
+  public void setX(double x) {
+    this.x = x;
+  }
 
-	/**
-	 * Change only ordinate at absolute coordinate y.
-	 */
-	public void setY(double y) {
-		this.y = y;
-	}
+  /**
+   * Change only ordinate at absolute coordinate y.
+   */
+  public void setY(double y) {
+    this.y = y;
+  }
 
-	/**
-	 * Exchange the values of this and other.
-	 */
-	public void swap(Point2 other) {
-		double t;
+  /**
+   * Exchange the values of this and other.
+   */
+  public void swap(Point2 other) {
+    double t;
 
-		if (other != this) {
-			t = this.x;
-			this.x = other.x;
-			other.x = t;
+    if (other != this) {
+      t = this.x;
+      this.x = other.x;
+      other.x = t;
 
-			t = this.y;
-			this.y = other.y;
-			other.y = t;
-		}
-	}
+      t = this.y;
+      this.y = other.y;
+      other.y = t;
+    }
+  }
 
-	// Commands -- misc.
+  // Commands -- misc.
 
-	@Override
-	public String toString() {
-		StringBuffer buf;
+  @Override
+  public String toString() {
+    StringBuffer buf;
 
-		buf = new StringBuffer("Point2[");
+    buf = new StringBuffer("Point2[");
 
-		buf.append(x);
-		buf.append('|');
-		buf.append(y);
-		buf.append("]");
+    buf.append(x);
+    buf.append('|');
+    buf.append(y);
+    buf.append("]");
 
-		return buf.toString();
-	}
+    return buf.toString();
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
-		Point2 point2 = (Point2) o;
+    Point2 point2 = (Point2) o;
 
-		if (Double.compare(point2.x, x) != 0) {
-			return false;
-		}
-		if (Double.compare(point2.y, y) != 0) {
-			return false;
-		}
+    if (Double.compare(point2.x, x) != 0) {
+      return false;
+    }
+    if (Double.compare(point2.y, y) != 0) {
+      return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	@Override
-	public int hashCode() {
-		int result;
-		long temp;
-		temp = Double.doubleToLongBits(x);
-		result = (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(y);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		return result;
-	}
+  @Override
+  public int hashCode() {
+    int result;
+    long temp;
+    temp = Double.doubleToLongBits(x);
+    result = (int) (temp ^ (temp >>> 32));
+    temp = Double.doubleToLongBits(y);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    return result;
+  }
 }

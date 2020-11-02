@@ -41,52 +41,66 @@ package org.graphstream.stream;
  * </p>
  */
 public class SinkAdapter implements Sink {
-	public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
-	}
+  @Override
+  public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
+  }
 
-	public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
-			Object newValue) {
-	}
+  @Override
+  public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
+      Object newValue) {
+  }
 
-	public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
-	}
+  @Override
+  public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
+  }
 
-	public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
-	}
+  @Override
+  public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
+  }
 
-	public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue,
-			Object newValue) {
-	}
+  @Override
+  public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue, Object newValue) {
+  }
 
-	public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
-	}
+  @Override
+  public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
+  }
 
-	public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
-	}
+  @Override
+  public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
+  }
 
-	public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
-			Object newValue) {
-	}
+  @Override
+  public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
+      Object newValue) {
+  }
 
-	public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
-	}
+  @Override
+  public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
+  }
 
-	public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
-			boolean directed) {
-	}
+  @Override
+  public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+      boolean directed) {
+  }
 
-	public void edgeRemoved(String sourceId, long timeId, String edgeId) {
-	}
+  @Override
+  public void edgeRemoved(String sourceId, long timeId, String edgeId) {
+  }
 
-	public void graphCleared(String sourceId, long timeId) {
-	}
+  @Override
+  public void graphCleared(String sourceId, long timeId) {
+  }
 
-	public void nodeAdded(String sourceId, long timeId, String nodeId) {
-	}
+  @Override
+  public void nodeAdded(String sourceId, long timeId, String nodeId) {
+  }
 
-	public void nodeRemoved(String sourceId, long timeId, String nodeId) {
-	}
+  @Override
+  public void nodeRemoved(String sourceId, long timeId, String nodeId) {
+  }
 
-	public void stepBegins(String sourceId, long timeId, double step) {
-	}
+  @Override
+  public void stepBegins(String sourceId, long timeId, double step) {
+  }
 }

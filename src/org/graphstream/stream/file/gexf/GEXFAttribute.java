@@ -33,47 +33,51 @@ package org.graphstream.stream.file.gexf;
 import javax.xml.stream.XMLStreamException;
 
 public class GEXFAttribute implements GEXFElement {
-	GEXF root;
+  GEXF root;
 
-	int id;
-	String title;
-	AttrType type;
+  int id;
+  String title;
+  AttrType type;
 
-	String defaultValue;
-	String options;
+  String defaultValue;
+  String options;
 
-	public GEXFAttribute(GEXF root, String key, AttrType type) {
-		this.root = root;
-		this.id = root.getNewAttributeIndex();
-		this.title = key;
-		this.type = type;
+  public GEXFAttribute(GEXF root, String key, AttrType type) {
+    this.root = root;
+    this.id = root.getNewAttributeIndex();
+    this.title = key;
+    this.type = type;
 
-		defaultValue = null;
-		options = null;
-	}
+    defaultValue = null;
+    options = null;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		stream.startElement("attribute");
-		stream.stream.writeAttribute("id", Integer.toString(id));
-		stream.stream.writeAttribute("type", type.qname);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    stream.startElement("attribute");
+    stream.stream.writeAttribute("id", Integer.toString(id));
+    stream.stream.writeAttribute("type", type.qname);
 
-		if (title != null)
-			stream.stream.writeAttribute("title", title);
+    if (title != null) {
+      stream.stream.writeAttribute("title", title);
+    }
 
-		if (defaultValue != null)
-			stream.leafWithText("default", defaultValue);
+    if (defaultValue != null) {
+      stream.leafWithText("default", defaultValue);
+    }
 
-		if (options != null)
-			stream.leafWithText("options", options);
+    if (options != null) {
+      stream.leafWithText("options", options);
+    }
 
-		stream.endElement(); // ATTRIBUTE
-	}
+    stream.endElement(); // ATTRIBUTE
+  }
 
 }

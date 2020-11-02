@@ -45,73 +45,70 @@ package org.graphstream.stream;
  * @see Pipe
  */
 public interface Source {
-	/**
-	 * Add a sink for all graph events (attributes and graph elements) coming from
-	 * this source. This is similar to registering a sink for attributes an another
-	 * for elements.
-	 * 
-	 * @param sink
-	 *            The sink to register.
-	 */
-	void addSink(Sink sink);
+  /**
+   * Add a sink for all graph events (attributes and graph elements) coming from
+   * this source. This is similar to registering a sink for attributes an another
+   * for elements.
+   * 
+   * @param sink
+   *          The sink to register.
+   */
+  void addSink(Sink sink);
 
-	/**
-	 * Remove a sink.
-	 * 
-	 * @param sink
-	 *            The sink to remove, if it does not exist, this is ignored
-	 *            silently.
-	 */
-	void removeSink(Sink sink);
+  /**
+   * Remove a sink.
+   * 
+   * @param sink
+   *          The sink to remove, if it does not exist, this is ignored silently.
+   */
+  void removeSink(Sink sink);
 
-	/**
-	 * Add a sink for attribute events only. Attribute events include attribute
-	 * addition change and removal.
-	 * 
-	 * @param sink
-	 *            The sink to register.
-	 */
-	void addAttributeSink(AttributeSink sink);
+  /**
+   * Add a sink for attribute events only. Attribute events include attribute
+   * addition change and removal.
+   * 
+   * @param sink
+   *          The sink to register.
+   */
+  void addAttributeSink(AttributeSink sink);
 
-	/**
-	 * Remove an attribute sink.
-	 * 
-	 * @param sink
-	 *            The sink to remove, if it does not exist, this is ignored
-	 *            silently.
-	 */
-	void removeAttributeSink(AttributeSink sink);
+  /**
+   * Remove an attribute sink.
+   * 
+   * @param sink
+   *          The sink to remove, if it does not exist, this is ignored silently.
+   */
+  void removeAttributeSink(AttributeSink sink);
 
-	/**
-	 * Add a sink for elements events only. Elements events include, addition and
-	 * removal of nodes and edges, as well as step events.
-	 * 
-	 * @param sink
-	 *            The sink to register.
-	 */
-	void addElementSink(ElementSink sink);
+  /**
+   * Add a sink for elements events only. Elements events include, addition and
+   * removal of nodes and edges, as well as step events.
+   * 
+   * @param sink
+   *          The sink to register.
+   */
+  void addElementSink(ElementSink sink);
 
-	/**
-	 * Remove an element sink.
-	 * 
-	 * @param sink
-	 *            The sink to remove, if it does not exist, this is ignored
-	 *            silently.
-	 */
-	void removeElementSink(ElementSink sink);
+  /**
+   * Remove an element sink.
+   * 
+   * @param sink
+   *          The sink to remove, if it does not exist, this is ignored silently.
+   */
+  void removeElementSink(ElementSink sink);
 
-	/**
-	 * Remove all listener element sinks.
-	 */
-	void clearElementSinks();
+  /**
+   * Remove all listener element sinks.
+   */
+  void clearElementSinks();
 
-	/**
-	 * Remove all listener attribute sinks.
-	 */
-	void clearAttributeSinks();
+  /**
+   * Remove all listener attribute sinks.
+   */
+  void clearAttributeSinks();
 
-	/**
-	 * Remove all listener sinks.
-	 */
-	void clearSinks();
+  /**
+   * Remove all listener sinks.
+   */
+  void clearSinks();
 }

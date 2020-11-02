@@ -49,186 +49,198 @@ import org.graphstream.util.parser.ParserFactory;
  * 
  */
 public abstract class FileSourceParser extends SourceBase implements FileSource {
-	/**
-	 * Factory used to create parser.
-	 */
-	protected ParserFactory factory;
+  /**
+   * Factory used to create parser.
+   */
+  protected ParserFactory factory;
 
-	/**
-	 * Parser opened by a call to {@link #begin(Reader)}.
-	 */
-	protected Parser parser;
+  /**
+   * Parser opened by a call to {@link #begin(Reader)}.
+   */
+  protected Parser parser;
 
-	/**
-	 * Get a new parser factory.
-	 * 
-	 * @return a parser factory
-	 */
-	public abstract ParserFactory getNewParserFactory();
+  /**
+   * Get a new parser factory.
+   * 
+   * @return a parser factory
+   */
+  public abstract ParserFactory getNewParserFactory();
 
-	protected FileSourceParser() {
-		factory = getNewParserFactory();
-	}
+  protected FileSourceParser() {
+    factory = getNewParserFactory();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSource#readAll(java.lang.String)
-	 */
-	public void readAll(String fileName) throws IOException {
-		Parser parser = factory.newParser(createReaderForFile(fileName));
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSource#readAll(java.lang.String)
+   */
+  @Override
+  public void readAll(String fileName) throws IOException {
+    Parser parser = factory.newParser(createReaderForFile(fileName));
 
-		try {
-			parser.all();
-			parser.close();
-		} catch (ParseException e) {
-			throw new IOException(e);
-		}
-	}
+    try {
+      parser.all();
+      parser.close();
+    } catch (ParseException e) {
+      throw new IOException(e);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSource#readAll(java.net.URL)
-	 */
-	public void readAll(URL url) throws IOException {
-		Parser parser = factory.newParser(new InputStreamReader(url.openStream()));
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSource#readAll(java.net.URL)
+   */
+  @Override
+  public void readAll(URL url) throws IOException {
+    Parser parser = factory.newParser(new InputStreamReader(url.openStream()));
 
-		try {
-			parser.all();
-			parser.close();
-		} catch (ParseException e) {
-			throw new IOException(e);
-		}
-	}
+    try {
+      parser.all();
+      parser.close();
+    } catch (ParseException e) {
+      throw new IOException(e);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSource#readAll(java.io.InputStream)
-	 */
-	public void readAll(InputStream stream) throws IOException {
-		Parser parser = factory.newParser(new InputStreamReader(stream));
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSource#readAll(java.io.InputStream)
+   */
+  @Override
+  public void readAll(InputStream stream) throws IOException {
+    Parser parser = factory.newParser(new InputStreamReader(stream));
 
-		try {
-			parser.all();
-			parser.close();
-		} catch (ParseException e) {
-			throw new IOException(e);
-		}
-	}
+    try {
+      parser.all();
+      parser.close();
+    } catch (ParseException e) {
+      throw new IOException(e);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSource#readAll(java.io.Reader)
-	 */
-	public void readAll(Reader reader) throws IOException {
-		Parser parser = factory.newParser(reader);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSource#readAll(java.io.Reader)
+   */
+  @Override
+  public void readAll(Reader reader) throws IOException {
+    Parser parser = factory.newParser(reader);
 
-		try {
-			parser.all();
-			parser.close();
-		} catch (ParseException e) {
-			throw new IOException(e);
-		}
-	}
+    try {
+      parser.all();
+      parser.close();
+    } catch (ParseException e) {
+      throw new IOException(e);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSource#begin(java.lang.String)
-	 */
-	public void begin(String fileName) throws IOException {
-		if (parser != null)
-			end();
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSource#begin(java.lang.String)
+   */
+  @Override
+  public void begin(String fileName) throws IOException {
+    if (parser != null) {
+      end();
+    }
 
-		parser = factory.newParser(createReaderForFile(fileName));
+    parser = factory.newParser(createReaderForFile(fileName));
 
-		try {
-			parser.open();
-		} catch (ParseException e) {
-			throw new IOException(e);
-		}
-	}
+    try {
+      parser.open();
+    } catch (ParseException e) {
+      throw new IOException(e);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSource#begin(java.net.URL)
-	 */
-	public void begin(URL url) throws IOException {
-		parser = factory.newParser(new InputStreamReader(url.openStream()));
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSource#begin(java.net.URL)
+   */
+  @Override
+  public void begin(URL url) throws IOException {
+    parser = factory.newParser(new InputStreamReader(url.openStream()));
 
-		try {
-			parser.open();
-		} catch (ParseException e) {
-			throw new IOException(e);
-		}
-	}
+    try {
+      parser.open();
+    } catch (ParseException e) {
+      throw new IOException(e);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSource#begin(java.io.InputStream)
-	 */
-	public void begin(InputStream stream) throws IOException {
-		parser = factory.newParser(new InputStreamReader(stream));
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSource#begin(java.io.InputStream)
+   */
+  @Override
+  public void begin(InputStream stream) throws IOException {
+    parser = factory.newParser(new InputStreamReader(stream));
 
-		try {
-			parser.open();
-		} catch (ParseException e) {
-			throw new IOException(e);
-		}
-	}
+    try {
+      parser.open();
+    } catch (ParseException e) {
+      throw new IOException(e);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSource#begin(java.io.Reader)
-	 */
-	public void begin(Reader reader) throws IOException {
-		parser = factory.newParser(reader);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSource#begin(java.io.Reader)
+   */
+  @Override
+  public void begin(Reader reader) throws IOException {
+    parser = factory.newParser(reader);
 
-		try {
-			parser.open();
-		} catch (ParseException e) {
-			throw new IOException(e);
-		}
-	}
+    try {
+      parser.open();
+    } catch (ParseException e) {
+      throw new IOException(e);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSource#nextEvents()
-	 */
-	public boolean nextEvents() throws IOException {
-		try {
-			return parser.next();
-		} catch (ParseException e) {
-			throw new IOException(e);
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSource#nextEvents()
+   */
+  @Override
+  public boolean nextEvents() throws IOException {
+    try {
+      return parser.next();
+    } catch (ParseException e) {
+      throw new IOException(e);
+    }
+  }
 
-	/**
-	 * Since there is no step in DOT, this does the same action than
-	 * {@link #nextEvents()}.
-	 */
-	public boolean nextStep() throws IOException {
-		return nextEvents();
-	}
+  /**
+   * Since there is no step in DOT, this does the same action than
+   * {@link #nextEvents()}.
+   */
+  @Override
+  public boolean nextStep() throws IOException {
+    return nextEvents();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSource#end()
-	 */
-	public void end() throws IOException {
-		parser.close();
-		parser = null;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSource#end()
+   */
+  @Override
+  public void end() throws IOException {
+    parser.close();
+    parser = null;
+  }
 
-	protected Reader createReaderForFile(String filename) throws IOException {
-		return new FileReader(filename);
-	}
+  protected Reader createReaderForFile(String filename) throws IOException {
+    return new FileReader(filename);
+  }
 }

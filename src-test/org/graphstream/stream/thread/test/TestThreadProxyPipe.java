@@ -51,212 +51,219 @@ import org.junit.Test;
  * </p>
  */
 public class TestThreadProxyPipe {
-	public static void main(String args[]) {
-		new TestThreadProxyPipe();
-	}
+  public static void main(String args[]) {
+    new TestThreadProxyPipe();
+  }
 
-	public TestThreadProxyPipe() {
+  public TestThreadProxyPipe() {
 
-	}
+  }
 
-	@Test
-	public void Test1_GraphToWardGraph() {
-		Graph source = new MultiGraph("g1");
-		Graph target = new MultiGraph("g2");
+  @Test
+  public void Test1_GraphToWardGraph() {
+    Graph source = new MultiGraph("g1");
+    Graph target = new MultiGraph("g2");
 
-		// Start to populate the graph to test the "replay" feature of the
-		// proxy.
+    // Start to populate the graph to test the "replay" feature of the
+    // proxy.
 
-		source.addNode("A");
-		source.addNode("B");
-		source.addNode("C");
-		source.addEdge("AB", "A", "B");
-		source.addEdge("BC", "B", "C");
-		source.addEdge("CA", "C", "A");
+    source.addNode("A");
+    source.addNode("B");
+    source.addNode("C");
+    source.addEdge("AB", "A", "B");
+    source.addEdge("BC", "B", "C");
+    source.addEdge("CA", "C", "A");
 
-		source.getNode("A").setAttribute("A1", "foo");
-		source.getNode("A").setAttribute("A2", "foo");
+    source.getNode("A").setAttribute("A1", "foo");
+    source.getNode("A").setAttribute("A2", "foo");
 
-		ThreadProxyPipe proxy = new ThreadProxyPipe();
-		proxy.addSink(target);
-		proxy.init(source, true);
+    ThreadProxyPipe proxy = new ThreadProxyPipe();
+    proxy.addSink(target);
+    proxy.init(source, true);
 
-		Thread other = new Thread(new AnotherThread(proxy, target) {
-			public void run() {
-				// The second part of the test starts
-				// in this target thread.
+    Thread other = new Thread(new AnotherThread(proxy, target) {
+      @Override
+      public void run() {
+        // The second part of the test starts
+        // in this target thread.
 
-				boolean loop = true;
+        boolean loop = true;
 
-				do {
-					proxy.pump();
+        do {
+          proxy.pump();
 
-					if (target.hasAttribute("STOP!"))
-						loop = false;
-				} while (loop);
-			}
+          if (target.hasAttribute("STOP!")) {
+            loop = false;
+          }
+        } while (loop);
+      }
 
-		});
+    });
 
-		other.start();
+    other.start();
 
-		// The first part of the test begins in this
-		// source thread.
+    // The first part of the test begins in this
+    // source thread.
 
-		source.addNode("X");
-		source.addNode("Y");
-		source.addNode("Z");
-		source.addEdge("XY", "X", "Y");
-		source.addEdge("YZ", "Y", "Z");
-		source.addEdge("ZX", "Z", "X");
-		source.addEdge("XA", "X", "A");
-		source.removeEdge("AB");
-		source.removeNode("B");
-		source.getNode("X").setAttribute("X1", "foo");
-		source.getNode("X").setAttribute("X1", "bar");
-		source.getNode("A").removeAttribute("A1");
+    source.addNode("X");
+    source.addNode("Y");
+    source.addNode("Z");
+    source.addEdge("XY", "X", "Y");
+    source.addEdge("YZ", "Y", "Z");
+    source.addEdge("ZX", "Z", "X");
+    source.addEdge("XA", "X", "A");
+    source.removeEdge("AB");
+    source.removeNode("B");
+    source.getNode("X").setAttribute("X1", "foo");
+    source.getNode("X").setAttribute("X1", "bar");
+    source.getNode("A").removeAttribute("A1");
 
-		source.setAttribute("STOP!");
+    source.setAttribute("STOP!");
 
-		// End of the test, wait for the other thread to terminate
+    // End of the test, wait for the other thread to terminate
 
-		try {
-			other.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+    try {
+      other.join();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
 
-		// Now test the results in the target thread.
-	}
+    // Now test the results in the target thread.
+  }
 
-	/**
-	 * Separate runnable that knows about the proxy.
-	 */
-	public abstract class AnotherThread implements Runnable {
-		protected ThreadProxyPipe proxy;
+  /**
+   * Separate runnable that knows about the proxy.
+   */
+  public abstract class AnotherThread implements Runnable {
+    protected ThreadProxyPipe proxy;
 
-		protected Graph target;
+    protected Graph target;
 
-		public AnotherThread(ThreadProxyPipe proxy, Graph target) {
-			this.proxy = proxy;
-			this.target = target;
-		}
-	}
+    public AnotherThread(ThreadProxyPipe proxy, Graph target) {
+      this.proxy = proxy;
+      this.target = target;
+    }
+  }
 
-	@Test
-	public void test() {
-		try {
-			for (int i = 0; i < 100; i++)
-				testOne();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+  @Test
+  public void test() {
+    try {
+      for (int i = 0; i < 100; i++) {
+        testOne();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
-	public void testOne() throws IOException {
-		Graph g = new AdjacencyListGraph("g");
-		ThreadProxyPipe tpp = new ThreadProxyPipe();
-		tpp.init(g);
+  public void testOne() throws IOException {
+    Graph g = new AdjacencyListGraph("g");
+    ThreadProxyPipe tpp = new ThreadProxyPipe();
+    tpp.init(g);
 
-		FileSinkDGS dgs1 = new FileSinkDGS();
-		FileSinkDGS dgs2 = new FileSinkDGS();
-		StringWriter w1 = new StringWriter();
-		StringWriter w2 = new StringWriter();
+    FileSinkDGS dgs1 = new FileSinkDGS();
+    FileSinkDGS dgs2 = new FileSinkDGS();
+    StringWriter w1 = new StringWriter();
+    StringWriter w2 = new StringWriter();
 
-		Actor a = new Actor(tpp);
-		Thread t = new Thread(a);
+    Actor a = new Actor(tpp);
+    Thread t = new Thread(a);
 
-		g.addSink(dgs1);
-		tpp.addSink(dgs2);
+    g.addSink(dgs1);
+    tpp.addSink(dgs2);
 
-		dgs1.begin(w1);
-		dgs2.begin(w2);
+    dgs1.begin(w1);
+    dgs2.begin(w2);
 
-		t.start();
-		generateRandom(g, 1000);
+    t.start();
+    generateRandom(g, 1000);
 
-		try {
-			Thread.yield();
-			a.alive = false;
-			t.join();
-		} catch (InterruptedException e) {
-		}
+    try {
+      Thread.yield();
+      a.alive = false;
+      t.join();
+    } catch (InterruptedException e) {
+    }
 
-		w1.close();
-		w2.close();
+    w1.close();
+    w2.close();
 
-		String str1 = w1.toString();
-		String str2 = w2.toString();
+    String str1 = w1.toString();
+    String str2 = w2.toString();
 
-		Assert.assertTrue(str1.length() > 0);
-		Assert.assertEquals(str1, str2);
-	}
+    Assert.assertTrue(str1.length() > 0);
+    Assert.assertEquals(str1, str2);
+  }
 
-	static class Actor implements Runnable {
-		ThreadProxyPipe pipe;
-		boolean alive;
+  static class Actor implements Runnable {
+    ThreadProxyPipe pipe;
+    boolean alive;
 
-		public Actor(ThreadProxyPipe pipe) {
-			this.pipe = pipe;
-			this.alive = true;
-		}
+    public Actor(ThreadProxyPipe pipe) {
+      this.pipe = pipe;
+      this.alive = true;
+    }
 
-		public void run() {
-			do
-				pipe.pump();
-			while (alive || pipe.hasPostRemaining());
-		}
-	}
+    @Override
+    public void run() {
+      do {
+        pipe.pump();
+      } while (alive || pipe.hasPostRemaining());
+    }
+  }
 
-	protected int ri(int size) {
-		return (int) (Math.random() * size);
-	}
+  protected int ri(int size) {
+    return (int) (Math.random() * size);
+  }
 
-	protected Object rv() {
-		int i = ri(3);
+  protected Object rv() {
+    int i = ri(3);
 
-		switch (i) {
-		case 0:
-			return ri(1000);
-		case 1:
-			return Math.random() * 1000;
-		case 2: {
-			StringBuilder sb = new StringBuilder();
-			String chars = "abcedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    switch (i) {
+      case 0:
+        return ri(1000);
+      case 1:
+        return Math.random() * 1000;
+      case 2: {
+        StringBuilder sb = new StringBuilder();
+        String chars = "abcedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-			for (int j = 0; j < 16; j++)
-				sb.append(chars.charAt(ri(chars.length())));
+        for (int j = 0; j < 16; j++) {
+          sb.append(chars.charAt(ri(chars.length())));
+        }
 
-			return sb.toString();
-		}
-		default:
-			return null;
-		}
-	}
+        return sb.toString();
+      }
+      default:
+        return null;
+    }
+  }
 
-	protected void generateRandom(Graph g, int size) {
-		String[] attributes = { "a", "b", "c", "d", "e", "f", "g" };
+  protected void generateRandom(Graph g, int size) {
+    String[] attributes = { "a", "b", "c", "d", "e", "f", "g" };
 
-		for (int i = 0; i < size; i++) {
-			Node n = g.addNode(String.format("%d", i));
+    for (int i = 0; i < size; i++) {
+      Node n = g.addNode(String.format("%d", i));
 
-			for (int j = 0; j < 3; j++)
-				n.setAttribute(attributes[ri(attributes.length)], rv());
-		}
+      for (int j = 0; j < 3; j++) {
+        n.setAttribute(attributes[ri(attributes.length)], rv());
+      }
+    }
 
-		for (int i = 0; i < size; i++) {
-			Node a, b;
+    for (int i = 0; i < size; i++) {
+      Node a, b;
 
-			a = g.getNode((int) (Math.random() * size));
+      a = g.getNode((int) (Math.random() * size));
 
-			do {
-				b = g.getNode((int) (Math.random() * size));
-			} while (a == b);
+      do {
+        b = g.getNode((int) (Math.random() * size));
+      } while (a == b);
 
-			Edge e = g.addEdge(String.format("edge%d", i), a, b);
+      Edge e = g.addEdge(String.format("edge%d", i), a, b);
 
-			for (int j = 0; j < 3; j++)
-				e.setAttribute(attributes[ri(attributes.length)], rv());
-		}
-	}
+      for (int j = 0; j < 3; j++) {
+        e.setAttribute(attributes[ri(attributes.length)], rv());
+      }
+    }
+  }
 }

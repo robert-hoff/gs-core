@@ -40,231 +40,247 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class GraphSpells implements Sink {
-	private static final Logger logger = Logger.getLogger(GraphSpells.class.getSimpleName());
+  private static final Logger logger = Logger.getLogger(GraphSpells.class.getSimpleName());
 
-	CumulativeSpells graph;
-	CumulativeAttributes graphAttributes;
+  CumulativeSpells graph;
+  CumulativeAttributes graphAttributes;
 
-	HashMap<String, CumulativeSpells> nodes;
-	HashMap<String, CumulativeAttributes> nodesAttributes;
+  HashMap<String, CumulativeSpells> nodes;
+  HashMap<String, CumulativeAttributes> nodesAttributes;
 
-	HashMap<String, CumulativeSpells> edges;
-	HashMap<String, CumulativeAttributes> edgesAttributes;
-	HashMap<String, EdgeData> edgesData;
+  HashMap<String, CumulativeSpells> edges;
+  HashMap<String, CumulativeAttributes> edgesAttributes;
+  HashMap<String, EdgeData> edgesData;
 
-	double date;
+  double date;
 
-	public GraphSpells() {
-		graph = new CumulativeSpells();
-		graphAttributes = new CumulativeAttributes(0);
+  public GraphSpells() {
+    graph = new CumulativeSpells();
+    graphAttributes = new CumulativeAttributes(0);
 
-		nodes = new HashMap<String, CumulativeSpells>();
-		nodesAttributes = new HashMap<String, CumulativeAttributes>();
+    nodes = new HashMap<String, CumulativeSpells>();
+    nodesAttributes = new HashMap<String, CumulativeAttributes>();
 
-		edges = new HashMap<String, CumulativeSpells>();
-		edgesAttributes = new HashMap<String, CumulativeAttributes>();
-		edgesData = new HashMap<String, EdgeData>();
+    edges = new HashMap<String, CumulativeSpells>();
+    edgesAttributes = new HashMap<String, CumulativeAttributes>();
+    edgesData = new HashMap<String, EdgeData>();
 
-		date = Double.NaN;
-	}
+    date = Double.NaN;
+  }
 
-	public static class EdgeData {
-		String source;
-		String target;
-		boolean directed;
+  public static class EdgeData {
+    String source;
+    String target;
+    boolean directed;
 
-		public String getSource() {
-			return source;
-		}
+    public String getSource() {
+      return source;
+    }
 
-		public String getTarget() {
-			return target;
-		}
+    public String getTarget() {
+      return target;
+    }
 
-		public boolean isDirected() {
-			return directed;
-		}
-	}
+    public boolean isDirected() {
+      return directed;
+    }
+  }
 
-	public Iterable<String> getNodes() {
-		return nodes.keySet();
-	}
+  public Iterable<String> getNodes() {
+    return nodes.keySet();
+  }
 
-	public Iterable<String> getEdges() {
-		return edges.keySet();
-	}
+  public Iterable<String> getEdges() {
+    return edges.keySet();
+  }
 
-	public CumulativeSpells getNodeSpells(String nodeId) {
-		return nodes.get(nodeId);
-	}
+  public CumulativeSpells getNodeSpells(String nodeId) {
+    return nodes.get(nodeId);
+  }
 
-	public CumulativeAttributes getNodeAttributes(String nodeId) {
-		return nodesAttributes.get(nodeId);
-	}
+  public CumulativeAttributes getNodeAttributes(String nodeId) {
+    return nodesAttributes.get(nodeId);
+  }
 
-	public CumulativeSpells getEdgeSpells(String edgeId) {
-		return edges.get(edgeId);
-	}
+  public CumulativeSpells getEdgeSpells(String edgeId) {
+    return edges.get(edgeId);
+  }
 
-	public CumulativeAttributes getEdgeAttributes(String edgeId) {
-		return edgesAttributes.get(edgeId);
-	}
+  public CumulativeAttributes getEdgeAttributes(String edgeId) {
+    return edgesAttributes.get(edgeId);
+  }
 
-	public EdgeData getEdgeData(String edgeId) {
-		return edgesData.get(edgeId);
-	}
+  public EdgeData getEdgeData(String edgeId) {
+    return edgesData.get(edgeId);
+  }
 
-	public void stepBegins(String sourceId, long timeId, double step) {
-		this.date = step;
+  @Override
+  public void stepBegins(String sourceId, long timeId, double step) {
+    this.date = step;
 
-		graphAttributes.updateDate(step);
-		graph.updateCurrentSpell(step);
+    graphAttributes.updateDate(step);
+    graph.updateCurrentSpell(step);
 
-		for (String id : nodes.keySet()) {
-			nodes.get(id).updateCurrentSpell(step);
-			nodesAttributes.get(id).updateDate(step);
-		}
+    for (String id : nodes.keySet()) {
+      nodes.get(id).updateCurrentSpell(step);
+      nodesAttributes.get(id).updateDate(step);
+    }
 
-		for (String id : edges.keySet()) {
-			edges.get(id).updateCurrentSpell(step);
-			edgesAttributes.get(id).updateDate(step);
-		}
-	}
+    for (String id : edges.keySet()) {
+      edges.get(id).updateCurrentSpell(step);
+      edgesAttributes.get(id).updateDate(step);
+    }
+  }
 
-	public void nodeAdded(String sourceId, long timeId, String nodeId) {
-		if (!nodes.containsKey(nodeId)) {
-			nodes.put(nodeId, new CumulativeSpells());
-			nodesAttributes.put(nodeId, new CumulativeAttributes(date));
-		}
+  @Override
+  public void nodeAdded(String sourceId, long timeId, String nodeId) {
+    if (!nodes.containsKey(nodeId)) {
+      nodes.put(nodeId, new CumulativeSpells());
+      nodesAttributes.put(nodeId, new CumulativeAttributes(date));
+    }
 
-		nodes.get(nodeId).startSpell(date);
-	}
+    nodes.get(nodeId).startSpell(date);
+  }
 
-	public void nodeRemoved(String sourceId, long timeId, String nodeId) {
-		if (nodes.containsKey(nodeId)) {
-			nodes.get(nodeId).closeSpell();
-			nodesAttributes.get(nodeId).remove();
-		}
-	}
+  @Override
+  public void nodeRemoved(String sourceId, long timeId, String nodeId) {
+    if (nodes.containsKey(nodeId)) {
+      nodes.get(nodeId).closeSpell();
+      nodesAttributes.get(nodeId).remove();
+    }
+  }
 
-	public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
-			boolean directed) {
-		if (!edges.containsKey(edgeId)) {
-			edges.put(edgeId, new CumulativeSpells());
-			edgesAttributes.put(edgeId, new CumulativeAttributes(date));
+  @Override
+  public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+      boolean directed) {
+    if (!edges.containsKey(edgeId)) {
+      edges.put(edgeId, new CumulativeSpells());
+      edgesAttributes.put(edgeId, new CumulativeAttributes(date));
 
-			EdgeData data = new EdgeData();
-			data.source = fromNodeId;
-			data.target = toNodeId;
-			data.directed = directed;
+      EdgeData data = new EdgeData();
+      data.source = fromNodeId;
+      data.target = toNodeId;
+      data.directed = directed;
 
-			edgesData.put(edgeId, data);
-		}
+      edgesData.put(edgeId, data);
+    }
 
-		edges.get(edgeId).startSpell(date);
+    edges.get(edgeId).startSpell(date);
 
-		EdgeData data = edgesData.get(edgeId);
+    EdgeData data = edgesData.get(edgeId);
 
-		if (!data.source.equals(fromNodeId) || !data.target.equals(toNodeId) || data.directed != directed)
-			logger.warning("An edge with this id but different properties" + " has already be created in the past.");
-	}
+    if (!data.source.equals(fromNodeId) || !data.target.equals(toNodeId) || data.directed != directed) {
+      logger.warning("An edge with this id but different properties" + " has already be created in the past.");
+    }
+  }
 
-	public void edgeRemoved(String sourceId, long timeId, String edgeId) {
-		if (edges.containsKey(edgeId)) {
-			edges.get(edgeId).closeSpell();
-			edgesAttributes.get(edgeId).remove();
-		}
-	}
+  @Override
+  public void edgeRemoved(String sourceId, long timeId, String edgeId) {
+    if (edges.containsKey(edgeId)) {
+      edges.get(edgeId).closeSpell();
+      edgesAttributes.get(edgeId).remove();
+    }
+  }
 
-	public void graphCleared(String sourceId, long timeId) {
-		for (String id : nodes.keySet()) {
-			nodes.get(id).closeSpell();
-			nodesAttributes.get(id).remove();
-		}
+  @Override
+  public void graphCleared(String sourceId, long timeId) {
+    for (String id : nodes.keySet()) {
+      nodes.get(id).closeSpell();
+      nodesAttributes.get(id).remove();
+    }
 
-		for (String id : edges.keySet()) {
-			edges.get(id).closeSpell();
-			edgesAttributes.get(id).remove();
-		}
-	}
+    for (String id : edges.keySet()) {
+      edges.get(id).closeSpell();
+      edgesAttributes.get(id).remove();
+    }
+  }
 
-	public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
-		graphAttributes.set(attribute, value);
-	}
+  @Override
+  public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
+    graphAttributes.set(attribute, value);
+  }
 
-	public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue,
-			Object newValue) {
-		graphAttributes.set(attribute, newValue);
-	}
+  @Override
+  public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue, Object newValue) {
+    graphAttributes.set(attribute, newValue);
+  }
 
-	public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
-		graphAttributes.remove(attribute);
-	}
+  @Override
+  public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
+    graphAttributes.remove(attribute);
+  }
 
-	public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
-		nodesAttributes.get(nodeId).set(attribute, value);
-	}
+  @Override
+  public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
+    nodesAttributes.get(nodeId).set(attribute, value);
+  }
 
-	public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
-			Object newValue) {
-		nodesAttributes.get(nodeId).set(attribute, newValue);
-	}
+  @Override
+  public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
+      Object newValue) {
+    nodesAttributes.get(nodeId).set(attribute, newValue);
+  }
 
-	public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
-		nodesAttributes.get(nodeId).remove(attribute);
-	}
+  @Override
+  public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
+    nodesAttributes.get(nodeId).remove(attribute);
+  }
 
-	public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
-		edgesAttributes.get(edgeId).set(attribute, value);
-	}
+  @Override
+  public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
+    edgesAttributes.get(edgeId).set(attribute, value);
+  }
 
-	public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
-			Object newValue) {
-		edgesAttributes.get(edgeId).set(attribute, newValue);
-	}
+  @Override
+  public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
+      Object newValue) {
+    edgesAttributes.get(edgeId).set(attribute, newValue);
+  }
 
-	public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
-		edgesAttributes.get(edgeId).remove(attribute);
-	}
+  @Override
+  public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
+    edgesAttributes.get(edgeId).remove(attribute);
+  }
 
-	public String toString() {
-		StringBuilder buffer = new StringBuilder();
+  @Override
+  public String toString() {
+    StringBuilder buffer = new StringBuilder();
 
-		for (String id : nodes.keySet()) {
-			buffer.append("node#\"").append(id).append("\" ").append(nodes.get(id)).append(" ")
-					.append(nodesAttributes.get(id)).append("\n");
-		}
+    for (String id : nodes.keySet()) {
+      buffer.append("node#\"").append(id).append("\" ").append(nodes.get(id)).append(" ")
+      .append(nodesAttributes.get(id)).append("\n");
+    }
 
-		for (String id : edges.keySet()) {
-			buffer.append("edge#\"").append(id).append("\" ").append(edges.get(id)).append("\n");
-		}
+    for (String id : edges.keySet()) {
+      buffer.append("edge#\"").append(id).append("\" ").append(edges.get(id)).append("\n");
+    }
 
-		return buffer.toString();
-	}
+    return buffer.toString();
+  }
 
-	public static void main(String... args) {
-		GraphSpells graphSpells = new GraphSpells();
-		Graph g = new AdjacencyListGraph("g");
+  public static void main(String... args) {
+    GraphSpells graphSpells = new GraphSpells();
+    Graph g = new AdjacencyListGraph("g");
 
-		g.addSink(graphSpells);
+    g.addSink(graphSpells);
 
-		g.addNode("A");
-		g.addNode("B");
-		g.addNode("C");
-		g.stepBegins(1);
-		g.getNode("A").setAttribute("test1", 100);
-		g.addEdge("AB", "A", "B");
-		g.addEdge("AC", "A", "C");
-		g.stepBegins(2);
-		g.addEdge("CB", "C", "B");
-		g.removeNode("A");
-		g.stepBegins(3);
-		g.addNode("A");
-		g.addEdge("AB", "A", "B");
-		g.stepBegins(4);
-		g.removeNode("C");
-		g.stepBegins(5);
+    g.addNode("A");
+    g.addNode("B");
+    g.addNode("C");
+    g.stepBegins(1);
+    g.getNode("A").setAttribute("test1", 100);
+    g.addEdge("AB", "A", "B");
+    g.addEdge("AC", "A", "C");
+    g.stepBegins(2);
+    g.addEdge("CB", "C", "B");
+    g.removeNode("A");
+    g.stepBegins(3);
+    g.addNode("A");
+    g.addEdge("AB", "A", "B");
+    g.stepBegins(4);
+    g.removeNode("C");
+    g.stepBegins(5);
 
-		System.out.println(graphSpells);
-	}
+    System.out.println(graphSpells);
+  }
 }

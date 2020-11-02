@@ -56,321 +56,322 @@ import org.miv.pherd.geom.Vector3;
  */
 public class GraphMetrics {
 
-	/**
-	 * class level logger
-	 */
-	private static final Logger logger = Logger.getLogger(GraphMetrics.class.getSimpleName());
+  /**
+   * class level logger
+   */
+  private static final Logger logger = Logger.getLogger(GraphMetrics.class.getSimpleName());
 
-	// Attribute
+  // Attribute
 
-	/**
-	 * Graph lower position (bottom,left,front).
-	 */
-	public Point3 lo = new Point3();
+  /**
+   * Graph lower position (bottom,left,front).
+   */
+  public Point3 lo = new Point3();
 
-	/**
-	 * Graph higher position (top,right,back).
-	 */
-	public Point3 hi = new Point3();
+  /**
+   * Graph higher position (top,right,back).
+   */
+  public Point3 hi = new Point3();
 
-	/**
-	 * The lowest visible point.
-	 */
-	public Point3 loVisible = new Point3();
+  /**
+   * The lowest visible point.
+   */
+  public Point3 loVisible = new Point3();
 
-	/**
-	 * The highest visible point.
-	 */
-	public Point3 hiVisible = new Point3();
+  /**
+   * The highest visible point.
+   */
+  public Point3 hiVisible = new Point3();
 
-	/**
-	 * Graph dimension.
-	 */
-	public Vector3 size = new Vector3();
+  /**
+   * Graph dimension.
+   */
+  public Vector3 size = new Vector3();
 
-	/**
-	 * The graph diagonal.
-	 */
-	public double diagonal = 1;
+  /**
+   * The graph diagonal.
+   */
+  public double diagonal = 1;
 
-	/**
-	 * The view port size.
-	 */
-	public double viewport[] = new double[4];
+  /**
+   * The view port size.
+   */
+  public double viewport[] = new double[4];
 
-	/**
-	 * The scaling factor to pass from graph units to pixels.
-	 */
-	public double ratioPx2Gu;
+  /**
+   * The scaling factor to pass from graph units to pixels.
+   */
+  public double ratioPx2Gu;
 
-	/**
-	 * The length for one pixel, according to the current transformation.
-	 */
-	public double px1;
+  /**
+   * The length for one pixel, according to the current transformation.
+   */
+  public double px1;
 
-	// Construction
+  // Construction
 
-	/**
-	 * New canvas metrics with default values.
-	 */
-	public GraphMetrics() {
-		setDefaults();
-	}
+  /**
+   * New canvas metrics with default values.
+   */
+  public GraphMetrics() {
+    setDefaults();
+  }
 
-	/**
-	 * Set defaults value in the lo, hi and size fields to (-1) and (1)
-	 * respectively.
-	 */
-	protected void setDefaults() {
-		lo.set(-1, -1, -1);
-		hi.set(1, 1, 1);
-		size.set(2, 2, 2);
+  /**
+   * Set defaults value in the lo, hi and size fields to (-1) and (1)
+   * respectively.
+   */
+  protected void setDefaults() {
+    lo.set(-1, -1, -1);
+    hi.set(1, 1, 1);
+    size.set(2, 2, 2);
 
-		diagonal = 1;
-		ratioPx2Gu = 1;
-		px1 = 1;
-	}
+    diagonal = 1;
+    ratioPx2Gu = 1;
+    px1 = 1;
+  }
 
-	// Access
+  // Access
 
-	/**
-	 * The graph diagonal (the overall width).
-	 * 
-	 * @return The diagonal.
-	 */
-	public double getDiagonal() {
-		return diagonal;
-	}
+  /**
+   * The graph diagonal (the overall width).
+   * 
+   * @return The diagonal.
+   */
+  public double getDiagonal() {
+    return diagonal;
+  }
 
-	/**
-	 * The graph bounds.
-	 * 
-	 * @return The size.
-	 */
-	public Vector3 getSize() {
-		return size;
-	}
+  /**
+   * The graph bounds.
+   * 
+   * @return The size.
+   */
+  public Vector3 getSize() {
+    return size;
+  }
 
-	/**
-	 * The graph lowest (bottom,left,front) point.
-	 * 
-	 * @return The lowest point.
-	 */
-	public Point3 getLowPoint() {
-		return lo;
-	}
+  /**
+   * The graph lowest (bottom,left,front) point.
+   * 
+   * @return The lowest point.
+   */
+  public Point3 getLowPoint() {
+    return lo;
+  }
 
-	/**
-	 * The graph highest (top,right,back) point.
-	 * 
-	 * @return The highest point.
-	 */
-	public Point3 getHighPoint() {
-		return hi;
-	}
+  /**
+   * The graph highest (top,right,back) point.
+   * 
+   * @return The highest point.
+   */
+  public Point3 getHighPoint() {
+    return hi;
+  }
 
-	public double graphWidthGU() {
-		return hi.x - lo.x;
-	}
+  public double graphWidthGU() {
+    return hi.x - lo.x;
+  }
 
-	public double graphHeightGU() {
-		return hi.y - lo.y;
-	}
+  public double graphHeightGU() {
+    return hi.y - lo.y;
+  }
 
-	public double graphDepthGU() {
-		return hi.z - lo.z;
-	}
+  public double graphDepthGU() {
+    return hi.z - lo.z;
+  }
 
-	// Access -- Convert values
+  // Access -- Convert values
 
-	/**
-	 * Convert a value in given units to graph units.
-	 * 
-	 * @param value
-	 *            The value to convert.
-	 * @param units
-	 *            The units the value to convert is expressed in.
-	 * @return The value converted to GU.
-	 */
-	public double lengthToGu(double value, StyleConstants.Units units) {
-		switch (units) {
-		case PX:
-			// return (value - 0.01f) / ratioPx2Gu;
-			return value / ratioPx2Gu;
-		case PERCENTS:
-			return (diagonal * value);
-		case GU:
-		default:
-			return value;
-		}
-	}
+  /**
+   * Convert a value in given units to graph units.
+   * 
+   * @param value
+   *          The value to convert.
+   * @param units
+   *          The units the value to convert is expressed in.
+   * @return The value converted to GU.
+   */
+  public double lengthToGu(double value, StyleConstants.Units units) {
+    switch (units) {
+      case PX:
+        // return (value - 0.01f) / ratioPx2Gu;
+        return value / ratioPx2Gu;
+      case PERCENTS:
+        return (diagonal * value);
+      case GU:
+      default:
+        return value;
+    }
+  }
 
-	/**
-	 * Convert a value in a given units to graph units.
-	 * 
-	 * @param value
-	 *            The value to convert (it contains its own units).
-	 */
-	public double lengthToGu(Value value) {
-		return lengthToGu(value.value, value.units);
-	}
+  /**
+   * Convert a value in a given units to graph units.
+   * 
+   * @param value
+   *          The value to convert (it contains its own units).
+   */
+  public double lengthToGu(Value value) {
+    return lengthToGu(value.value, value.units);
+  }
 
-	/**
-	 * Convert one of the given values in a given units to graph units.
-	 * 
-	 * @param values
-	 *            The values set containing the value to convert (it contains its
-	 *            own units).
-	 * @param index
-	 *            Index of the value to convert.
-	 */
-	public double lengthToGu(Values values, int index) {
-		return lengthToGu(values.get(index), values.units);
-	}
+  /**
+   * Convert one of the given values in a given units to graph units.
+   * 
+   * @param values
+   *          The values set containing the value to convert (it contains its own
+   *          units).
+   * @param index
+   *          Index of the value to convert.
+   */
+  public double lengthToGu(Values values, int index) {
+    return lengthToGu(values.get(index), values.units);
+  }
 
-	/**
-	 * Convert a value in a given units to pixels.
-	 * 
-	 * @param value
-	 *            The value to convert.
-	 * @param units
-	 *            The units the value to convert is expressed in.
-	 * @return The value converted in pixels.
-	 */
-	public double lengthToPx(double value, StyleConstants.Units units) {
-		switch (units) {
-		case GU:
-			// return (value - 0.01f) * ratioPx2Gu;
-			return value * ratioPx2Gu;
-		case PERCENTS:
-			return (diagonal * value) * ratioPx2Gu;
-		case PX:
-		default:
-			return value;
-		}
-	}
+  /**
+   * Convert a value in a given units to pixels.
+   * 
+   * @param value
+   *          The value to convert.
+   * @param units
+   *          The units the value to convert is expressed in.
+   * @return The value converted in pixels.
+   */
+  public double lengthToPx(double value, StyleConstants.Units units) {
+    switch (units) {
+      case GU:
+        // return (value - 0.01f) * ratioPx2Gu;
+        return value * ratioPx2Gu;
+      case PERCENTS:
+        return (diagonal * value) * ratioPx2Gu;
+      case PX:
+      default:
+        return value;
+    }
+  }
 
-	/**
-	 * Convert a value in a given units to pixels.
-	 * 
-	 * @param value
-	 *            The value to convert (it contains its own units).
-	 */
-	public double lengthToPx(Value value) {
-		return lengthToPx(value.value, value.units);
-	}
+  /**
+   * Convert a value in a given units to pixels.
+   * 
+   * @param value
+   *          The value to convert (it contains its own units).
+   */
+  public double lengthToPx(Value value) {
+    return lengthToPx(value.value, value.units);
+  }
 
-	/**
-	 * Convert one of the given values in a given units pixels.
-	 * 
-	 * @param values
-	 *            The values set containing the value to convert (it contains its
-	 *            own units).
-	 * @param index
-	 *            Index of the value to convert.
-	 */
-	public double lengthToPx(Values values, int index) {
-		return lengthToPx(values.get(index), values.units);
-	}
+  /**
+   * Convert one of the given values in a given units pixels.
+   * 
+   * @param values
+   *          The values set containing the value to convert (it contains its own
+   *          units).
+   * @param index
+   *          Index of the value to convert.
+   */
+  public double lengthToPx(Values values, int index) {
+    return lengthToPx(values.get(index), values.units);
+  }
 
-	public double positionPixelToGu(int pixels, int index) {
-		double l = lengthToGu(pixels, Units.PX);
+  public double positionPixelToGu(int pixels, int index) {
+    double l = lengthToGu(pixels, Units.PX);
 
-		switch (index) {
-		case 0:
-			l -= graphWidthGU() / 2.0;
-			l = (hi.x + lo.x) / 2.0 + l;
-			break;
-		case 1:
-			l -= graphHeightGU() / 2.0;
-			l = (hi.y + lo.y) / 2.0 + l;
-			break;
-		default:
-			throw new IllegalArgumentException();
-		}
+    switch (index) {
+      case 0:
+        l -= graphWidthGU() / 2.0;
+        l = (hi.x + lo.x) / 2.0 + l;
+        break;
+      case 1:
+        l -= graphHeightGU() / 2.0;
+        l = (hi.y + lo.y) / 2.0 + l;
+        break;
+      default:
+        throw new IllegalArgumentException();
+    }
 
-		logger.fine(String.format("%spixel[%d] %d --> %fgu", this, index, pixels, l));
+    logger.fine(String.format("%spixel[%d] %d --> %fgu", this, index, pixels, l));
 
-		return l;
-	}
+    return l;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder(String.format("Graph Metrics :%n"));
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder(String.format("Graph Metrics :%n"));
 
-		builder.append(String.format("        lo         = %s%n", lo));
-		builder.append(String.format("        hi         = %s%n", hi));
-		builder.append(String.format("        visible lo = %s%n", loVisible));
-		builder.append(String.format("        visible hi = %s%n", hiVisible));
-		builder.append(String.format("        size       = %s%n", size));
-		builder.append(String.format("        diag       = %f%n", diagonal));
-		builder.append(String.format("        viewport   = %s%n", viewport));
-		builder.append(String.format("        ratio      = %fpx = 1gu%n", ratioPx2Gu));
+    builder.append(String.format("        lo         = %s%n", lo));
+    builder.append(String.format("        hi         = %s%n", hi));
+    builder.append(String.format("        visible lo = %s%n", loVisible));
+    builder.append(String.format("        visible hi = %s%n", hiVisible));
+    builder.append(String.format("        size       = %s%n", size));
+    builder.append(String.format("        diag       = %f%n", diagonal));
+    builder.append(String.format("        viewport   = %s%n", viewport));
+    builder.append(String.format("        ratio      = %fpx = 1gu%n", ratioPx2Gu));
 
-		return builder.toString();
-	}
+    return builder.toString();
+  }
 
-	// Command
+  // Command
 
-	/**
-	 * Set the output view port size in pixels.
-	 * 
-	 * @param viewportWidth
-	 *            The width in pixels of the view port.
-	 * @param viewportHeight
-	 *            The width in pixels of the view port.
-	 */
-	public void setViewport(double viewportX, double viewportY, double viewportWidth, double viewportHeight) {
-		viewport[0] = viewportX;
-		viewport[1] = viewportY;
-		viewport[2] = viewportWidth;
-		viewport[3] = viewportHeight;
-	}
+  /**
+   * Set the output view port size in pixels.
+   * 
+   * @param viewportWidth
+   *          The width in pixels of the view port.
+   * @param viewportHeight
+   *          The width in pixels of the view port.
+   */
+  public void setViewport(double viewportX, double viewportY, double viewportWidth, double viewportHeight) {
+    viewport[0] = viewportX;
+    viewport[1] = viewportY;
+    viewport[2] = viewportWidth;
+    viewport[3] = viewportHeight;
+  }
 
-	/**
-	 * The ratio to pass by multiplication from pixels to graph units. This ratio
-	 * must be larger than zero, else nothing is changed.
-	 * 
-	 * @param ratio
-	 *            The ratio.
-	 */
-	public void setRatioPx2Gu(double ratio) {
-		if (ratio > 0) {
-			ratioPx2Gu = ratio;
-			px1 = 0.95f / ratioPx2Gu;
-		} else if (ratio == 0)
-			throw new RuntimeException("ratio PX to GU cannot be zero");
-		else if (ratio < 0)
-			throw new RuntimeException(String.format("ratio PX to GU cannot be negative (%f)", ratio));
-	}
+  /**
+   * The ratio to pass by multiplication from pixels to graph units. This ratio
+   * must be larger than zero, else nothing is changed.
+   * 
+   * @param ratio
+   *          The ratio.
+   */
+  public void setRatioPx2Gu(double ratio) {
+    if (ratio > 0) {
+      ratioPx2Gu = ratio;
+      px1 = 0.95f / ratioPx2Gu;
+    } else if (ratio == 0) {
+      throw new RuntimeException("ratio PX to GU cannot be zero");
+    } else if (ratio < 0) {
+      throw new RuntimeException(String.format("ratio PX to GU cannot be negative (%f)", ratio));
+    }
+  }
 
-	/**
-	 * Set the graphic graph bounds (the lowest and highest points).
-	 * 
-	 * @param minx
-	 *            Lowest abscissa.
-	 * @param miny
-	 *            Lowest ordinate.
-	 * @param minz
-	 *            Lowest depth.
-	 * @param maxx
-	 *            Highest abscissa.
-	 * @param maxy
-	 *            Highest ordinate.
-	 * @param maxz
-	 *            Highest depth.
-	 */
-	public void setBounds(double minx, double miny, double minz, double maxx, double maxy, double maxz) {
-		lo.x = minx;
-		lo.y = miny;
-		lo.z = minz;
-		hi.x = maxx;
-		hi.y = maxy;
-		hi.z = maxz;
+  /**
+   * Set the graphic graph bounds (the lowest and highest points).
+   * 
+   * @param minx
+   *          Lowest abscissa.
+   * @param miny
+   *          Lowest ordinate.
+   * @param minz
+   *          Lowest depth.
+   * @param maxx
+   *          Highest abscissa.
+   * @param maxy
+   *          Highest ordinate.
+   * @param maxz
+   *          Highest depth.
+   */
+  public void setBounds(double minx, double miny, double minz, double maxx, double maxy, double maxz) {
+    lo.x = minx;
+    lo.y = miny;
+    lo.z = minz;
+    hi.x = maxx;
+    hi.y = maxy;
+    hi.z = maxz;
 
-		size.data[0] = hi.x - lo.x;
-		size.data[1] = hi.y - lo.y;
-		size.data[2] = hi.z - lo.z;
-		diagonal = Math.sqrt(size.data[0] * size.data[0] + size.data[1] * size.data[1] + size.data[2] * size.data[2]);
-	}
+    size.data[0] = hi.x - lo.x;
+    size.data[1] = hi.y - lo.y;
+    size.data[2] = hi.z - lo.z;
+    diagonal = Math.sqrt(size.data[0] * size.data[0] + size.data[1] * size.data[1] + size.data[2] * size.data[2]);
+  }
 }

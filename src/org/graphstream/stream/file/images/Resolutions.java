@@ -27,32 +27,37 @@ package org.graphstream.stream.file.images;
 /**
  * Common resolutions.
  *
- * @see <a href="https://en.wikipedia.org/wiki/Graphics_display_resolution">Graphics display resolution page on Wikipedia</a>
+ * @see <a href=
+ *      "https://en.wikipedia.org/wiki/Graphics_display_resolution">Graphics
+ *      display resolution page on Wikipedia</a>
  */
 public enum Resolutions implements Resolution {
-	QVGA(320, 240), CGA(320, 200), VGA(640, 480), NTSC(720, 480), PAL(768, 576), WVGA_5by3(800, 480), SVGA(800,
-			600), WVGA_16by9(854, 480), WSVGA(1024, 600), XGA(1024, 768), HD720(1280, 720), WXGA_5by3(1280,
-			768), WXGA_8by5(1280, 800), SXGA(1280, 1024), FWXGA(1366, 768), SXGAp(1400, 1050), WSXGAp(1680, 1050), UXGA(
-			1600, 1200), HD1080(1920, 1080), WUXGA(1920, 1200), TwoK(2048, 1080), QXGA(2048, 1536), WQXGA(2560,
-			1600), QSXGA(2560, 2048), UHD_4K(3840, 2160), UHD_8K_16by9(7680, 4320), UHD_8K_17by8(8192,
-			4320), UHD_8K_1by1(8192, 8192);
+  QVGA(320, 240), CGA(320, 200), VGA(640, 480), NTSC(720, 480), PAL(768, 576), WVGA_5by3(800, 480), SVGA(800,
+      600), WVGA_16by9(854, 480), WSVGA(1024, 600), XGA(1024, 768), HD720(1280, 720), WXGA_5by3(1280,
+          768), WXGA_8by5(1280, 800), SXGA(1280, 1024), FWXGA(1366, 768), SXGAp(1400, 1050), WSXGAp(1680,
+              1050), UXGA(1600, 1200), HD1080(1920, 1080), WUXGA(1920, 1200), TwoK(2048, 1080), QXGA(2048,
+                  1536), WQXGA(2560, 1600), QSXGA(2560, 2048), UHD_4K(3840,
+                      2160), UHD_8K_16by9(7680, 4320), UHD_8K_17by8(8192, 4320), UHD_8K_1by1(8192, 8192);
 
-	final int width, height;
+  final int width, height;
 
-	Resolutions(int width, int height) {
-		this.width = width;
-		this.height = height;
-	}
+  Resolutions(int width, int height) {
+    this.width = width;
+    this.height = height;
+  }
 
-	public int getWidth() {
-		return width;
-	}
+  @Override
+  public int getWidth() {
+    return width;
+  }
 
-	public int getHeight() {
-		return height;
-	}
+  @Override
+  public int getHeight() {
+    return height;
+  }
 
-	@Override public String toString() {
-		return String.format("%s (%dx%d)", name(), width, height);
-	}
+  @Override
+  public String toString() {
+    return String.format("%s (%dx%d)", name(), width, height);
+  }
 }

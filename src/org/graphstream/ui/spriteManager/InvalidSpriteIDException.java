@@ -37,13 +37,13 @@ package org.graphstream.ui.spriteManager;
  * impossible in the current implementation.
  */
 public class InvalidSpriteIDException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	public InvalidSpriteIDException(String message) {
-		super(message);
-	}
+  public InvalidSpriteIDException(String message) {
+    super(message);
+  }
 
-	public InvalidSpriteIDException() {
-		super();
-	}
+  public InvalidSpriteIDException() {
+    super();
+  }
 }

@@ -44,66 +44,66 @@ import org.graphstream.ui.geom.Point3;
  * </p>
  */
 public class EdgeSpring {
-	/**
-	 * The edge identifier.
-	 */
-	public String id;
+  /**
+   * The edge identifier.
+   */
+  public String id;
 
-	/**
-	 * Source node.
-	 */
-	public NodeParticle node0;
+  /**
+   * Source node.
+   */
+  public NodeParticle node0;
 
-	/**
-	 * Target node.
-	 */
-	public NodeParticle node1;
+  /**
+   * Target node.
+   */
+  public NodeParticle node1;
 
-	/**
-	 * Edge weight.
-	 */
-	public double weight = 1f;
+  /**
+   * Edge weight.
+   */
+  public double weight = 1f;
 
-	/**
-	 * The attraction force on this edge.
-	 */
-	public Point3 spring = new Point3();
+  /**
+   * The attraction force on this edge.
+   */
+  public Point3 spring = new Point3();
 
-	/**
-	 * Make this edge ignored by the layout algorithm ?.
-	 */
-	public boolean ignored = false;
+  /**
+   * Make this edge ignored by the layout algorithm ?.
+   */
+  public boolean ignored = false;
 
-	/**
-	 * The edge attraction energy.
-	 */
-	public double attE;
+  /**
+   * The edge attraction energy.
+   */
+  public double attE;
 
-	/**
-	 * New edge between two given nodes.
-	 * 
-	 * @param id
-	 *            The edge identifier.
-	 * @param n0
-	 *            The first node.
-	 * @param n1
-	 *            The second node.
-	 */
-	public EdgeSpring(String id, NodeParticle n0, NodeParticle n1) {
-		this.id = id;
-		this.node0 = n0;
-		this.node1 = n1;
-	}
+  /**
+   * New edge between two given nodes.
+   * 
+   * @param id
+   *          The edge identifier.
+   * @param n0
+   *          The first node.
+   * @param n1
+   *          The second node.
+   */
+  public EdgeSpring(String id, NodeParticle n0, NodeParticle n1) {
+    this.id = id;
+    this.node0 = n0;
+    this.node1 = n1;
+  }
 
-	/**
-	 * Considering the two nodes of the edge, return the one that was not given as
-	 * argument.
-	 * 
-	 * @param node
-	 *            One of the nodes of the edge.
-	 * @return The other node.
-	 */
-	public NodeParticle getOpposite(NodeParticle node) {
-		return node0 == node ? node1 : node0;
-	}
+  /**
+   * Considering the two nodes of the edge, return the one that was not given as
+   * argument.
+   * 
+   * @param node
+   *          One of the nodes of the edge.
+   * @return The other node.
+   */
+  public NodeParticle getOpposite(NodeParticle node) {
+    return node0 == node ? node1 : node0;
+  }
 }

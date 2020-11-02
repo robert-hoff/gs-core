@@ -34,35 +34,36 @@ package org.graphstream.stream.file.gexf;
 import javax.xml.stream.XMLStreamException;
 
 public class GEXFSpell implements GEXFElement {
-	GEXF root;
+  GEXF root;
 
-	boolean startOpen;
-	boolean endOpen;
+  boolean startOpen;
+  boolean endOpen;
 
-	double start;
-	double end;
+  double start;
+  double end;
 
-	boolean closed;
+  boolean closed;
 
-	public GEXFSpell(GEXF root) {
-		this.root = root;
-		this.closed = false;
-	}
+  public GEXFSpell(GEXF root) {
+    this.root = root;
+    this.closed = false;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		stream.startElement("spell");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    stream.startElement("spell");
 
-		stream.stream.writeAttribute("start", root.getTimeFormat().format.format(start));
-		stream.stream.writeAttribute("end", root.getTimeFormat().format.format(closed ? end : root.step));
+    stream.stream.writeAttribute("start", root.getTimeFormat().format.format(start));
+    stream.stream.writeAttribute("end", root.getTimeFormat().format.format(closed ? end : root.step));
 
-		stream.endElement(); // SPELL
+    stream.endElement(); // SPELL
 
-	}
+  }
 }

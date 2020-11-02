@@ -38,10 +38,10 @@ package org.graphstream.graph;
  * @since September 2007
  */
 public interface NodeFactory<T extends Node> {
-	/**
-	 * Create a new instance of node.
-	 * 
-	 * @return The newly created edge.
-	 */
-	T newInstance(String id, Graph graph);
+  /**
+   * Create a new instance of node.
+   * 
+   * @return The newly created edge.
+   */
+  T newInstance(String id, Graph graph);
 }

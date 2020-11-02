@@ -38,77 +38,86 @@ import java.util.LinkedList;
 import javax.xml.stream.XMLStreamException;
 
 public class GEXFAttValues implements GEXFElement {
-	GEXF root;
-	HashMap<Integer, LinkedList<GEXFAttValue>> values;
+  GEXF root;
+  HashMap<Integer, LinkedList<GEXFAttValue>> values;
 
-	public GEXFAttValues(GEXF root) {
-		this.root = root;
-		this.values = new HashMap<Integer, LinkedList<GEXFAttValue>>();
-	}
+  public GEXFAttValues(GEXF root) {
+    this.root = root;
+    this.values = new HashMap<Integer, LinkedList<GEXFAttValue>>();
+  }
 
-	public void attributeUpdated(GEXFAttribute decl, Object value) {
-		if (!values.containsKey(decl.id))
-			values.put(decl.id, new LinkedList<GEXFAttValue>());
+  public void attributeUpdated(GEXFAttribute decl, Object value) {
+    if (!values.containsKey(decl.id)) {
+      values.put(decl.id, new LinkedList<GEXFAttValue>());
+    }
 
-		LinkedList<GEXFAttValue> attr = values.get(decl.id);
+    LinkedList<GEXFAttValue> attr = values.get(decl.id);
 
-		if (value != null) {
-			if (attr.size() > 0) {
-				if (attr.getLast().start == root.step)
-					attr.removeLast();
-				else
-					attr.getLast().end = root.step;
-			}
+    if (value != null) {
+      if (attr.size() > 0) {
+        if (attr.getLast().start == root.step) {
+          attr.removeLast();
+        } else {
+          attr.getLast().end = root.step;
+        }
+      }
 
-			GEXFAttValue av = new GEXFAttValue(root, Integer.toString(decl.id), formatValue(value));
-			attr.add(av);
-		} else {
-			if (attr.size() > 0)
-				attr.getLast().end = root.step;
-		}
-	}
+      GEXFAttValue av = new GEXFAttValue(root, Integer.toString(decl.id), formatValue(value));
+      attr.add(av);
+    } else {
+      if (attr.size() > 0) {
+        attr.getLast().end = root.step;
+      }
+    }
+  }
 
-	String formatValue(Object o) {
-		if (o == null)
-			return "<null>";
+  String formatValue(Object o) {
+    if (o == null) {
+      return "<null>";
+    }
 
-		if (o.getClass().isArray()) {
-			StringBuilder buffer = new StringBuilder();
+    if (o.getClass().isArray()) {
+      StringBuilder buffer = new StringBuilder();
 
-			for (int i = 0; i < Array.getLength(o); i++) {
-				Object ochild = Array.get(o, i);
+      for (int i = 0; i < Array.getLength(o); i++) {
+        Object ochild = Array.get(o, i);
 
-				if (i > 0)
-					buffer.append("|");
+        if (i > 0) {
+          buffer.append("|");
+        }
 
-				if (ochild != null)
-					buffer.append(ochild.toString());
-			}
+        if (ochild != null) {
+          buffer.append(ochild.toString());
+        }
+      }
 
-			o = buffer;
-		}
+      o = buffer;
+    }
 
-		return o.toString();
-	}
+    return o.toString();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		if (values.size() == 0)
-			return;
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    if (values.size() == 0) {
+      return;
+    }
 
-		stream.startElement("attvalues");
+    stream.startElement("attvalues");
 
-		for (LinkedList<GEXFAttValue> attrValues : values.values()) {
-			for (int i = 0; i < attrValues.size(); i++)
-				attrValues.get(i).export(stream);
-		}
+    for (LinkedList<GEXFAttValue> attrValues : values.values()) {
+      for (int i = 0; i < attrValues.size(); i++) {
+        attrValues.get(i).export(stream);
+      }
+    }
 
-		stream.endElement(); // ATTVALUES
-	}
+    stream.endElement(); // ATTVALUES
+  }
 }

@@ -39,5 +39,5 @@ package org.graphstream.ui.graphicGraph;
  * not changed.
  */
 public interface GraphicElementChangeListener {
-	void graphicElementChanged(GraphicElement element);
+  void graphicElementChanged(GraphicElement element);
 }

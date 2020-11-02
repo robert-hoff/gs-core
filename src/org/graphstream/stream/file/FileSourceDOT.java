@@ -50,16 +50,18 @@ import org.graphstream.util.parser.ParserFactory;
  * </pre>
  */
 public class FileSourceDOT extends FileSourceParser {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSourceParser#getNewFactory()
-	 */
-	public ParserFactory getNewParserFactory() {
-		return new ParserFactory() {
-			public Parser newParser(Reader reader) {
-				return new DOTParser(FileSourceDOT.this, reader);
-			}
-		};
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSourceParser#getNewFactory()
+   */
+  @Override
+  public ParserFactory getNewParserFactory() {
+    return new ParserFactory() {
+      @Override
+      public Parser newParser(Reader reader) {
+        return new DOTParser(FileSourceDOT.this, reader);
+      }
+    };
+  }
 }

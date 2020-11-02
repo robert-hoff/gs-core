@@ -36,13 +36,13 @@ package org.graphstream.ui.view;
  * Listener for specific viewer events.
  */
 public interface ViewerListener {
-	void viewClosed(String viewName);
+  void viewClosed(String viewName);
 
-	void buttonPushed(String id);
+  void buttonPushed(String id);
 
-	void buttonReleased(String id);
+  void buttonReleased(String id);
 
-	void mouseOver(String id);
+  void mouseOver(String id);
 
-	void mouseLeft(String id);
+  void mouseLeft(String id);
 }

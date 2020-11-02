@@ -30,5 +30,5 @@ import java.awt.image.BufferedImage;
  * Defines filter that will be applied on images before writing.
  */
 public interface Filter {
-	void apply(BufferedImage image);
+  void apply(BufferedImage image);
 }

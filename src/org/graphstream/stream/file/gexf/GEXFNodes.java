@@ -39,147 +39,159 @@ import javax.xml.stream.XMLStreamException;
 import org.graphstream.stream.SinkAdapter;
 
 public class GEXFNodes extends SinkAdapter implements GEXFElement {
-	GEXF root;
-	HashMap<String, GEXFNode> nodes;
+  GEXF root;
+  HashMap<String, GEXFNode> nodes;
 
-	public GEXFNodes(GEXF root) {
-		this.root = root;
-		this.nodes = new HashMap<String, GEXFNode>();
+  public GEXFNodes(GEXF root) {
+    this.root = root;
+    this.nodes = new HashMap<String, GEXFNode>();
 
-		root.addSink(this);
-	}
+    root.addSink(this);
+  }
 
-	private float[] convertToXYZ(Object value) {
-		if (value == null || !value.getClass().isArray())
-			return null;
+  private float[] convertToXYZ(Object value) {
+    if (value == null || !value.getClass().isArray()) {
+      return null;
+    }
 
-		float[] xyz = new float[Array.getLength(value)];
+    float[] xyz = new float[Array.getLength(value)];
 
-		for (int i = 0; i < xyz.length; i++) {
-			Object o = Array.get(value, i);
+    for (int i = 0; i < xyz.length; i++) {
+      Object o = Array.get(value, i);
 
-			if (o instanceof Number)
-				xyz[i] = ((Number) o).floatValue();
-			else
-				return null;
-		}
+      if (o instanceof Number) {
+        xyz[i] = ((Number) o).floatValue();
+      } else {
+        return null;
+      }
+    }
 
-		return xyz;
-	}
+    return xyz;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		stream.startElement("nodes");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    stream.startElement("nodes");
 
-		for (GEXFNode node : nodes.values())
-			node.export(stream);
+    for (GEXFNode node : nodes.values()) {
+      node.export(stream);
+    }
 
-		stream.endElement(); // NODES
-	}
+    stream.endElement(); // NODES
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.SinkAdapter#nodeAdded(java.lang.String, long,
-	 * java.lang.String)
-	 */
-	public void nodeAdded(String sourceId, long timeId, String nodeId) {
-		GEXFNode node = nodes.get(nodeId);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.SinkAdapter#nodeAdded(java.lang.String, long,
+   * java.lang.String)
+   */
+  @Override
+  public void nodeAdded(String sourceId, long timeId, String nodeId) {
+    GEXFNode node = nodes.get(nodeId);
 
-		if (node == null) {
-			node = new GEXFNode(root, nodeId);
-			nodes.put(nodeId, node);
-		}
+    if (node == null) {
+      node = new GEXFNode(root, nodeId);
+      nodes.put(nodeId, node);
+    }
 
-		node.spells.start();
-	}
+    node.spells.start();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.SinkAdapter#nodeRemoved(java.lang.String, long,
-	 * java.lang.String)
-	 */
-	public void nodeRemoved(String sourceId, long timeId, String nodeId) {
-		GEXFNode node = nodes.get(nodeId);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.SinkAdapter#nodeRemoved(java.lang.String, long,
+   * java.lang.String)
+   */
+  @Override
+  public void nodeRemoved(String sourceId, long timeId, String nodeId) {
+    GEXFNode node = nodes.get(nodeId);
 
-		if (node == null) {
-			System.err.printf("node removed but not added\n");
-			return;
-		}
+    if (node == null) {
+      System.err.printf("node removed but not added\n");
+      return;
+    }
 
-		node.spells.end();
-	}
+    node.spells.end();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.SinkAdapter#nodeAttributeAdded(java.lang.String,
-	 * long, java.lang.String, java.lang.String, java.lang.Object)
-	 */
-	public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
-		GEXFNode node = nodes.get(nodeId);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.SinkAdapter#nodeAttributeAdded(java.lang.String,
+   * long, java.lang.String, java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
+    GEXFNode node = nodes.get(nodeId);
 
-		if (("ui.label".equals(attribute) || "label".equals(attribute)) && value != null)
-			node.label = value.toString();
+    if (("ui.label".equals(attribute) || "label".equals(attribute)) && value != null) {
+      node.label = value.toString();
+    }
 
-		if ("xyz".equals(attribute)) {
-			float[] xyz = convertToXYZ(value);
+    if ("xyz".equals(attribute)) {
+      float[] xyz = convertToXYZ(value);
 
-			switch (xyz.length) {
-			default:
-				node.z = xyz[2];
-			case 2:
-				node.y = xyz[1];
-			case 1:
-				node.x = xyz[0];
-			case 0:
-				break;
-			}
+      switch (xyz.length) {
+        default:
+          node.z = xyz[2];
+        case 2:
+          node.y = xyz[1];
+        case 1:
+          node.x = xyz[0];
+        case 0:
+          break;
+      }
 
-			node.position = true;
-		}
+      node.position = true;
+    }
 
-		node.attvalues.attributeUpdated(root.getNodeAttribute(attribute), value);
-	}
+    node.attvalues.attributeUpdated(root.getNodeAttribute(attribute), value);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.SinkAdapter#nodeAttributeChanged(java.lang.String,
-	 * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
-			Object newValue) {
-		nodeAttributeAdded(sourceId, timeId, nodeId, attribute, newValue);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.SinkAdapter#nodeAttributeChanged(java.lang.String,
+   * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
+   */
+  @Override
+  public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
+      Object newValue) {
+    nodeAttributeAdded(sourceId, timeId, nodeId, attribute, newValue);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.SinkAdapter#nodeAttributeRemoved(java.lang.String,
-	 * long, java.lang.String, java.lang.String)
-	 */
-	public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
-		GEXFNode node = nodes.get(nodeId);
-		node.attvalues.attributeUpdated(root.getNodeAttribute(attribute), null);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.SinkAdapter#nodeAttributeRemoved(java.lang.String,
+   * long, java.lang.String, java.lang.String)
+   */
+  @Override
+  public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
+    GEXFNode node = nodes.get(nodeId);
+    node.attvalues.attributeUpdated(root.getNodeAttribute(attribute), null);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.SinkAdapter#graphCleared(java.lang.String, long)
-	 */
-	public void graphCleared(String sourceId, long timeId) {
-		for (GEXFNode node : nodes.values())
-			node.spells.end();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.SinkAdapter#graphCleared(java.lang.String, long)
+   */
+  @Override
+  public void graphCleared(String sourceId, long timeId) {
+    for (GEXFNode node : nodes.values()) {
+      node.spells.end();
+    }
+  }
 }

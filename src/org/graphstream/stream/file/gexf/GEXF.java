@@ -37,98 +37,101 @@ import javax.xml.stream.XMLStreamException;
 import org.graphstream.stream.PipeBase;
 
 public class GEXF extends PipeBase implements GEXFElement {
-	public static final String XMLNS = "http://www.gexf.net/1.2draft";
-	public static final String XMLNS_XSI = "http://www.w3.org/2001/XMLSchema-instance";
-	public static final String XMLNS_SL = "http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd";
-	public static final String XMLNS_VIZ = "http://www.gexf.net/1.2draft/viz";
+  public static final String XMLNS = "http://www.gexf.net/1.2draft";
+  public static final String XMLNS_XSI = "http://www.w3.org/2001/XMLSchema-instance";
+  public static final String XMLNS_SL = "http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd";
+  public static final String XMLNS_VIZ = "http://www.gexf.net/1.2draft/viz";
 
-	public static final String VERSION = "1.2";
+  public static final String VERSION = "1.2";
 
-	GEXFMeta meta;
-	GEXFGraph graph;
+  GEXFMeta meta;
+  GEXFGraph graph;
 
-	int currentAttributeIndex;
+  int currentAttributeIndex;
 
-	double step;
+  double step;
 
-	HashSet<Extension> extensions;
+  HashSet<Extension> extensions;
 
-	TimeFormat timeFormat;
+  TimeFormat timeFormat;
 
-	public GEXF() {
-		meta = new GEXFMeta();
-		currentAttributeIndex = 0;
-		step = 0;
-		graph = new GEXFGraph(this);
-		timeFormat = TimeFormat.DOUBLE;
+  public GEXF() {
+    meta = new GEXFMeta();
+    currentAttributeIndex = 0;
+    step = 0;
+    graph = new GEXFGraph(this);
+    timeFormat = TimeFormat.DOUBLE;
 
-		extensions = new HashSet<Extension>();
-		extensions.add(Extension.DATA);
-		extensions.add(Extension.DYNAMICS);
-		extensions.add(Extension.VIZ);
-	}
+    extensions = new HashSet<Extension>();
+    extensions.add(Extension.DATA);
+    extensions.add(Extension.DYNAMICS);
+    extensions.add(Extension.VIZ);
+  }
 
-	public TimeFormat getTimeFormat() {
-		return timeFormat;
-	}
+  public TimeFormat getTimeFormat() {
+    return timeFormat;
+  }
 
-	public boolean isExtensionEnable(Extension ext) {
-		return extensions.contains(ext);
-	}
+  public boolean isExtensionEnable(Extension ext) {
+    return extensions.contains(ext);
+  }
 
-	public void disable(Extension ext) {
-		extensions.remove(ext);
-	}
+  public void disable(Extension ext) {
+    extensions.remove(ext);
+  }
 
-	public void enable(Extension ext) {
-		extensions.add(ext);
-	}
+  public void enable(Extension ext) {
+    extensions.add(ext);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		stream.startElement("gexf");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    stream.startElement("gexf");
 
-		stream.stream.writeAttribute("xmlns", XMLNS);
-		stream.stream.writeAttribute("xmlns:xsi", XMLNS_XSI);
+    stream.stream.writeAttribute("xmlns", XMLNS);
+    stream.stream.writeAttribute("xmlns:xsi", XMLNS_XSI);
 
-		if (isExtensionEnable(Extension.VIZ))
-			stream.stream.writeAttribute("xmlns:viz", XMLNS_VIZ);
+    if (isExtensionEnable(Extension.VIZ)) {
+      stream.stream.writeAttribute("xmlns:viz", XMLNS_VIZ);
+    }
 
-		stream.stream.writeAttribute("xsi:schemaLocation", XMLNS_SL);
-		stream.stream.writeAttribute("version", VERSION);
+    stream.stream.writeAttribute("xsi:schemaLocation", XMLNS_SL);
+    stream.stream.writeAttribute("version", VERSION);
 
-		meta.export(stream);
-		graph.export(stream);
+    meta.export(stream);
+    graph.export(stream);
 
-		stream.endElement(); // GEXF
-	}
+    stream.endElement(); // GEXF
+  }
 
-	int getNewAttributeIndex() {
-		return currentAttributeIndex++;
-	}
+  int getNewAttributeIndex() {
+    return currentAttributeIndex++;
+  }
 
-	GEXFAttribute getNodeAttribute(String key) {
-		return graph.nodesAttributes.attributes.get(key);
-	}
+  GEXFAttribute getNodeAttribute(String key) {
+    return graph.nodesAttributes.attributes.get(key);
+  }
 
-	GEXFAttribute getEdgeAttribute(String key) {
-		return graph.edgesAttributes.attributes.get(key);
-	}
+  GEXFAttribute getEdgeAttribute(String key) {
+    return graph.edgesAttributes.attributes.get(key);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.PipeBase#stepBegins(java.lang.String, long,
-	 * double)
-	 */
-	public void stepBegins(String sourceId, long timeId, double step) {
-		this.step = step;
-		super.stepBegins(sourceId, timeId, step);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.PipeBase#stepBegins(java.lang.String, long,
+   * double)
+   */
+  @Override
+  public void stepBegins(String sourceId, long timeId, double step) {
+    this.step = step;
+    super.stepBegins(sourceId, timeId, step);
+  }
 }

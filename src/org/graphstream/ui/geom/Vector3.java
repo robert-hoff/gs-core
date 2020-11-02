@@ -41,284 +41,284 @@ package org.graphstream.ui.geom;
  * @version 0.1
  */
 public class Vector3 extends Vector2 {
-	// Attributes:
+  // Attributes:
 
-	private static final long serialVersionUID = 8839258036865851454L;
+  private static final long serialVersionUID = 8839258036865851454L;
 
-	// Constructors
+  // Constructors
 
-	/**
-	 * New zero vector.
-	 */
-	public Vector3() {
-		data = new double[3];
-		data[0] = 0;
-		data[1] = 0;
-		data[2] = 0;
-	}
+  /**
+   * New zero vector.
+   */
+  public Vector3() {
+    data = new double[3];
+    data[0] = 0;
+    data[1] = 0;
+    data[2] = 0;
+  }
 
-	/**
-	 * New (<code>x</code>,<code>y</code>,<code>z</code>) vector.
-	 */
-	public Vector3(double x, double y, double z) {
-		data = new double[3];
-		data[0] = x;
-		data[1] = y;
-		data[2] = z;
-	}
+  /**
+   * New (<code>x</code>,<code>y</code>,<code>z</code>) vector.
+   */
+  public Vector3(double x, double y, double z) {
+    data = new double[3];
+    data[0] = x;
+    data[1] = y;
+    data[2] = z;
+  }
 
-	/**
-	 * New vector copy of <code>other</code>.
-	 */
-	public Vector3(Vector3 other) {
-		data = new double[3];
-		copy(other);
-	}
+  /**
+   * New vector copy of <code>other</code>.
+   */
+  public Vector3(Vector3 other) {
+    data = new double[3];
+    copy(other);
+  }
 
-	/**
-	 * New vector copy of <code>point</code>.
-	 */
-	public Vector3(Point3 point) {
-		data = new double[3];
-		copy(point);
-	}
+  /**
+   * New vector copy of <code>point</code>.
+   */
+  public Vector3(Point3 point) {
+    data = new double[3];
+    copy(point);
+  }
 
-	// Predicates
+  // Predicates
 
-	/**
-	 * Are all components to zero?.
-	 */
-	@Override
-	public boolean isZero() {
-		return (data[0] == 0 && data[1] == 0 && data[2] == 0);
-	}
+  /**
+   * Are all components to zero?.
+   */
+  @Override
+  public boolean isZero() {
+    return (data[0] == 0 && data[1] == 0 && data[2] == 0);
+  }
 
-	/**
-	 * Is this equal to other ?
-	 */
-	@Override
-	public boolean equals(Object other) {
-		Vector3 v;
+  /**
+   * Is this equal to other ?
+   */
+  @Override
+  public boolean equals(Object other) {
+    Vector3 v;
 
-		if (!(other instanceof Vector3)) {
-			return false;
-		}
+    if (!(other instanceof Vector3)) {
+      return false;
+    }
 
-		v = (Vector3) other;
+    v = (Vector3) other;
 
-		return (data[0] == v.data[0] && data[1] == v.data[1] && data[2] == v.data[2]);
-	}
+    return (data[0] == v.data[0] && data[1] == v.data[1] && data[2] == v.data[2]);
+  }
 
-	/**
-	 * Is i the index of a component ?
-	 * 
-	 * In other words, is i &gt;= 0 &amp;&amp; &lt; than #count() ?
-	 */
-	@Override
-	public boolean validComponent(int i) {
-		return (i >= 0 && i < 3);
-	}
+  /**
+   * Is i the index of a component ?
+   * 
+   * In other words, is i &gt;= 0 &amp;&amp; &lt; than #count() ?
+   */
+  @Override
+  public boolean validComponent(int i) {
+    return (i >= 0 && i < 3);
+  }
 
-	// Access
+  // Access
 
-	@Override
-	public Object clone() {
-		return new Vector3(this);
-	}
+  @Override
+  public Object clone() {
+    return new Vector3(this);
+  }
 
-	// Access
+  // Access
 
-	public double dotProduct(double ox, double oy, double oz) {
-		return ((data[0] * ox) + (data[1] * oy) + (data[2] * oz));
-	}
+  public double dotProduct(double ox, double oy, double oz) {
+    return ((data[0] * ox) + (data[1] * oy) + (data[2] * oz));
+  }
 
-	/**
-	 * Dot product of this and other.
-	 */
-	public double dotProduct(Vector3 other) {
-		return ((data[0] * other.data[0]) + (data[1] * other.data[1]) + (data[2] * other.data[2]));
-	}
+  /**
+   * Dot product of this and other.
+   */
+  public double dotProduct(Vector3 other) {
+    return ((data[0] * other.data[0]) + (data[1] * other.data[1]) + (data[2] * other.data[2]));
+  }
 
-	/**
-	 * Cartesian length.
-	 */
-	@Override
-	public double length() {
-		return Math.sqrt((data[0] * data[0]) + (data[1] * data[1]) + (data[2] * data[2]));
-	}
+  /**
+   * Cartesian length.
+   */
+  @Override
+  public double length() {
+    return Math.sqrt((data[0] * data[0]) + (data[1] * data[1]) + (data[2] * data[2]));
+  }
 
-	public double z() {
-		return data[2];
-	}
+  public double z() {
+    return data[2];
+  }
 
-	// Commands
+  // Commands
 
-	/**
-	 * Assign value to all elements.
-	 */
-	@Override
-	public void fill(double value) {
-		data[0] = data[1] = data[2] = value;
-	}
+  /**
+   * Assign value to all elements.
+   */
+  @Override
+  public void fill(double value) {
+    data[0] = data[1] = data[2] = value;
+  }
 
-	/**
-	 * Explicitly set the i-th component to value.
-	 */
-	@Override
-	public void set(int i, double value) {
-		data[i] = value;
-	}
+  /**
+   * Explicitly set the i-th component to value.
+   */
+  @Override
+  public void set(int i, double value) {
+    data[i] = value;
+  }
 
-	/**
-	 * Explicitly set the three components.
-	 */
-	public void set(double x, double y, double z) {
-		data[0] = x;
-		data[1] = y;
-		data[2] = z;
-	}
+  /**
+   * Explicitly set the three components.
+   */
+  public void set(double x, double y, double z) {
+    data[0] = x;
+    data[1] = y;
+    data[2] = z;
+  }
 
-	/**
-	 * Add each element of other to the corresponding element of this.
-	 */
-	public void add(Vector3 other) {
-		data[0] += other.data[0];
-		data[1] += other.data[1];
-		data[2] += other.data[2];
-	}
+  /**
+   * Add each element of other to the corresponding element of this.
+   */
+  public void add(Vector3 other) {
+    data[0] += other.data[0];
+    data[1] += other.data[1];
+    data[2] += other.data[2];
+  }
 
-	/**
-	 * Substract each element of other to the corresponding element of this.
-	 */
-	public void sub(Vector3 other) {
-		data[0] -= other.data[0];
-		data[1] -= other.data[1];
-		data[2] -= other.data[2];
-	}
+  /**
+   * Substract each element of other to the corresponding element of this.
+   */
+  public void sub(Vector3 other) {
+    data[0] -= other.data[0];
+    data[1] -= other.data[1];
+    data[2] -= other.data[2];
+  }
 
-	/**
-	 * Multiply each element of this by the corresponding element of other.
-	 */
-	public void mult(Vector3 other) {
-		data[0] *= other.data[0];
-		data[1] *= other.data[1];
-		data[2] *= other.data[2];
-	}
+  /**
+   * Multiply each element of this by the corresponding element of other.
+   */
+  public void mult(Vector3 other) {
+    data[0] *= other.data[0];
+    data[1] *= other.data[1];
+    data[2] *= other.data[2];
+  }
 
-	/**
-	 * Add value to each element.
-	 */
-	@Override
-	public void scalarAdd(double value) {
-		data[0] += value;
-		data[1] += value;
-		data[2] += value;
-	}
+  /**
+   * Add value to each element.
+   */
+  @Override
+  public void scalarAdd(double value) {
+    data[0] += value;
+    data[1] += value;
+    data[2] += value;
+  }
 
-	/**
-	 * Substract value to each element.
-	 */
-	@Override
-	public void scalarSub(double value) {
-		data[0] -= value;
-		data[1] -= value;
-		data[2] -= value;
-	}
+  /**
+   * Substract value to each element.
+   */
+  @Override
+  public void scalarSub(double value) {
+    data[0] -= value;
+    data[1] -= value;
+    data[2] -= value;
+  }
 
-	/**
-	 * Multiply each element by value.
-	 */
-	@Override
-	public void scalarMult(double value) {
-		data[0] *= value;
-		data[1] *= value;
-		data[2] *= value;
-	}
+  /**
+   * Multiply each element by value.
+   */
+  @Override
+  public void scalarMult(double value) {
+    data[0] *= value;
+    data[1] *= value;
+    data[2] *= value;
+  }
 
-	/**
-	 * Divide each element by value.
-	 */
-	@Override
-	public void scalarDiv(double value) {
-		data[0] /= value;
-		data[1] /= value;
-		data[2] /= value;
-	}
+  /**
+   * Divide each element by value.
+   */
+  @Override
+  public void scalarDiv(double value) {
+    data[0] /= value;
+    data[1] /= value;
+    data[2] /= value;
+  }
 
-	/**
-	 * Set this to the cross product of this and other.
-	 */
-	public void crossProduct(Vector3 other) {
-		double x;
-		double y;
+  /**
+   * Set this to the cross product of this and other.
+   */
+  public void crossProduct(Vector3 other) {
+    double x;
+    double y;
 
-		x = (data[1] * other.data[2]) - (data[2] * other.data[1]);
-		y = (data[2] * other.data[0]) - (data[0] * other.data[2]);
-		data[2] = (data[0] * other.data[1]) - (data[1] * other.data[0]);
-		data[0] = x;
-		data[1] = y;
-	}
+    x = (data[1] * other.data[2]) - (data[2] * other.data[1]);
+    y = (data[2] * other.data[0]) - (data[0] * other.data[2]);
+    data[2] = (data[0] * other.data[1]) - (data[1] * other.data[0]);
+    data[0] = x;
+    data[1] = y;
+  }
 
-	/**
-	 * Set this to the cross product of A and B.
-	 */
-	public void crossProduct(Vector3 A, Vector3 B) {
-		data[0] = (A.data[1] * B.data[2]) - (A.data[2] * B.data[1]);
-		data[1] = (A.data[2] * B.data[0]) - (A.data[0] * B.data[2]);
-		data[2] = (A.data[0] * B.data[1]) - (A.data[1] * B.data[0]);
-	}
+  /**
+   * Set this to the cross product of A and B.
+   */
+  public void crossProduct(Vector3 A, Vector3 B) {
+    data[0] = (A.data[1] * B.data[2]) - (A.data[2] * B.data[1]);
+    data[1] = (A.data[2] * B.data[0]) - (A.data[0] * B.data[2]);
+    data[2] = (A.data[0] * B.data[1]) - (A.data[1] * B.data[0]);
+  }
 
-	/**
-	 * Transform this into an unit vector.
-	 * 
-	 * @return the vector length.
-	 */
-	@Override
-	public double normalize() {
-		double len = length();
+  /**
+   * Transform this into an unit vector.
+   * 
+   * @return the vector length.
+   */
+  @Override
+  public double normalize() {
+    double len = length();
 
-		if (len != 0) {
-			data[0] /= len;
-			data[1] /= len;
-			data[2] /= len;
-		}
+    if (len != 0) {
+      data[0] /= len;
+      data[1] /= len;
+      data[2] /= len;
+    }
 
-		return len;
-	}
+    return len;
+  }
 
-	// Utility
+  // Utility
 
-	/**
-	 * Make this a copy of other.
-	 */
-	public void copy(Vector3 other) {
-		data[0] = other.data[0];
-		data[1] = other.data[1];
-		data[2] = other.data[2];
-	}
+  /**
+   * Make this a copy of other.
+   */
+  public void copy(Vector3 other) {
+    data[0] = other.data[0];
+    data[1] = other.data[1];
+    data[2] = other.data[2];
+  }
 
-	/**
-	 * Make this a copy of <code>point</code>.
-	 */
-	public void copy(Point3 point) {
-		data[0] = point.x;
-		data[1] = point.y;
-		data[2] = point.z;
-	}
+  /**
+   * Make this a copy of <code>point</code>.
+   */
+  public void copy(Point3 point) {
+    data[0] = point.x;
+    data[1] = point.y;
+    data[2] = point.z;
+  }
 
-	// Misc.
+  // Misc.
 
-	@Override
-	public String toString() {
-		StringBuffer sb = new StringBuffer("[");
+  @Override
+  public String toString() {
+    StringBuffer sb = new StringBuffer("[");
 
-		sb.append(data[0]);
-		sb.append('|');
-		sb.append(data[1]);
-		sb.append('|');
-		sb.append(data[2]);
-		sb.append(']');
+    sb.append(data[0]);
+    sb.append('|');
+    sb.append(data[1]);
+    sb.append('|');
+    sb.append(data[2]);
+    sb.append(']');
 
-		return sb.toString();
-	}
+    return sb.toString();
+  }
 }

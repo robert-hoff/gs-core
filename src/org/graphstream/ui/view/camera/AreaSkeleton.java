@@ -38,7 +38,7 @@ import org.graphstream.ui.geom.Point2;
  * and sprites.
  */
 public interface AreaSkeleton {
-	public Point2 theSize();
+  public Point2 theSize();
 
-	public Point2 theCenter();
+  public Point2 theCenter();
 }

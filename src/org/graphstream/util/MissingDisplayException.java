@@ -25,7 +25,11 @@
 package org.graphstream.util;
 
 public class MissingDisplayException extends Exception {
-	public MissingDisplayException(String message) {
-		super(message);
-	}
+  private static final long serialVersionUID = 8299492159737490515L;
+  public MissingDisplayException(String message) {
+    super(message);
+  }
 }
+
+
+

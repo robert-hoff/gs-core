@@ -46,36 +46,36 @@ import java.util.logging.Logger;
  */
 public class GraphFactory {
 
-	private static final Logger logger = Logger.getLogger(GraphFactory.class.getSimpleName());
+  private static final Logger logger = Logger.getLogger(GraphFactory.class.getSimpleName());
 
-	/**
-	 * Create a new instance of graph.
-	 */
-	public GraphFactory() {
-	}
+  /**
+   * Create a new instance of graph.
+   */
+  public GraphFactory() {
+  }
 
-	/**
-	 * Instantiate a new graph from the given class name.
-	 * 
-	 * @return A graph instance or null if the graph class was not found.
-	 */
-	public Graph newInstance(String id, String graphClass) {
-		try {
-			String completeGraphClass;
-			if (graphClass.split("[.]").length < 2) {
-				completeGraphClass = "org.graphstream.graph.implementations." + graphClass;
-			} else {
-				completeGraphClass = graphClass;
-			}
-			// Graph res = (Graph) Class.forName( completeGraphClass
-			// ).newInstance();
-			// res.setId( id );
-			Class<?> clazz = Class.forName(completeGraphClass);
-			Graph res = (Graph) clazz.getConstructor(String.class).newInstance(id);
-			return res;
-		} catch (final Exception e) {
-			logger.log(Level.SEVERE, "Error executing GraphFactory#newInstance.", e);
-		}
-		return null;
-	}
+  /**
+   * Instantiate a new graph from the given class name.
+   * 
+   * @return A graph instance or null if the graph class was not found.
+   */
+  public Graph newInstance(String id, String graphClass) {
+    try {
+      String completeGraphClass;
+      if (graphClass.split("[.]").length < 2) {
+        completeGraphClass = "org.graphstream.graph.implementations." + graphClass;
+      } else {
+        completeGraphClass = graphClass;
+      }
+      // Graph res = (Graph) Class.forName( completeGraphClass
+      // ).newInstance();
+      // res.setId( id );
+      Class<?> clazz = Class.forName(completeGraphClass);
+      Graph res = (Graph) clazz.getConstructor(String.class).newInstance(id);
+      return res;
+    } catch (final Exception e) {
+      logger.log(Level.SEVERE, "Error executing GraphFactory#newInstance.", e);
+    }
+    return null;
+  }
 }

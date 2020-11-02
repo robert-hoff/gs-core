@@ -39,72 +39,77 @@ import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 public class BreadthFirstIterator implements Iterator<Node> {
-	protected boolean directed;
-	protected Graph graph;
-	protected Node[] queue;
-	protected int[] depth;
-	protected int qHead, qTail;
+  protected boolean directed;
+  protected Graph graph;
+  protected Node[] queue;
+  protected int[] depth;
+  protected int qHead, qTail;
 
-	public BreadthFirstIterator(Node startNode, boolean directed) {
-		this.directed = directed;
-		graph = startNode.getGraph();
-		int n = graph.getNodeCount();
-		queue = new Node[n];
-		depth = new int[n];
+  public BreadthFirstIterator(Node startNode, boolean directed) {
+    this.directed = directed;
+    graph = startNode.getGraph();
+    int n = graph.getNodeCount();
+    queue = new Node[n];
+    depth = new int[n];
 
-		int s = startNode.getIndex();
-		for (int i = 0; i < n; i++)
-			depth[i] = i == s ? 0 : -1;
-		queue[0] = startNode;
-		qHead = 0;
-		qTail = 1;
-	}
+    int s = startNode.getIndex();
+    for (int i = 0; i < n; i++) {
+      depth[i] = i == s ? 0 : -1;
+    }
+    queue[0] = startNode;
+    qHead = 0;
+    qTail = 1;
+  }
 
-	public BreadthFirstIterator(Node startNode) {
-		this(startNode, true);
-	}
+  public BreadthFirstIterator(Node startNode) {
+    this(startNode, true);
+  }
 
-	public boolean hasNext() {
-		return qHead < qTail;
-	}
+  @Override
+  public boolean hasNext() {
+    return qHead < qTail;
+  }
 
-	public Node next() {
-		if (qHead >= qTail)
-			throw new NoSuchElementException();
-		Node current = queue[qHead++];
-		int level = depth[current.getIndex()] + 1;
-		Stream<Edge> edges = directed ? current.leavingEdges() : current.edges();
+  @Override
+  public Node next() {
+    if (qHead >= qTail) {
+      throw new NoSuchElementException();
+    }
+    Node current = queue[qHead++];
+    int level = depth[current.getIndex()] + 1;
+    Stream<Edge> edges = directed ? current.leavingEdges() : current.edges();
 
-		edges.forEach(e -> {
-			Node node = e.getOpposite(current);
-			int j = node.getIndex();
+    edges.forEach(e -> {
+      Node node = e.getOpposite(current);
+      int j = node.getIndex();
 
-			if (depth[j] == -1) {
-				queue[qTail++] = node;
-				depth[j] = level;
-			}
-		});
+      if (depth[j] == -1) {
+        queue[qTail++] = node;
+        depth[j] = level;
+      }
+    });
 
-		return current;
-	}
+    return current;
+  }
 
-	public void remove() {
-		throw new UnsupportedOperationException("This iterator does not support remove");
-	}
+  @Override
+  public void remove() {
+    throw new UnsupportedOperationException("This iterator does not support remove");
+  }
 
-	public int getDepthOf(Node node) {
-		return depth[node.getIndex()];
-	}
+  public int getDepthOf(Node node) {
+    return depth[node.getIndex()];
+  }
 
-	public int getDepthMax() {
-		return depth[queue[qTail - 1].getIndex()];
-	}
+  public int getDepthMax() {
+    return depth[queue[qTail - 1].getIndex()];
+  }
 
-	public boolean tabu(Node node) {
-		return depth[node.getIndex()] != -1;
-	}
+  public boolean tabu(Node node) {
+    return depth[node.getIndex()] != -1;
+  }
 
-	public boolean isDirected() {
-		return directed;
-	}
+  public boolean isDirected() {
+    return directed;
+  }
 }

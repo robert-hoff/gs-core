@@ -39,47 +39,47 @@ import org.junit.*;
  * Test the file input in DGS format.
  */
 public class TestFileSourceDGS extends TestFileSourceBase {
-	// Before
+  // Before
 
-	@Before
-	public void setUp() {
-		graph = new MultiGraph("g1");
-		input = new FileSourceDGS();
-	}
+  @Before
+  public void setUp() {
+    graph = new MultiGraph("g1");
+    input = new FileSourceDGS();
+  }
 
-	// Test
+  // Test
 
-	@Override
-	public String anUndirectedTriangle() {
-		return TEST1_TRIANGLE;
-	}
+  @Override
+  public String anUndirectedTriangle() {
+    return TEST1_TRIANGLE;
+  }
 
-	protected static String TEST1_TRIANGLE = "DGS004\n" + "\"test1\" 0 0\n" + "an A\n" + "an B\n" + "an C\n"
-			+ "ae AB A B\n" + "ae BC B C\n" + "ae CA C A\n";
+  protected static String TEST1_TRIANGLE = "DGS004\n" + "\"test1\" 0 0\n" + "an A\n" + "an B\n" + "an C\n"
+      + "ae AB A B\n" + "ae BC B C\n" + "ae CA C A\n";
 
-	@Override
-	public String aDirectedTriangle() {
-		return TEST2_DIRECTED_TRIANGLE;
-	}
+  @Override
+  public String aDirectedTriangle() {
+    return TEST2_DIRECTED_TRIANGLE;
+  }
 
-	protected static String TEST2_DIRECTED_TRIANGLE = "DGS004\n" + "\"test2\" 0 0\n" + "an A\n" + "an B\n" + "an C\n"
-			+ "ae AB A > B\n" + "ae BC B C\n" + "ae CA C < A\n";
+  protected static String TEST2_DIRECTED_TRIANGLE = "DGS004\n" + "\"test2\" 0 0\n" + "an A\n" + "an B\n" + "an C\n"
+      + "ae AB A > B\n" + "ae BC B C\n" + "ae CA C < A\n";
 
-	@Override
-	public String basicAttributes() {
-		return TEST3_ATTRIBUTES;
-	}
+  @Override
+  public String basicAttributes() {
+    return TEST3_ATTRIBUTES;
+  }
 
-	protected static String TEST3_ATTRIBUTES = "DGS004\n" + "\"test3\" 0 0\n" + "an A a:1 b:\"truc\" c:\"true\"\n"
-			+ "an B aa:1,2,3,4 bb:foo cc:bar\n" + "an C aaa=1.234\n" + "ae AB A B\n" + "ae BC B C\n" + "ae CA C A\n";
+  protected static String TEST3_ATTRIBUTES = "DGS004\n" + "\"test3\" 0 0\n" + "an A a:1 b:\"truc\" c:\"true\"\n"
+      + "an B aa:1,2,3,4 bb:foo cc:bar\n" + "an C aaa=1.234\n" + "ae AB A B\n" + "ae BC B C\n" + "ae CA C A\n";
 
-	@Override
-	public String anUndirectedTriangleFileName() {
-		return "src-test/org/graphstream/stream/file/test/data/undirectedTriangle.dgs";
-	}
+  @Override
+  public String anUndirectedTriangleFileName() {
+    return "src-test/org/graphstream/stream/file/test/data/undirectedTriangle.dgs";
+  }
 
-	@Override
-	public String anUndirectedTriangleHttpURL() {
-		return "http://graphstream-project.org/media/data/undirectedTriangle.dgs";
-	}
+  @Override
+  public String anUndirectedTriangleHttpURL() {
+    return "http://graphstream-project.org/media/data/undirectedTriangle.dgs";
+  }
 }

@@ -45,22 +45,22 @@ package org.graphstream.graph;
  * @since 19990811
  */
 public class IdAlreadyInUseException extends RuntimeException {
-	private static final long serialVersionUID = -3000770118436738366L;
+  private static final long serialVersionUID = -3000770118436738366L;
 
-	/**
-	 * Throws the message "singleton exception".
-	 */
-	public IdAlreadyInUseException() {
-		super("singleton exception");
-	}
+  /**
+   * Throws the message "singleton exception".
+   */
+  public IdAlreadyInUseException() {
+    super("singleton exception");
+  }
 
-	/**
-	 * Throws a given message.
-	 * 
-	 * @param message
-	 *            The message to throw.
-	 */
-	public IdAlreadyInUseException(String message) {
-		super("singleton exception: " + message);
-	}
+  /**
+   * Throws a given message.
+   * 
+   * @param message
+   *          The message to throw.
+   */
+  public IdAlreadyInUseException(String message) {
+    super("singleton exception: " + message);
+  }
 }

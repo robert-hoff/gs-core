@@ -34,56 +34,59 @@ package org.graphstream.stream.file.gexf;
 import javax.xml.stream.XMLStreamException;
 
 public class GEXFEdge implements GEXFElement {
-	GEXF root;
+  GEXF root;
 
-	String id;
-	String label;
-	String source;
-	String target;
-	boolean directed;
+  String id;
+  String label;
+  String source;
+  String target;
+  boolean directed;
 
-	double weight = Double.NaN;
+  double weight = Double.NaN;
 
-	GEXFAttValues attvalues;
-	GEXFSpells spells;
+  GEXFAttValues attvalues;
+  GEXFSpells spells;
 
-	public GEXFEdge(GEXF root, String id, String source, String target, boolean directed) {
-		this.root = root;
+  public GEXFEdge(GEXF root, String id, String source, String target, boolean directed) {
+    this.root = root;
 
-		this.id = id;
-		this.label = id;
-		this.source = source;
-		this.target = target;
-		this.directed = directed;
+    this.id = id;
+    this.label = id;
+    this.source = source;
+    this.target = target;
+    this.directed = directed;
 
-		spells = new GEXFSpells(root);
-		attvalues = new GEXFAttValues(root);
-	}
+    spells = new GEXFSpells(root);
+    attvalues = new GEXFAttValues(root);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		stream.startElement("edge");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    stream.startElement("edge");
 
-		stream.stream.writeAttribute("id", id);
-		stream.stream.writeAttribute("label", label);
-		stream.stream.writeAttribute("source", source);
-		stream.stream.writeAttribute("target", target);
-		stream.stream.writeAttribute("type", directed ? "directed" : "undirected");
+    stream.stream.writeAttribute("id", id);
+    stream.stream.writeAttribute("label", label);
+    stream.stream.writeAttribute("source", source);
+    stream.stream.writeAttribute("target", target);
+    stream.stream.writeAttribute("type", directed ? "directed" : "undirected");
 
-		if (!Double.isNaN(weight))
-			stream.stream.writeAttribute("weight", Double.toString(weight));
+    if (!Double.isNaN(weight)) {
+      stream.stream.writeAttribute("weight", Double.toString(weight));
+    }
 
-		if (root.isExtensionEnable(Extension.DYNAMICS))
-			spells.export(stream);
+    if (root.isExtensionEnable(Extension.DYNAMICS)) {
+      spells.export(stream);
+    }
 
-		attvalues.export(stream);
+    attvalues.export(stream);
 
-		stream.endElement(); // EDGE
-	}
+    stream.endElement(); // EDGE
+  }
 }

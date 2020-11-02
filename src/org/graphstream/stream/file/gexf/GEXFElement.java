@@ -40,74 +40,75 @@ import java.util.Locale;
 import javax.xml.stream.XMLStreamException;
 
 public interface GEXFElement {
-	public static enum Extension {
-		VIZ, DYNAMICS, DATA
-	}
+  public static enum Extension {
+    VIZ, DYNAMICS, DATA
+  }
 
-	public static enum TimeFormat {
-		INTEGER("integer", new DecimalFormat("#", new DecimalFormatSymbols(Locale.ROOT))), DOUBLE("double",
-				new DecimalFormat("#.0###################", new DecimalFormatSymbols(Locale.ROOT))), DATE("date",
-						new SimpleDateFormat("yyyy-MM-dd")), DATETIME("datetime",
-								new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSSZ"));
-		String qname;
-		Format format;
+  public static enum TimeFormat {
+    INTEGER("integer", new DecimalFormat("#", new DecimalFormatSymbols(Locale.ROOT))), DOUBLE("double",
+        new DecimalFormat("#.0###################", new DecimalFormatSymbols(Locale.ROOT))), DATE("date",
+            new SimpleDateFormat("yyyy-MM-dd")), DATETIME("datetime",
+                new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSSZ"));
 
-		TimeFormat(String qname, Format f) {
-			this.qname = qname;
-			this.format = f;
-		}
-	}
+    String qname;
+    Format format;
 
-	public static enum DefaultEdgeType {
-		UNDIRECTED("undirected"), DIRECTED("directed"), MUTUAL("mutual");
+    TimeFormat(String qname, Format f) {
+      this.qname = qname;
+      this.format = f;
+    }
+  }
 
-		final String qname;
+  public static enum DefaultEdgeType {
+    UNDIRECTED("undirected"), DIRECTED("directed"), MUTUAL("mutual");
 
-		DefaultEdgeType(String qname) {
-			this.qname = qname;
-		}
-	}
+    final String qname;
 
-	public static enum IDType {
-		INTEGER("integer"), STRING("string");
+    DefaultEdgeType(String qname) {
+      this.qname = qname;
+    }
+  }
 
-		final String qname;
+  public static enum IDType {
+    INTEGER("integer"), STRING("string");
 
-		IDType(String qname) {
-			this.qname = qname;
-		}
-	}
+    final String qname;
 
-	public static enum Mode {
-		STATIC("static"), DYNAMIC("dynamic");
+    IDType(String qname) {
+      this.qname = qname;
+    }
+  }
 
-		final String qname;
+  public static enum Mode {
+    STATIC("static"), DYNAMIC("dynamic");
 
-		Mode(String qname) {
-			this.qname = qname;
-		}
-	}
+    final String qname;
 
-	public static enum ClassType {
-		NODE("node"), EDGE("edge");
+    Mode(String qname) {
+      this.qname = qname;
+    }
+  }
 
-		final String qname;
+  public static enum ClassType {
+    NODE("node"), EDGE("edge");
 
-		ClassType(String qname) {
-			this.qname = qname;
-		}
-	}
+    final String qname;
 
-	public static enum AttrType {
-		INTEGER("integer"), LONG("long"), DOUBLE("double"), FLOAT("float"), BOOLEAN("boolean"), LISTSTRING(
-				"liststring"), STRING("string"), ANYURI("anyURI");
+    ClassType(String qname) {
+      this.qname = qname;
+    }
+  }
 
-		final String qname;
+  public static enum AttrType {
+    INTEGER("integer"), LONG("long"), DOUBLE("double"), FLOAT("float"), BOOLEAN("boolean"), LISTSTRING(
+        "liststring"), STRING("string"), ANYURI("anyURI");
 
-		AttrType(String qname) {
-			this.qname = qname;
-		}
-	}
+    final String qname;
 
-	void export(SmartXMLWriter stream) throws XMLStreamException;
+    AttrType(String qname) {
+      this.qname = qname;
+    }
+  }
+
+  void export(SmartXMLWriter stream) throws XMLStreamException;
 }

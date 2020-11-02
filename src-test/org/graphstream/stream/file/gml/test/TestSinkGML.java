@@ -42,42 +42,42 @@ import org.junit.Ignore;
 
 @Ignore
 public class TestSinkGML {
-	public static void main(String args[]) {
-		try {
-			(new TestSinkGML()).test();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+  public static void main(String args[]) {
+    try {
+      (new TestSinkGML()).test();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 
-	public void test() throws IOException {
-		Graph graph = new MultiGraph("test GML");
-		FileSinkGML out1 = new FileSinkGML();
-		FileSinkDynamicGML out2 = new FileSinkDynamicGML();
+  public void test() throws IOException {
+    Graph graph = new MultiGraph("test GML");
+    FileSinkGML out1 = new FileSinkGML();
+    FileSinkDynamicGML out2 = new FileSinkDynamicGML();
 
-		out1.begin("TestSinkGML.gml");
-		out2.begin("TestSinkGML.dgml");
+    out1.begin("TestSinkGML.gml");
+    out2.begin("TestSinkGML.dgml");
 
-		graph.addSink(out1);
-		graph.addSink(out2);
+    graph.addSink(out1);
+    graph.addSink(out2);
 
-		graph.addNode("A");
-		graph.getNode("A").setAttribute("s", "foo bar");
-		graph.addNode("B");
-		graph.stepBegins(1);
-		graph.addEdge("AB", "A", "B", true);
-		graph.getEdge("AB").setAttribute("n", 1);
-		graph.stepBegins(2);
-		graph.setAttribute("b", true);
-		graph.getNode("B").setAttribute("c", 'X');
-		graph.getNode("B").setAttribute("d", 'Y');
-		graph.stepBegins(3);
-		graph.getNode("B").removeAttribute("c");
-		graph.removeAttribute("b");
-		graph.removeNode("A");
-		graph.removeNode("B");
+    graph.addNode("A");
+    graph.getNode("A").setAttribute("s", "foo bar");
+    graph.addNode("B");
+    graph.stepBegins(1);
+    graph.addEdge("AB", "A", "B", true);
+    graph.getEdge("AB").setAttribute("n", 1);
+    graph.stepBegins(2);
+    graph.setAttribute("b", true);
+    graph.getNode("B").setAttribute("c", 'X');
+    graph.getNode("B").setAttribute("d", 'Y');
+    graph.stepBegins(3);
+    graph.getNode("B").removeAttribute("c");
+    graph.removeAttribute("b");
+    graph.removeNode("A");
+    graph.removeNode("B");
 
-		out1.end();
-		out2.end();
-	}
+    out1.end();
+    out2.end();
+  }
 }

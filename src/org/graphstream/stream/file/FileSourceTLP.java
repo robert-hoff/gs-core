@@ -118,16 +118,18 @@ import org.graphstream.util.parser.ParserFactory;
  * </ul>
  */
 public class FileSourceTLP extends FileSourceParser {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSourceParser#getNewFactory()
-	 */
-	public ParserFactory getNewParserFactory() {
-		return new ParserFactory() {
-			public Parser newParser(Reader reader) {
-				return new TLPParser(FileSourceTLP.this, reader);
-			}
-		};
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSourceParser#getNewFactory()
+   */
+  @Override
+  public ParserFactory getNewParserFactory() {
+    return new ParserFactory() {
+      @Override
+      public Parser newParser(Reader reader) {
+        return new TLPParser(FileSourceTLP.this, reader);
+      }
+    };
+  }
 }

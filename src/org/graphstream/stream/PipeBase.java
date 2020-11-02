@@ -47,66 +47,81 @@ package org.graphstream.stream;
  * </p>
  */
 public class PipeBase extends SourceBase implements Pipe {
-	public void edgeAttributeAdded(String graphId, long timeId, String edgeId, String attribute, Object value) {
-		sendEdgeAttributeAdded(graphId, timeId, edgeId, attribute, value);
-	}
+  @Override
+  public void edgeAttributeAdded(String graphId, long timeId, String edgeId, String attribute, Object value) {
+    sendEdgeAttributeAdded(graphId, timeId, edgeId, attribute, value);
+  }
 
-	public void edgeAttributeChanged(String graphId, long timeId, String edgeId, String attribute, Object oldValue,
-			Object newValue) {
-		sendEdgeAttributeChanged(graphId, timeId, edgeId, attribute, oldValue, newValue);
-	}
+  @Override
+  public void edgeAttributeChanged(String graphId, long timeId, String edgeId, String attribute, Object oldValue,
+      Object newValue) {
+    sendEdgeAttributeChanged(graphId, timeId, edgeId, attribute, oldValue, newValue);
+  }
 
-	public void edgeAttributeRemoved(String graphId, long timeId, String edgeId, String attribute) {
-		sendEdgeAttributeRemoved(graphId, timeId, edgeId, attribute);
-	}
+  @Override
+  public void edgeAttributeRemoved(String graphId, long timeId, String edgeId, String attribute) {
+    sendEdgeAttributeRemoved(graphId, timeId, edgeId, attribute);
+  }
 
-	public void graphAttributeAdded(String graphId, long timeId, String attribute, Object value) {
-		sendGraphAttributeAdded(graphId, timeId, attribute, value);
-	}
+  @Override
+  public void graphAttributeAdded(String graphId, long timeId, String attribute, Object value) {
+    sendGraphAttributeAdded(graphId, timeId, attribute, value);
+  }
 
-	public void graphAttributeChanged(String graphId, long timeId, String attribute, Object oldValue, Object newValue) {
-		sendGraphAttributeChanged(graphId, timeId, attribute, oldValue, newValue);
-	}
+  @Override
+  public void graphAttributeChanged(String graphId, long timeId, String attribute, Object oldValue, Object newValue) {
+    sendGraphAttributeChanged(graphId, timeId, attribute, oldValue, newValue);
+  }
 
-	public void graphAttributeRemoved(String graphId, long timeId, String attribute) {
-		sendGraphAttributeRemoved(graphId, timeId, attribute);
-	}
+  @Override
+  public void graphAttributeRemoved(String graphId, long timeId, String attribute) {
+    sendGraphAttributeRemoved(graphId, timeId, attribute);
+  }
 
-	public void nodeAttributeAdded(String graphId, long timeId, String nodeId, String attribute, Object value) {
-		sendNodeAttributeAdded(graphId, timeId, nodeId, attribute, value);
-	}
+  @Override
+  public void nodeAttributeAdded(String graphId, long timeId, String nodeId, String attribute, Object value) {
+    sendNodeAttributeAdded(graphId, timeId, nodeId, attribute, value);
+  }
 
-	public void nodeAttributeChanged(String graphId, long timeId, String nodeId, String attribute, Object oldValue,
-			Object newValue) {
-		sendNodeAttributeChanged(graphId, timeId, nodeId, attribute, oldValue, newValue);
-	}
+  @Override
+  public void nodeAttributeChanged(String graphId, long timeId, String nodeId, String attribute, Object oldValue,
+      Object newValue) {
+    sendNodeAttributeChanged(graphId, timeId, nodeId, attribute, oldValue, newValue);
+  }
 
-	public void nodeAttributeRemoved(String graphId, long timeId, String nodeId, String attribute) {
-		sendNodeAttributeRemoved(graphId, timeId, nodeId, attribute);
-	}
+  @Override
+  public void nodeAttributeRemoved(String graphId, long timeId, String nodeId, String attribute) {
+    sendNodeAttributeRemoved(graphId, timeId, nodeId, attribute);
+  }
 
-	public void edgeAdded(String graphId, long timeId, String edgeId, String fromNodeId, String toNodeId,
-			boolean directed) {
-		sendEdgeAdded(graphId, timeId, edgeId, fromNodeId, toNodeId, directed);
-	}
+  @Override
+  public void edgeAdded(String graphId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+      boolean directed) {
+    sendEdgeAdded(graphId, timeId, edgeId, fromNodeId, toNodeId, directed);
+  }
 
-	public void edgeRemoved(String graphId, long timeId, String edgeId) {
-		sendEdgeRemoved(graphId, timeId, edgeId);
-	}
+  @Override
+  public void edgeRemoved(String graphId, long timeId, String edgeId) {
+    sendEdgeRemoved(graphId, timeId, edgeId);
+  }
 
-	public void graphCleared(String graphId, long timeId) {
-		sendGraphCleared(graphId, timeId);
-	}
+  @Override
+  public void graphCleared(String graphId, long timeId) {
+    sendGraphCleared(graphId, timeId);
+  }
 
-	public void nodeAdded(String graphId, long timeId, String nodeId) {
-		sendNodeAdded(graphId, timeId, nodeId);
-	}
+  @Override
+  public void nodeAdded(String graphId, long timeId, String nodeId) {
+    sendNodeAdded(graphId, timeId, nodeId);
+  }
 
-	public void nodeRemoved(String graphId, long timeId, String nodeId) {
-		sendNodeRemoved(graphId, timeId, nodeId);
-	}
+  @Override
+  public void nodeRemoved(String graphId, long timeId, String nodeId) {
+    sendNodeRemoved(graphId, timeId, nodeId);
+  }
 
-	public void stepBegins(String graphId, long timeId, double step) {
-		sendStepBegins(graphId, timeId, step);
-	}
+  @Override
+  public void stepBegins(String graphId, long timeId, double step) {
+    sendStepBegins(graphId, timeId, step);
+  }
 }

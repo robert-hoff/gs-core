@@ -40,30 +40,39 @@ package org.graphstream.stream;
  * </p>
  */
 public class SourceAdapter implements Source {
-	public void addAttributeSink(AttributeSink sink) {
-	}
+  @Override
+  public void addAttributeSink(AttributeSink sink) {
+  }
 
-	public void addElementSink(ElementSink sink) {
-	}
+  @Override
+  public void addElementSink(ElementSink sink) {
+  }
 
-	public void addSink(Sink sink) {
-	}
+  @Override
+  public void addSink(Sink sink) {
+  }
 
-	public void removeAttributeSink(AttributeSink sink) {
-	}
+  @Override
+  public void removeAttributeSink(AttributeSink sink) {
+  }
 
-	public void removeElementSink(ElementSink sink) {
-	}
+  @Override
+  public void removeElementSink(ElementSink sink) {
+  }
 
-	public void removeSink(Sink sink) {
-	}
+  @Override
+  public void removeSink(Sink sink) {
+  }
 
-	public void clearAttributeSinks() {
-	}
+  @Override
+  public void clearAttributeSinks() {
+  }
 
-	public void clearElementSinks() {
-	}
+  @Override
+  public void clearElementSinks() {
+  }
 
-	public void clearSinks() {
-	}
+  @Override
+  public void clearSinks() {
+  }
 }

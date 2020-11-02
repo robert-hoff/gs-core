@@ -33,60 +33,62 @@ package org.graphstream.stream.file.gexf;
 import javax.xml.stream.XMLStreamException;
 
 public class GEXFNode implements GEXFElement {
-	GEXF root;
+  GEXF root;
 
-	String id;
-	String label;
+  String id;
+  String label;
 
-	GEXFAttValues attvalues;
-	GEXFSpells spells;
+  GEXFAttValues attvalues;
+  GEXFSpells spells;
 
-	//
-	// VIZ Extension
-	float x;
-	float y;
-	float z;
-	boolean position;
+  //
+  // VIZ Extension
+  float x;
+  float y;
+  float z;
+  boolean position;
 
-	//
+  //
 
-	public GEXFNode(GEXF root, String id) {
-		this.root = root;
+  public GEXFNode(GEXF root, String id) {
+    this.root = root;
 
-		this.id = id;
-		this.label = id;
+    this.id = id;
+    this.label = id;
 
-		spells = new GEXFSpells(root);
-		attvalues = new GEXFAttValues(root);
-		position = false;
-	}
+    spells = new GEXFSpells(root);
+    attvalues = new GEXFAttValues(root);
+    position = false;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		stream.startElement("node");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    stream.startElement("node");
 
-		stream.stream.writeAttribute("id", id);
-		stream.stream.writeAttribute("label", label);
+    stream.stream.writeAttribute("id", id);
+    stream.stream.writeAttribute("label", label);
 
-		if (position && root.isExtensionEnable(Extension.VIZ)) {
-			stream.startElement("viz:position");
-			stream.stream.writeAttribute("x", Float.toString(x));
-			stream.stream.writeAttribute("y", Float.toString(y));
-			stream.stream.writeAttribute("z", Float.toString(z));
-			stream.endElement(); // POSITION
-		}
+    if (position && root.isExtensionEnable(Extension.VIZ)) {
+      stream.startElement("viz:position");
+      stream.stream.writeAttribute("x", Float.toString(x));
+      stream.stream.writeAttribute("y", Float.toString(y));
+      stream.stream.writeAttribute("z", Float.toString(z));
+      stream.endElement(); // POSITION
+    }
 
-		attvalues.export(stream);
+    attvalues.export(stream);
 
-		if (root.isExtensionEnable(Extension.DYNAMICS))
-			spells.export(stream);
+    if (root.isExtensionEnable(Extension.DYNAMICS)) {
+      spells.export(stream);
+    }
 
-		stream.endElement(); // SPELLS
-	}
+    stream.endElement(); // SPELLS
+  }
 }

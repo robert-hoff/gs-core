@@ -38,22 +38,22 @@ package org.graphstream.graph;
  * @since 20020615
  */
 public class ElementNotFoundException extends RuntimeException {
-	private static final long serialVersionUID = 5089958436773409615L;
+  private static final long serialVersionUID = 5089958436773409615L;
 
-	/**
-	 * Throws the message "not found".
-	 */
-	public ElementNotFoundException() {
-		super("not found");
-	}
+  /**
+   * Throws the message "not found".
+   */
+  public ElementNotFoundException() {
+    super("not found");
+  }
 
-	/**
-	 * Throws <code>message</code>.
-	 * 
-	 * @param message
-	 *            The message to throw.
-	 */
-	public ElementNotFoundException(String message, Object... args) {
-		super(String.format(message, args));
-	}
+  /**
+   * Throws <code>message</code>.
+   * 
+   * @param message
+   *          The message to throw.
+   */
+  public ElementNotFoundException(String message, Object... args) {
+    super(String.format(message, args));
+  }
 }

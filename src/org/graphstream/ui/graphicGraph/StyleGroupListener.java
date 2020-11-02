@@ -40,15 +40,15 @@ import org.graphstream.graph.Element;
  * @author Antoine Dutot
  */
 public interface StyleGroupListener {
-	/**
-	 * The style of the element changed.
-	 * 
-	 * @param element
-	 *            The element.
-	 * @param oldStyle
-	 *            The old style.
-	 * @param style
-	 *            The changed style or the new style of the element.
-	 */
-	void elementStyleChanged(Element element, StyleGroup oldStyle, StyleGroup style);
+  /**
+   * The style of the element changed.
+   * 
+   * @param element
+   *          The element.
+   * @param oldStyle
+   *          The old style.
+   * @param style
+   *          The changed style or the new style of the element.
+   */
+  void elementStyleChanged(Element element, StyleGroup oldStyle, StyleGroup style);
 }

@@ -83,139 +83,141 @@ import java.util.HashSet;
  * The usual file name extension for this format is ".ncol".
  */
 public class FileSourceNCol extends FileSourceBase {
-	// Attribute
+  // Attribute
 
-	/**
-	 * Allocator for edge identifiers.
-	 */
-	protected int edgeid = 0;
+  /**
+   * Allocator for edge identifiers.
+   */
+  protected int edgeid = 0;
 
-	/**
-	 * Set of existing nodes (if nodes are declared).
-	 */
-	protected HashSet<String> nodes;
+  /**
+   * Set of existing nodes (if nodes are declared).
+   */
+  protected HashSet<String> nodes;
 
-	protected String graphName = "NCOL_";
+  protected String graphName = "NCOL_";
 
-	// Construction
+  // Construction
 
-	/**
-	 * New reader for the "ncol" format.
-	 */
-	public FileSourceNCol() {
-		this(false);
-	}
+  /**
+   * New reader for the "ncol" format.
+   */
+  public FileSourceNCol() {
+    this(false);
+  }
 
-	/**
-	 * New reader for the "ncol" format.
-	 * 
-	 * @param declareNodes
-	 *            If true (default=true) this reader outputs nodeAdded events.
-	 */
-	public FileSourceNCol(boolean declareNodes) {
-		nodes = declareNodes ? new HashSet<String>() : null;
-	}
+  /**
+   * New reader for the "ncol" format.
+   * 
+   * @param declareNodes
+   *          If true (default=true) this reader outputs nodeAdded events.
+   */
+  public FileSourceNCol(boolean declareNodes) {
+    nodes = declareNodes ? new HashSet<String>() : null;
+  }
 
-	// Commands
+  // Commands
 
-	@Override
-	protected void continueParsingInInclude() throws IOException {
-		// Should not happen, NCol files cannot be nested.
-	}
+  @Override
+  protected void continueParsingInInclude() throws IOException {
+    // Should not happen, NCol files cannot be nested.
+  }
 
-	@Override
-	public boolean nextEvents() throws IOException {
-		String id1 = getWordOrNumberOrStringOrEolOrEof();
+  @Override
+  public boolean nextEvents() throws IOException {
+    String id1 = getWordOrNumberOrStringOrEolOrEof();
 
-		if (id1.equals("EOL")) {
-			// Empty line. Skip it.
-		} else if (id1.equals("EOF")) {
-			return false;
-		} else {
-			declareNode(id1);
+    if (id1.equals("EOL")) {
+      // Empty line. Skip it.
+    } else if (id1.equals("EOF")) {
+      return false;
+    } else {
+      declareNode(id1);
 
-			String id2 = getWordOrNumberOrStringOrEolOrEof();
+      String id2 = getWordOrNumberOrStringOrEolOrEof();
 
-			if (!id2.equals("EOL") && !id2.equals("EOF")) {
-				// Loops are not accepted by the format.
-				if (!id1.equals(id2)) {
-					// There may be a weight.
-					String weight = getWordOrNumberOrStringOrEolOrEof();
-					double w = 0.0;
+      if (!id2.equals("EOL") && !id2.equals("EOF")) {
+        // Loops are not accepted by the format.
+        if (!id1.equals(id2)) {
+          // There may be a weight.
+          String weight = getWordOrNumberOrStringOrEolOrEof();
+          double w = 0.0;
 
-					if (weight.equals("EOL") || weight.equals("EOF")) {
-						weight = null;
-						pushBack();
-					} else {
-						try {
-							w = Double.parseDouble(weight);
-						} catch (Exception e) {
-							throw new IOException(String.format("cannot transform weight %s into a number", weight));
-						}
-					}
+          if (weight.equals("EOL") || weight.equals("EOF")) {
+            weight = null;
+            pushBack();
+          } else {
+            try {
+              w = Double.parseDouble(weight);
+            } catch (Exception e) {
+              throw new IOException(String.format("cannot transform weight %s into a number", weight));
+            }
+          }
 
-					String edgeId = Integer.toString(edgeid++);
+          String edgeId = Integer.toString(edgeid++);
 
-					declareNode(id2);
-					sendEdgeAdded(graphName, edgeId, id1, id2, false);
+          declareNode(id2);
+          sendEdgeAdded(graphName, edgeId, id1, id2, false);
 
-					if (weight != null)
-						sendEdgeAttributeAdded(graphName, edgeId, "weight", (Double) w);
-				}
-			} else {
-				throw new IOException("unexpected EOL or EOF");
-			}
-		}
+          if (weight != null) {
+            sendEdgeAttributeAdded(graphName, edgeId, "weight", w);
+          }
+        }
+      } else {
+        throw new IOException("unexpected EOL or EOF");
+      }
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	protected void declareNode(String id) {
-		if (nodes != null) {
-			if (!nodes.contains(id)) {
-				sendNodeAdded(graphName, id);
-				nodes.add(id);
-			}
-		}
-	}
+  protected void declareNode(String id) {
+    if (nodes != null) {
+      if (!nodes.contains(id)) {
+        sendNodeAdded(graphName, id);
+        nodes.add(id);
+      }
+    }
+  }
 
-	@Override
-	public void begin(String filename) throws IOException {
-		super.begin(filename);
-		init();
-	}
+  @Override
+  public void begin(String filename) throws IOException {
+    super.begin(filename);
+    init();
+  }
 
-	@Override
-	public void begin(URL url) throws IOException {
-		super.begin(url);
-		init();
-	}
+  @Override
+  public void begin(URL url) throws IOException {
+    super.begin(url);
+    init();
+  }
 
-	@Override
-	public void begin(InputStream stream) throws IOException {
-		super.begin(stream);
-		init();
-	}
+  @Override
+  public void begin(InputStream stream) throws IOException {
+    super.begin(stream);
+    init();
+  }
 
-	@Override
-	public void begin(Reader reader) throws IOException {
-		super.begin(reader);
-		init();
-	}
+  @Override
+  public void begin(Reader reader) throws IOException {
+    super.begin(reader);
+    init();
+  }
 
-	protected void init() throws IOException {
-		st.eolIsSignificant(true);
-		st.commentChar('#');
+  protected void init() throws IOException {
+    st.eolIsSignificant(true);
+    st.commentChar('#');
 
-		graphName = String.format("%s_%d", graphName, System.currentTimeMillis() + ((long) Math.random() * 10));
-	}
+    graphName = String.format("%s_%d", graphName, System.currentTimeMillis() + ((long) Math.random() * 10));
+  }
 
-	public boolean nextStep() throws IOException {
-		return nextEvents();
-	}
+  @Override
+  public boolean nextStep() throws IOException {
+    return nextEvents();
+  }
 
-	@Override
-	public void end() throws IOException {
-		super.end();
-	}
+  @Override
+  public void end() throws IOException {
+    super.end();
+  }
 }

@@ -38,7 +38,6 @@ import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -47,230 +46,253 @@ import org.graphstream.graph.Node;
  * Graph writer for the GraphViz DOT format.
  */
 public class FileSinkDOT extends FileSinkBase {
-	// Attribute
+  // Attribute
 
-	/**
-	 * The output.
-	 */
-	protected PrintWriter out;
+  /**
+   * The output.
+   */
+  protected PrintWriter out;
 
-	/**
-	 * The graph name (set as soon as known).
-	 */
-	protected String graphName = "";
+  /**
+   * The graph name (set as soon as known).
+   */
+  protected String graphName = "";
 
-	/**
-	 * Is the graph directed ?
-	 */
-	protected boolean digraph;
+  /**
+   * Is the graph directed ?
+   */
+  protected boolean digraph;
 
-	/**
-	 * What element ?.
-	 */
-	protected enum What {
-		NODE, EDGE, OTHER
-	};
+  /**
+   * What element ?.
+   */
+  protected enum What {
+    NODE, EDGE, OTHER
+  };
 
-	/**
-	 * Build a new DOT sink to export undirected graph.
-	 */
-	public FileSinkDOT() {
-		this(false);
-	}
+  /**
+   * Build a new DOT sink to export undirected graph.
+   */
+  public FileSinkDOT() {
+    this(false);
+  }
 
-	/**
-	 * Build a new DOT sink specifying if the graph is directed or not.
-	 * 
-	 * @param digraph
-	 *            true if the graph is directed
-	 */
-	public FileSinkDOT(boolean digraph) {
-		this.digraph = digraph;
-	}
+  /**
+   * Build a new DOT sink specifying if the graph is directed or not.
+   * 
+   * @param digraph
+   *          true if the graph is directed
+   */
+  public FileSinkDOT(boolean digraph) {
+    this.digraph = digraph;
+  }
 
-	// Command
+  // Command
 
-	/**
-	 * Set flag indicating if exported graph is directed or not.
-	 * 
-	 * @param digraph
-	 *            true is exported graph is directed
-	 */
-	public void setDirected(boolean digraph) {
-		this.digraph = digraph;
-	}
+  /**
+   * Set flag indicating if exported graph is directed or not.
+   * 
+   * @param digraph
+   *          true is exported graph is directed
+   */
+  public void setDirected(boolean digraph) {
+    this.digraph = digraph;
+  }
 
-	/**
-	 * Get the flag indicating if exported graph is directed or not.
-	 * 
-	 * @return true if exported graph is directed
-	 */
-	public boolean isDirected() {
-		return digraph;
-	}
+  /**
+   * Get the flag indicating if exported graph is directed or not.
+   * 
+   * @return true if exported graph is directed
+   */
+  public boolean isDirected() {
+    return digraph;
+  }
 
-	@Override
-	protected void exportGraph(Graph graph) {
-		String graphId = graph.getId();
-		AtomicLong timeId = new AtomicLong(0);
+  @Override
+  protected void exportGraph(Graph graph) {
+    String graphId = graph.getId();
+    AtomicLong timeId = new AtomicLong(0);
 
-		graph.attributeKeys()
-				.forEach(key -> graphAttributeAdded(graphId, timeId.getAndIncrement(), key, graph.getAttribute(key)));
+    graph.attributeKeys()
+    .forEach(key -> graphAttributeAdded(graphId, timeId.getAndIncrement(), key, graph.getAttribute(key)));
 
-		for (Node node : graph) {
-			String nodeId = node.getId();
-			out.printf("\t\"%s\" %s;%n", nodeId, outputAttributes(node));
-		}
+    for (Node node : graph) {
+      String nodeId = node.getId();
+      out.printf("\t\"%s\" %s;%n", nodeId, outputAttributes(node));
+    }
 
-		graph.edges().forEach(edge -> {
-			String fromNodeId = edge.getNode0().getId();
-			String toNodeId = edge.getNode1().getId();
-			String attr = outputAttributes(edge);
+    graph.edges().forEach(edge -> {
+      String fromNodeId = edge.getNode0().getId();
+      String toNodeId = edge.getNode1().getId();
+      String attr = outputAttributes(edge);
 
-			if (digraph) {
-				out.printf("\t\"%s\" -> \"%s\"", fromNodeId, toNodeId);
+      if (digraph) {
+        out.printf("\t\"%s\" -> \"%s\"", fromNodeId, toNodeId);
 
-				if (!edge.isDirected())
-					out.printf(" -> \"%s\"", fromNodeId);
-			} else
-				out.printf("\t\"%s\" -- \"%s\"", fromNodeId, toNodeId);
+        if (!edge.isDirected()) {
+          out.printf(" -> \"%s\"", fromNodeId);
+        }
+      } else {
+        out.printf("\t\"%s\" -- \"%s\"", fromNodeId, toNodeId);
+      }
 
-			out.printf(" %s;%n", attr);
-		});
-	}
+      out.printf(" %s;%n", attr);
+    });
+  }
 
-	@Override
-	protected void outputHeader() throws IOException {
-		out = (PrintWriter) output;
-		out.printf("%s {%n", digraph ? "digraph" : "graph");
+  @Override
+  protected void outputHeader() throws IOException {
+    out = (PrintWriter) output;
+    out.printf("%s {%n", digraph ? "digraph" : "graph");
 
-		if (graphName.length() > 0)
-			out.printf("\tgraph [label=%s];%n", graphName);
-	}
+    if (graphName.length() > 0) {
+      out.printf("\tgraph [label=%s];%n", graphName);
+    }
+  }
 
-	@Override
-	protected void outputEndOfFile() throws IOException {
-		out.printf("}%n");
-	}
+  @Override
+  protected void outputEndOfFile() throws IOException {
+    out.printf("}%n");
+  }
 
-	public void edgeAttributeAdded(String graphId, long timeId, String edgeId, String attribute, Object value) {
-		// NOP
-	}
+  @Override
+  public void edgeAttributeAdded(String graphId, long timeId, String edgeId, String attribute, Object value) {
+    // NOP
+  }
 
-	public void edgeAttributeChanged(String graphId, long timeId, String edgeId, String attribute, Object oldValue,
-			Object newValue) {
-		// NOP
-	}
+  @Override
+  public void edgeAttributeChanged(String graphId, long timeId, String edgeId, String attribute, Object oldValue,
+      Object newValue) {
+    // NOP
+  }
 
-	public void edgeAttributeRemoved(String graphId, long timeId, String edgeId, String attribute) {
-		// NOP
-	}
+  @Override
+  public void edgeAttributeRemoved(String graphId, long timeId, String edgeId, String attribute) {
+    // NOP
+  }
 
-	public void graphAttributeAdded(String graphId, long timeId, String attribute, Object value) {
-		out.printf("\tgraph [ %s ];%n", outputAttribute(attribute, value, true));
-	}
+  @Override
+  public void graphAttributeAdded(String graphId, long timeId, String attribute, Object value) {
+    out.printf("\tgraph [ %s ];%n", outputAttribute(attribute, value, true));
+  }
 
-	public void graphAttributeChanged(String graphId, long timeId, String attribute, Object oldValue, Object newValue) {
-		out.printf("\tgraph [ %s ];%n", outputAttribute(attribute, newValue, true));
-	}
+  @Override
+  public void graphAttributeChanged(String graphId, long timeId, String attribute, Object oldValue, Object newValue) {
+    out.printf("\tgraph [ %s ];%n", outputAttribute(attribute, newValue, true));
+  }
 
-	public void graphAttributeRemoved(String graphId, long timeId, String attribute) {
-		// NOP
-	}
+  @Override
+  public void graphAttributeRemoved(String graphId, long timeId, String attribute) {
+    // NOP
+  }
 
-	public void nodeAttributeAdded(String graphId, long timeId, String nodeId, String attribute, Object value) {
-		out.printf("\t\"%s\" [ %s ];%n", nodeId, outputAttribute(attribute, value, true));
-	}
+  @Override
+  public void nodeAttributeAdded(String graphId, long timeId, String nodeId, String attribute, Object value) {
+    out.printf("\t\"%s\" [ %s ];%n", nodeId, outputAttribute(attribute, value, true));
+  }
 
-	public void nodeAttributeChanged(String graphId, long timeId, String nodeId, String attribute, Object oldValue,
-			Object newValue) {
-		out.printf("\t\"%s\" [ %s ];%n", nodeId, outputAttribute(attribute, newValue, true));
-	}
+  @Override
+  public void nodeAttributeChanged(String graphId, long timeId, String nodeId, String attribute, Object oldValue,
+      Object newValue) {
+    out.printf("\t\"%s\" [ %s ];%n", nodeId, outputAttribute(attribute, newValue, true));
+  }
 
-	public void nodeAttributeRemoved(String graphId, long timeId, String nodeId, String attribute) {
-		// NOP
-	}
+  @Override
+  public void nodeAttributeRemoved(String graphId, long timeId, String nodeId, String attribute) {
+    // NOP
+  }
 
-	public void edgeAdded(String graphId, long timeId, String edgeId, String fromNodeId, String toNodeId,
-			boolean directed) {
-		if (digraph) {
-			out.printf("\t\"%s\" -> \"%s\"", fromNodeId, toNodeId);
+  @Override
+  public void edgeAdded(String graphId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+      boolean directed) {
+    if (digraph) {
+      out.printf("\t\"%s\" -> \"%s\"", fromNodeId, toNodeId);
 
-			if (!directed)
-				out.printf(" -> \"%s\"", fromNodeId);
+      if (!directed) {
+        out.printf(" -> \"%s\"", fromNodeId);
+      }
 
-			out.printf(";%n");
-		} else
-			out.printf("\t\"%s\" -- \"%s\";%n", fromNodeId, toNodeId);
-	}
+      out.printf(";%n");
+    } else {
+      out.printf("\t\"%s\" -- \"%s\";%n", fromNodeId, toNodeId);
+    }
+  }
 
-	public void edgeRemoved(String graphId, long timeId, String edgeId) {
-		// NOP
-	}
+  @Override
+  public void edgeRemoved(String graphId, long timeId, String edgeId) {
+    // NOP
+  }
 
-	public void graphCleared(String graphId, long timeId) {
-		// NOP
-	}
+  @Override
+  public void graphCleared(String graphId, long timeId) {
+    // NOP
+  }
 
-	public void nodeAdded(String graphId, long timeId, String nodeId) {
-		out.printf("\t\"%s\";%n", nodeId);
-	}
+  @Override
+  public void nodeAdded(String graphId, long timeId, String nodeId) {
+    out.printf("\t\"%s\";%n", nodeId);
+  }
 
-	public void nodeRemoved(String graphId, long timeId, String nodeId) {
-		// NOP
-	}
+  @Override
+  public void nodeRemoved(String graphId, long timeId, String nodeId) {
+    // NOP
+  }
 
-	public void stepBegins(String graphId, long timeId, double step) {
-		// NOP
-	}
+  @Override
+  public void stepBegins(String graphId, long timeId, double step) {
+    // NOP
+  }
 
-	// Utility
-	/*
-	 * protected void outputAttributes(Map<String, Object> attributes, What what)
-	 * throws IOException { out.printf(" [");
-	 * 
-	 * boolean first = true;
-	 * 
-	 * for (String key : attributes.keySet()) { Object value = attributes.get(key);
-	 * 
-	 * if (what == What.NODE) { // if( ! nodeForbiddenAttrs.contains( key ) ) {
-	 * first = outputAttribute(key, value, first); } } else if (what == What.EDGE) {
-	 * // if( ! edgeForbiddenAttrs.contains( key ) ) { first = outputAttribute(key,
-	 * value, first); } } else { first = outputAttribute(key, value, first); }
-	 * 
-	 * }
-	 * 
-	 * out.printf("]"); }
-	 */
-	protected String outputAttribute(String key, Object value, boolean first) {
-		boolean quote = true;
+  // Utility
+  /*
+   * protected void outputAttributes(Map<String, Object> attributes, What what)
+   * throws IOException { out.printf(" [");
+   * 
+   * boolean first = true;
+   * 
+   * for (String key : attributes.keySet()) { Object value = attributes.get(key);
+   * 
+   * if (what == What.NODE) { // if( ! nodeForbiddenAttrs.contains( key ) ) {
+   * first = outputAttribute(key, value, first); } } else if (what == What.EDGE) {
+   * // if( ! edgeForbiddenAttrs.contains( key ) ) { first = outputAttribute(key,
+   * value, first); } } else { first = outputAttribute(key, value, first); }
+   * 
+   * }
+   * 
+   * out.printf("]"); }
+   */
+  protected String outputAttribute(String key, Object value, boolean first) {
+    boolean quote = true;
 
-		if (value instanceof Number)
-			quote = false;
+    if (value instanceof Number) {
+      quote = false;
+    }
 
-		return String.format("%s\"%s\"=%s%s%s", first ? "" : ",", key, quote ? "\"" : "", value, quote ? "\"" : "");
-	}
+    return String.format("%s\"%s\"=%s%s%s", first ? "" : ",", key, quote ? "\"" : "", value, quote ? "\"" : "");
+  }
 
-	protected String outputAttributes(Element e) {
-		if (e.getAttributeCount() == 0)
-			return "";
+  protected String outputAttributes(Element e) {
+    if (e.getAttributeCount() == 0) {
+      return "";
+    }
 
-		StringBuilder buffer = new StringBuilder("[");
-		AtomicBoolean first = new AtomicBoolean(true);
+    StringBuilder buffer = new StringBuilder("[");
+    AtomicBoolean first = new AtomicBoolean(true);
 
-		e.attributeKeys().forEach(key -> {
-			boolean quote = true;
-			Object value = e.getAttribute(key);
+    e.attributeKeys().forEach(key -> {
+      boolean quote = true;
+      Object value = e.getAttribute(key);
 
-			if (value instanceof Number)
-				quote = false;
+      if (value instanceof Number) {
+        quote = false;
+      }
 
-			buffer.append(String.format("%s\"%s\"=%s%s%s", first.get() ? "" : ",", key, quote ? "\"" : "", value,
-					quote ? "\"" : ""));
+      buffer.append(
+          String.format("%s\"%s\"=%s%s%s", first.get() ? "" : ",", key, quote ? "\"" : "", value, quote ? "\"" : ""));
 
-			first.set(false);
-		});
+      first.set(false);
+    });
 
-		return buffer.append(']').toString();
-	}
+    return buffer.append(']').toString();
+  }
 }

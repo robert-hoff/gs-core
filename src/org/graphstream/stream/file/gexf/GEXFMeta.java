@@ -38,41 +38,42 @@ import java.util.Date;
 import javax.xml.stream.XMLStreamException;
 
 public class GEXFMeta implements GEXFElement {
-	String creator;
-	String keywords;
-	String description;
+  String creator;
+  String keywords;
+  String description;
 
-	public GEXFMeta() {
-		creator = "GraphStream using " + getClass().getName();
-		keywords = "";
-		description = "";
-	}
+  public GEXFMeta() {
+    creator = "GraphStream using " + getClass().getName();
+    keywords = "";
+    description = "";
+  }
 
-	public GEXFMeta(String creator, String keywords, String description) {
-		this.creator = creator;
-		this.keywords = keywords;
-		this.description = description;
-	}
+  public GEXFMeta(String creator, String keywords, String description) {
+    this.creator = creator;
+    this.keywords = keywords;
+    this.description = description;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		Calendar cal = Calendar.getInstance();
-		Date date = cal.getTime();
-		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    Calendar cal = Calendar.getInstance();
+    Date date = cal.getTime();
+    DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
-		stream.startElement("meta");
-		stream.stream.writeAttribute("lastmodifieddate", df.format(date));
+    stream.startElement("meta");
+    stream.stream.writeAttribute("lastmodifieddate", df.format(date));
 
-		stream.leafWithText("creator", creator);
-		stream.leafWithText("keywords", keywords);
-		stream.leafWithText("description", description);
+    stream.leafWithText("creator", creator);
+    stream.leafWithText("keywords", keywords);
+    stream.leafWithText("description", description);
 
-		stream.endElement(); // META
-	}
+    stream.endElement(); // META
+  }
 }

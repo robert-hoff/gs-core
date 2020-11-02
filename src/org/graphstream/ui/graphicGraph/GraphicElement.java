@@ -74,240 +74,241 @@ import java.util.regex.Pattern;
  */
 public abstract class GraphicElement extends AbstractElement {
 
-	/**
-	 * class level logger
-	 */
-	private static final Logger logger = Logger.getLogger(GraphicElement.class.getSimpleName());
+  /**
+   * class level logger
+   */
+  private static final Logger logger = Logger.getLogger(GraphicElement.class.getSimpleName());
 
-	/**
-	 * Interface for renderers registered in each style group.
-	 */
-	public interface SwingElementRenderer {
-	}
+  /**
+   * Interface for renderers registered in each style group.
+   */
+  public interface SwingElementRenderer {
+  }
 
-	/**
-	 * Graph containing this element.
-	 */
-	protected GraphicGraph mygraph;
+  /**
+   * Graph containing this element.
+   */
+  protected GraphicGraph mygraph;
 
-	/**
-	 * The label or null if not specified.
-	 */
-	public String label;
+  /**
+   * The label or null if not specified.
+   */
+  public String label;
 
-	/**
-	 * The node style.
-	 */
-	public StyleGroup style;
+  /**
+   * The node style.
+   */
+  public StyleGroup style;
 
-	/**
-	 * Associated GUI component.
-	 */
-	public Object component;
+  /**
+   * Associated GUI component.
+   */
+  public Object component;
 
-	/**
-	 * Do not show.
-	 */
-	public boolean hidden = false;
+  /**
+   * Do not show.
+   */
+  public boolean hidden = false;
 
-	/**
-	 * New element.
-	 */
-	public GraphicElement(String id, GraphicGraph graph) {
-		super(id);
-		this.mygraph = graph;
-	}
+  /**
+   * New element.
+   */
+  public GraphicElement(String id, GraphicGraph graph) {
+    super(id);
+    this.mygraph = graph;
+  }
 
-	public GraphicGraph myGraph() {
-		return mygraph;
-	}
+  public GraphicGraph myGraph() {
+    return mygraph;
+  }
 
-	/**
-	 * Type of selector for the graphic element (Node, Edge, Sprite ?).
-	 */
-	public abstract Selector.Type getSelectorType();
+  /**
+   * Type of selector for the graphic element (Node, Edge, Sprite ?).
+   */
+  public abstract Selector.Type getSelectorType();
 
-	/**
-	 * Style group. An style group may reference several elements.
-	 * 
-	 * @return The style group corresponding to this element.
-	 */
-	public StyleGroup getStyle() {
-		return style;
-	}
+  /**
+   * Style group. An style group may reference several elements.
+   * 
+   * @return The style group corresponding to this element.
+   */
+  public StyleGroup getStyle() {
+    return style;
+  }
 
-	/**
-	 * Label or null if not set.
-	 */
-	public String getLabel() {
-		return label;
-	}
+  /**
+   * Label or null if not set.
+   */
+  public String getLabel() {
+    return label;
+  }
 
-	/**
-	 * Abscissa of the element, always in GU (graph units). For edges this is the X
-	 * of the "from" node.
-	 */
-	public abstract double getX();
+  /**
+   * Abscissa of the element, always in GU (graph units). For edges this is the X
+   * of the "from" node.
+   */
+  public abstract double getX();
 
-	/**
-	 * Ordinate of the element, always in GU (graph units). For edges this is the Y
-	 * of the "from" node.
-	 */
-	public abstract double getY();
+  /**
+   * Ordinate of the element, always in GU (graph units). For edges this is the Y
+   * of the "from" node.
+   */
+  public abstract double getY();
 
-	/**
-	 * Depth of the element, always in GU (graph units). For edges this is the Z of
-	 * the "from" node.
-	 */
-	public abstract double getZ();
+  /**
+   * Depth of the element, always in GU (graph units). For edges this is the Z of
+   * the "from" node.
+   */
+  public abstract double getZ();
 
-	/**
-	 * The associated GUI component.
-	 * 
-	 * @return An object.
-	 */
-	public Object getComponent() {
-		return component;
-	}
+  /**
+   * The associated GUI component.
+   * 
+   * @return An object.
+   */
+  public Object getComponent() {
+    return component;
+  }
 
-	// Commands
+  // Commands
 
-	/**
-	 * The graphic element was removed from the graphic graph, clean up.
-	 */
-	protected abstract void removed();
+  /**
+   * The graphic element was removed from the graphic graph, clean up.
+   */
+  protected abstract void removed();
 
-	/**
-	 * Try to force the element to move at the give location in graph units (GU).
-	 * For edges, this may move the two attached nodes.
-	 * 
-	 * @param x
-	 *            The new X.
-	 * @param y
-	 *            The new Y.
-	 * @param z
-	 *            the new Z.
-	 */
-	public abstract void move(double x, double y, double z);
+  /**
+   * Try to force the element to move at the give location in graph units (GU).
+   * For edges, this may move the two attached nodes.
+   * 
+   * @param x
+   *          The new X.
+   * @param y
+   *          The new Y.
+   * @param z
+   *          the new Z.
+   */
+  public abstract void move(double x, double y, double z);
 
-	/**
-	 * Set the GUI component of this element.
-	 * 
-	 * @param component
-	 *            The component.
-	 */
-	public void setComponent(Object component) {
-		this.component = component;
-	}
+  /**
+   * Set the GUI component of this element.
+   * 
+   * @param component
+   *          The component.
+   */
+  public void setComponent(Object component) {
+    this.component = component;
+  }
 
-	/**
-	 * Handle the "ui.class", "label", "ui.style", etc. attributes.
-	 */
-	@Override
-	protected void attributeChanged(AttributeChangeEvent event, String attribute, Object oldValue, Object newValue) {
-		if (event == AttributeChangeEvent.ADD || event == AttributeChangeEvent.CHANGE) {
-			if (attribute.charAt(0) == 'u' && attribute.charAt(1) == 'i') {
-				if (attribute.equals("ui.class")) {
-					mygraph.styleGroups.checkElementStyleGroup(this);
-					// mygraph.styleGroups.removeElement( tis );
-					// mygraph.styleGroups.addElement( this );
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.label")) {
-					label = StyleConstants.convertLabel(newValue);
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.style")) {
-					// Cascade the new style in the style sheet.
+  /**
+   * Handle the "ui.class", "label", "ui.style", etc. attributes.
+   */
+  @Override
+  protected void attributeChanged(AttributeChangeEvent event, String attribute, Object oldValue, Object newValue) {
+    if (event == AttributeChangeEvent.ADD || event == AttributeChangeEvent.CHANGE) {
+      if (attribute.charAt(0) == 'u' && attribute.charAt(1) == 'i') {
+        if (attribute.equals("ui.class")) {
+          mygraph.styleGroups.checkElementStyleGroup(this);
+          // mygraph.styleGroups.removeElement( tis );
+          // mygraph.styleGroups.addElement( this );
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.label")) {
+          label = StyleConstants.convertLabel(newValue);
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.style")) {
+          // Cascade the new style in the style sheet.
 
-					if (newValue instanceof String) {
-						try {
-							mygraph.styleSheet.parseStyleFromString(new Selector(getSelectorType(), getId(), null),
-									(String) newValue);
-						} catch (Exception e) {
-							logger.log(Level.WARNING, String.format("Error while parsing style for %S '%s' :",
-									getSelectorType(), getId()), e);
-						}
-						mygraph.graphChanged = true;
-					} else {
-						logger.warning("Unknown value for style [" + newValue + "].");
-					}
-				} else if (attribute.equals("ui.hide")) {
-					hidden = true;
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.clicked")) {
-					style.pushEventFor(this, "clicked");
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.selected")) {
-					style.pushEventFor(this, "selected");
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.color")) {
-					style.pushElementAsDynamic(this);
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.size")) {
-					style.pushElementAsDynamic(this);
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.icon")) {
-					mygraph.graphChanged = true;
-				}
-				// else if( attribute.equals( "ui.state" ) )
-				// {
-				// if( newValue == null )
-				// state = null;
-				// else if( newValue instanceof String )
-				// state = (String) newValue;
-				// }
-			} else if (attribute.equals("label")) {
-				label = StyleConstants.convertLabel(newValue);
-				mygraph.graphChanged = true;
-			}
-		} else // REMOVE
-		{
-			if (attribute.charAt(0) == 'u' && attribute.charAt(1) == 'i') {
-				if (attribute.equals("ui.class")) {
-					Object o = attributes.remove("ui.class"); // Not yet removed
-																// at
-																// this point !
-					mygraph.styleGroups.checkElementStyleGroup(this);
-					attributes.put("ui.class", o);
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.label")) {
-					label = "";
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.hide")) {
-					hidden = false;
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.clicked")) {
-					style.popEventFor(this, "clicked");
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.selected")) {
-					style.popEventFor(this, "selected");
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.color")) {
-					style.popElementAsDynamic(this);
-					mygraph.graphChanged = true;
-				} else if (attribute.equals("ui.size")) {
-					style.popElementAsDynamic(this);
-					mygraph.graphChanged = true;
-				}
-			} else if (attribute.equals("label")) {
-				label = "";
-				mygraph.graphChanged = true;
-			}
-		}
-	}
+          if (newValue instanceof String) {
+            try {
+              mygraph.styleSheet.parseStyleFromString(new Selector(getSelectorType(), getId(), null),
+                  (String) newValue);
+            } catch (Exception e) {
+              logger.log(Level.WARNING,
+                  String.format("Error while parsing style for %S '%s' :", getSelectorType(), getId()), e);
+            }
+            mygraph.graphChanged = true;
+          } else {
+            logger.warning("Unknown value for style [" + newValue + "].");
+          }
+        } else if (attribute.equals("ui.hide")) {
+          hidden = true;
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.clicked")) {
+          style.pushEventFor(this, "clicked");
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.selected")) {
+          style.pushEventFor(this, "selected");
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.color")) {
+          style.pushElementAsDynamic(this);
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.size")) {
+          style.pushElementAsDynamic(this);
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.icon")) {
+          mygraph.graphChanged = true;
+        }
+        // else if( attribute.equals( "ui.state" ) )
+        // {
+        // if( newValue == null )
+        // state = null;
+        // else if( newValue instanceof String )
+        // state = (String) newValue;
+        // }
+      } else if (attribute.equals("label")) {
+        label = StyleConstants.convertLabel(newValue);
+        mygraph.graphChanged = true;
+      }
+    } else // REMOVE
+    {
+      if (attribute.charAt(0) == 'u' && attribute.charAt(1) == 'i') {
+        if (attribute.equals("ui.class")) {
+          Object o = attributes.remove("ui.class"); // Not yet removed
+          // at
+          // this point !
+          mygraph.styleGroups.checkElementStyleGroup(this);
+          attributes.put("ui.class", o);
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.label")) {
+          label = "";
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.hide")) {
+          hidden = false;
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.clicked")) {
+          style.popEventFor(this, "clicked");
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.selected")) {
+          style.popEventFor(this, "selected");
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.color")) {
+          style.popElementAsDynamic(this);
+          mygraph.graphChanged = true;
+        } else if (attribute.equals("ui.size")) {
+          style.popElementAsDynamic(this);
+          mygraph.graphChanged = true;
+        }
+      } else if (attribute.equals("label")) {
+        label = "";
+        mygraph.graphChanged = true;
+      }
+    }
+  }
 
-	// Overriding of standard attribute changing to filter them.
+  // Overriding of standard attribute changing to filter them.
 
-	protected static Pattern acceptedAttribute;
+  protected static Pattern acceptedAttribute;
 
-	static {
-		acceptedAttribute = Pattern.compile("(ui[.].*)|(layout[.].*)|x|y|z|xy|xyz|label|stylesheet");
-	}
+  static {
+    acceptedAttribute = Pattern.compile("(ui[.].*)|(layout[.].*)|x|y|z|xy|xyz|label|stylesheet");
+  }
 
-	@Override
-	public void setAttribute(String attribute, Object... values) {
-		Matcher matcher = acceptedAttribute.matcher(attribute);
+  @Override
+  public void setAttribute(String attribute, Object... values) {
+    Matcher matcher = acceptedAttribute.matcher(attribute);
 
-		if (matcher.matches())
-			super.setAttribute(attribute, values);
-	}
+    if (matcher.matches()) {
+      super.setAttribute(attribute, values);
+    }
+  }
 }

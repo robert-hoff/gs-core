@@ -32,5 +32,5 @@
 package org.graphstream.ui.view.util;
 
 public enum InteractiveElement {
-	NODE, EDGE, SPRITE
+  NODE, EDGE, SPRITE
 }

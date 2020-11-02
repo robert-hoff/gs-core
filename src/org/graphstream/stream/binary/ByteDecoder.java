@@ -43,21 +43,21 @@ import java.nio.ByteBuffer;
  * @since 31/01/16.
  */
 public interface ByteDecoder extends Source {
-	/**
-	 * Decode the buffer, and dispatch the corresponding event.
-	 *
-	 * @param buffer
-	 *            event as a binary buffer
-	 */
-	void decode(ByteBuffer buffer);
+  /**
+   * Decode the buffer, and dispatch the corresponding event.
+   *
+   * @param buffer
+   *          event as a binary buffer
+   */
+  void decode(ByteBuffer buffer);
 
-	/**
-	 * Tells if the buffer contains an event that is ready to be dispatched. The
-	 * bytes considered should be from 0 to the buffer's position. The position of
-	 * the buffer SHOULD NOT be changed.
-	 *
-	 * @param buffer
-	 * @return true if the buffer contains an event
-	 */
-	boolean validate(ByteBuffer buffer);
+  /**
+   * Tells if the buffer contains an event that is ready to be dispatched. The
+   * bytes considered should be from 0 to the buffer's position. The position of
+   * the buffer SHOULD NOT be changed.
+   *
+   * @param buffer
+   * @return true if the buffer contains an event
+   */
+  boolean validate(ByteBuffer buffer);
 }

@@ -25,24 +25,24 @@
 package org.graphstream.stream.file.images;
 
 /**
- * Define resolution of outputted images.
- * An enumeration of common resolutions is provided in {@link Resolutions}.
+ * Define resolution of outputted images. An enumeration of common resolutions
+ * is provided in {@link Resolutions}.
  *
  * @see CustomResolution
  * @see Resolutions
  */
 public interface Resolution {
-	/**
-	 * Get the width of outputted images.
-	 *
-	 * @return width
-	 */
-	int getWidth();
+  /**
+   * Get the width of outputted images.
+   *
+   * @return width
+   */
+  int getWidth();
 
-	/**
-	 * Get the height of outputted images.
-	 *
-	 * @return height
-	 */
-	int getHeight();
+  /**
+   * Get the height of outputted images.
+   *
+   * @return height
+   */
+  int getHeight();
 }

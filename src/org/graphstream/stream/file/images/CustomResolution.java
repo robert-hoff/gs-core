@@ -28,22 +28,25 @@ package org.graphstream.stream.file.images;
  * User-defined resolution.
  */
 public class CustomResolution implements Resolution {
-	final int width, height;
+  final int width, height;
 
-	public CustomResolution(int width, int height) {
-		this.width = width;
-		this.height = height;
-	}
+  public CustomResolution(int width, int height) {
+    this.width = width;
+    this.height = height;
+  }
 
-	public int getWidth() {
-		return width;
-	}
+  @Override
+  public int getWidth() {
+    return width;
+  }
 
-	public int getHeight() {
-		return height;
-	}
+  @Override
+  public int getHeight() {
+    return height;
+  }
 
-	@Override public String toString() {
-		return String.format("%dx%d", width, height);
-	}
+  @Override
+  public String toString() {
+    return String.format("%dx%d", width, height);
+  }
 }

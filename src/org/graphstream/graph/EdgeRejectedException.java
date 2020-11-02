@@ -39,13 +39,13 @@ package org.graphstream.graph;
  * 
  */
 public class EdgeRejectedException extends RuntimeException {
-	private static final long serialVersionUID = 4952910935083960955L;
+  private static final long serialVersionUID = 4952910935083960955L;
 
-	public EdgeRejectedException() {
-		super("Edge rejected");
-	}
+  public EdgeRejectedException() {
+    super("Edge rejected");
+  }
 
-	public EdgeRejectedException(String message) {
-		super(message);
-	}
+  public EdgeRejectedException(String message) {
+    super(message);
+  }
 }

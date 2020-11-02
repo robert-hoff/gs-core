@@ -61,20 +61,20 @@ import java.util.HashMap;
  * </p>
  */
 public interface CompoundAttribute {
-	/**
-	 * Transforms this object to a hash map where each field is stored as a pair
-	 * (key,value) where the key is the field name. As we cannot enforce the types
-	 * of the key and value, the key are considered strings (or Object.toString()).
-	 * The value is an arbitrary object.
-	 * 
-	 * @return The conversion of this attribute to a hash.
-	 */
-	HashMap<?, ?> toHashMap();
+  /**
+   * Transforms this object to a hash map where each field is stored as a pair
+   * (key,value) where the key is the field name. As we cannot enforce the types
+   * of the key and value, the key are considered strings (or Object.toString()).
+   * The value is an arbitrary object.
+   * 
+   * @return The conversion of this attribute to a hash.
+   */
+  HashMap<?, ?> toHashMap();
 
-	/**
-	 * The usual key used to store this attribute inside a graph element.
-	 * 
-	 * @return The attribute usual name.
-	 */
-	String getKey();
+  /**
+   * The usual key used to store this attribute inside a graph element.
+   * 
+   * @return The attribute usual name.
+   */
+  String getKey();
 }

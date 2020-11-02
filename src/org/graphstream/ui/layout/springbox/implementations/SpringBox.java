@@ -56,86 +56,87 @@ import org.graphstream.ui.layout.springbox.NodeParticle;
  * </p>
  */
 public class SpringBox extends BarnesHutLayout {
-	/**
-	 * The optimal distance between nodes.
-	 */
-	protected double k = 1f;
+  /**
+   * The optimal distance between nodes.
+   */
+  protected double k = 1f;
 
-	/**
-	 * Default attraction.
-	 */
-	protected double K1 = 0.06f; // 0.3 ??
+  /**
+   * Default attraction.
+   */
+  protected double K1 = 0.06f; // 0.3 ??
 
-	/**
-	 * Default repulsion.
-	 */
-	protected double K2 = 0.024f; // 0.12 ??
+  /**
+   * Default repulsion.
+   */
+  protected double K2 = 0.024f; // 0.12 ??
 
-	/**
-	 * New "Spring-Box" 2D Barnes-Hut simulation.
-	 */
-	public SpringBox() {
-		this(false);
-	}
+  /**
+   * New "Spring-Box" 2D Barnes-Hut simulation.
+   */
+  public SpringBox() {
+    this(false);
+  }
 
-	/**
-	 * New "Spring-Box" Barnes-Hut simulation.
-	 * 
-	 * @param is3D
-	 *            If true the simulation dimensions count is 3 else 2.
-	 */
-	public SpringBox(boolean is3D) {
-		this(is3D, new Random(System.currentTimeMillis()));
-	}
+  /**
+   * New "Spring-Box" Barnes-Hut simulation.
+   * 
+   * @param is3D
+   *          If true the simulation dimensions count is 3 else 2.
+   */
+  public SpringBox(boolean is3D) {
+    this(is3D, new Random(System.currentTimeMillis()));
+  }
 
-	/**
-	 * New "Spring-Box" Barnes-Hut simulation.
-	 * 
-	 * @param is3D
-	 *            If true the simulation dimensions count is 3 else 2.
-	 * @param randomNumberGenerator
-	 *            The random number generator to use.
-	 */
-	public SpringBox(boolean is3D, Random randomNumberGenerator) {
-		super(is3D, randomNumberGenerator);
-		setQuality(0.1);
-	}
+  /**
+   * New "Spring-Box" Barnes-Hut simulation.
+   * 
+   * @param is3D
+   *          If true the simulation dimensions count is 3 else 2.
+   * @param randomNumberGenerator
+   *          The random number generator to use.
+   */
+  public SpringBox(boolean is3D, Random randomNumberGenerator) {
+    super(is3D, randomNumberGenerator);
+    setQuality(0.1);
+  }
 
-	@Override
-	public String getLayoutAlgorithmName() {
-		return "SpringBox";
-	}
+  @Override
+  public String getLayoutAlgorithmName() {
+    return "SpringBox";
+  }
 
-	@Override
-	public void setQuality(double qualityLevel) {
-		super.setQuality(qualityLevel);
+  @Override
+  public void setQuality(double qualityLevel) {
+    super.setQuality(qualityLevel);
 
-		if (quality >= 1) {
-			viewZone = -1;
-		} else if (quality <= 0) {
-			viewZone = k;
-		} else {
-			viewZone = k + (k * 10 * quality);
-		}
-	}
+    if (quality >= 1) {
+      viewZone = -1;
+    } else if (quality <= 0) {
+      viewZone = k;
+    } else {
+      viewZone = k + (k * 10 * quality);
+    }
+  }
 
-	@Override
-	protected void chooseNodePosition(NodeParticle n0, NodeParticle n1) {
-		if (n0.frozen || n1.frozen)
-			return;
+  @Override
+  protected void chooseNodePosition(NodeParticle n0, NodeParticle n1) {
+    if (n0.frozen || n1.frozen) {
+      return;
+    }
 
-		double delta = random.nextDouble(); // k * 0.1;
-		if (n0.getEdges().size() == 1 && n1.getEdges().size() > 1) {
-			org.miv.pherd.geom.Point3 pos = n1.getPosition();
-			n0.moveTo(pos.x + delta, pos.y + delta, pos.z + delta);
-		} else if (n1.getEdges().size() == 1 && n0.getEdges().size() > 1) {
-			org.miv.pherd.geom.Point3 pos = n0.getPosition();
-			n1.moveTo(pos.x + delta, pos.y + delta, pos.z + delta);
-		}
-	}
+    double delta = random.nextDouble(); // k * 0.1;
+    if (n0.getEdges().size() == 1 && n1.getEdges().size() > 1) {
+      org.miv.pherd.geom.Point3 pos = n1.getPosition();
+      n0.moveTo(pos.x + delta, pos.y + delta, pos.z + delta);
+    } else if (n1.getEdges().size() == 1 && n0.getEdges().size() > 1) {
+      org.miv.pherd.geom.Point3 pos = n0.getPosition();
+      n1.moveTo(pos.x + delta, pos.y + delta, pos.z + delta);
+    }
+  }
 
-	@Override
-	public NodeParticle newNodeParticle(String id) {
-		return new SpringBoxNodeParticle(this, id);
-	}
+  @Override
+  public NodeParticle newNodeParticle(String id) {
+    return new SpringBoxNodeParticle(this, id);
+  }
 }

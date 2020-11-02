@@ -12,12 +12,12 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 public class ExampleNetStreamClientSends {
-    public static void main(String[] args) throws IOException, InterruptedException {
+  public static void main(String[] args) throws IOException, InterruptedException {
 
 
     System.out.println("server...");
 
-    Graph g = new MultiGraph("G",false,true);
+    Graph g = new MultiGraph("G", false, true);
 
     VerboseSink logout = new VerboseSink();
     logout.setPrefix("server logout");
@@ -25,9 +25,9 @@ public class ExampleNetStreamClientSends {
 
     ByteProxy server = null;
     try {
-        server = new ByteProxy(NetStreamUtils.getDefaultNetStreamFactory(), 2001);
+      server = new ByteProxy(NetStreamUtils.getDefaultNetStreamFactory(), 2001);
     } catch (IOException e) {
-        e.printStackTrace();
+      e.printStackTrace();
     }
     server.addSink(g);
     server.start();
@@ -40,10 +40,10 @@ public class ExampleNetStreamClientSends {
 
     ByteProxy client = null;
     try {
-        client = new ByteProxy(NetStreamUtils.getDefaultNetStreamFactory(), ByteProxy.Mode.CLIENT,
-                InetAddress.getLocalHost(), 2001);
+      client = new ByteProxy(NetStreamUtils.getDefaultNetStreamFactory(), ByteProxy.Mode.CLIENT,
+          InetAddress.getLocalHost(), 2001);
     } catch (IOException e) {
-        e.printStackTrace();
+      e.printStackTrace();
     }
     client.start();
 
@@ -51,15 +51,15 @@ public class ExampleNetStreamClientSends {
 
     graphClient.addSink(client);
 
-    //VerboseSink clientVSink = new VerboseSink();
-    //clientVSink.setPrefix("client graph logout");
-    //graphClient.addSink(clientVSink);
+    // VerboseSink clientVSink = new VerboseSink();
+    // clientVSink.setPrefix("client graph logout");
+    // graphClient.addSink(clientVSink);
 
     Node n = graphClient.addNode(id);
-    n.setAttribute( "ui.label", label);
-    n.setAttribute( "nope", "ok", "not ok");
+    n.setAttribute("ui.label", label);
+    n.setAttribute("nope", "ok", "not ok");
 
     client.stop();
 
-    }
+  }
 }

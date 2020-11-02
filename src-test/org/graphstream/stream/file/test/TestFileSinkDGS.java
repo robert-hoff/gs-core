@@ -35,15 +35,15 @@ import org.graphstream.stream.file.FileSourceDGS;
 import org.junit.Before;
 
 public class TestFileSinkDGS extends TestFileSinkBase {
-	@Override
-	protected String graphFileExtension() {
-		return ".dgs";
-	}
+  @Override
+  protected String graphFileExtension() {
+    return ".dgs";
+  }
 
-	@Before
-	@Override
-	public void setup() {
-		input = new FileSourceDGS();
-		output = new FileSinkDGS();
-	}
+  @Before
+  @Override
+  public void setup() {
+    input = new FileSourceDGS();
+    output = new FileSinkDGS();
+  }
 }

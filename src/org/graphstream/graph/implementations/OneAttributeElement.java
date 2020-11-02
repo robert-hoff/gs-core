@@ -50,171 +50,195 @@ import java.util.Map;
  * 
  */
 public abstract class OneAttributeElement implements Element {
-	// Constants
+  // Constants
 
-	// Attributes
+  // Attributes
 
-	/**
-	 * Tag of this element.
-	 */
-	protected String id;
+  /**
+   * Tag of this element.
+   */
+  protected String id;
 
-	/**
-	 * The only one attribute
-	 */
-	Object attribute = null;
+  /**
+   * The only one attribute
+   */
+  Object attribute = null;
 
-	// Constructors
+  // Constructors
 
-	/**
-	 * New element.
-	 * 
-	 * @param id
-	 *            The unique identifier of this element.
-	 */
-	public OneAttributeElement(String id) {
-		assert id != null : "Graph elements cannot have a null identifier";
-		this.id = id;
-	}
+  /**
+   * New element.
+   * 
+   * @param id
+   *          The unique identifier of this element.
+   */
+  public OneAttributeElement(String id) {
+    assert id != null : "Graph elements cannot have a null identifier";
+    this.id = id;
+  }
 
-	// Accessors
+  // Accessors
 
-	public String getId() {
-		return id;
-	}
+  @Override
+  public String getId() {
+    return id;
+  }
 
-	public Object getAttribute(String key) {
-		return attribute;
-	}
+  @Override
+  public Object getAttribute(String key) {
+    return attribute;
+  }
 
-	public Object getFirstAttributeOf(String... keys) {
-		return attribute;
-	}
+  @Override
+  public Object getFirstAttributeOf(String... keys) {
+    return attribute;
+  }
 
-	@SuppressWarnings("all")
-	public <T> T getAttribute(String key, Class<T> clazz) {
-		return (T) attribute;
-	}
+  @Override
+  @SuppressWarnings("all")
+  public <T> T getAttribute(String key, Class<T> clazz) {
+    return (T) attribute;
+  }
 
-	@SuppressWarnings("all")
-	public <T> T getFirstAttributeOf(Class<T> clazz, String... keys) {
-		return (T) attribute;
-	}
+  @Override
+  @SuppressWarnings("all")
+  public <T> T getFirstAttributeOf(Class<T> clazz, String... keys) {
+    return (T) attribute;
+  }
 
-	public CharSequence getLabel(String key) {
-		if (attribute != null && attribute instanceof CharSequence)
-			return (CharSequence) attribute;
-		return null;
-	}
+  @Override
+  public CharSequence getLabel(String key) {
+    if (attribute != null && attribute instanceof CharSequence) {
+      return (CharSequence) attribute;
+    }
+    return null;
+  }
 
-	public double getNumber(String key) {
-		if (attribute != null && attribute instanceof Number)
-			return ((Number) attribute).doubleValue();
+  @Override
+  public double getNumber(String key) {
+    if (attribute != null && attribute instanceof Number) {
+      return ((Number) attribute).doubleValue();
+    }
 
-		return Double.NaN;
-	}
+    return Double.NaN;
+  }
 
-	@SuppressWarnings("unchecked")
-	public ArrayList<? extends Number> getVector(String key) {
-		if (attribute != null && attribute instanceof ArrayList)
-			return ((ArrayList<? extends Number>) attribute);
+  @Override
+  @SuppressWarnings("unchecked")
+  public ArrayList<? extends Number> getVector(String key) {
+    if (attribute != null && attribute instanceof ArrayList) {
+      return ((ArrayList<? extends Number>) attribute);
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	public boolean hasAttribute(String key) {
+  @Override
+  public boolean hasAttribute(String key) {
 
-		return true;
-	}
+    return true;
+  }
 
-	public boolean hasAttribute(String key, Class<?> clazz) {
-		if (attribute != null)
-			return (clazz.isInstance(attribute));
-		return false;
-	}
+  @Override
+  public boolean hasAttribute(String key, Class<?> clazz) {
+    if (attribute != null) {
+      return (clazz.isInstance(attribute));
+    }
+    return false;
+  }
 
-	public boolean hasLabel(String key) {
-		if (attribute != null)
-			return (attribute instanceof CharSequence);
+  @Override
+  public boolean hasLabel(String key) {
+    if (attribute != null) {
+      return (attribute instanceof CharSequence);
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	public boolean hasNumber(String key) {
-		if (attribute != null)
-			return (attribute instanceof Number);
+  @Override
+  public boolean hasNumber(String key) {
+    if (attribute != null) {
+      return (attribute instanceof Number);
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	public boolean hasVector(String key) {
-		if (attribute != null && attribute instanceof ArrayList<?>)
-			return true;
+  @Override
+  public boolean hasVector(String key) {
+    if (attribute != null && attribute instanceof ArrayList<?>) {
+      return true;
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	public Iterator<String> getAttributeKeyIterator() {
-		return null;
-	}
+  public Iterator<String> getAttributeKeyIterator() {
+    return null;
+  }
 
-	public Map<String, Object> getAttributeMap() {
-		return null;
-	}
+  public Map<String, Object> getAttributeMap() {
+    return null;
+  }
 
-	/**
-	 * Override the Object method
-	 */
-	@Override
-	public String toString() {
-		return id;
-	}
+  /**
+   * Override the Object method
+   */
+  @Override
+  public String toString() {
+    return id;
+  }
 
-	// Commands
+  // Commands
 
-	public void clearAttributes() {
-		attribute = null;
-	}
+  @Override
+  public void clearAttributes() {
+    attribute = null;
+  }
 
-	public void addAttribute(String attribute, Object value) {
-		this.attribute = value;
-	}
+  public void addAttribute(String attribute, Object value) {
+    this.attribute = value;
+  }
 
-	public void changeAttribute(String attribute, Object value) {
-		addAttribute(attribute, value);
-	}
+  public void changeAttribute(String attribute, Object value) {
+    addAttribute(attribute, value);
+  }
 
-	public void setAttributes(Map<String, Object> attributes) {
-		if (attributes.size() >= 1)
-			addAttribute("", attributes.get((attributes.keySet().toArray()[0])));
-	}
+  @Override
+  public void setAttributes(Map<String, Object> attributes) {
+    if (attributes.size() >= 1) {
+      addAttribute("", attributes.get((attributes.keySet().toArray()[0])));
+    }
+  }
 
-	public void removeAttribute(String attribute) {
-		this.attribute = null;
-	}
+  @Override
+  public void removeAttribute(String attribute) {
+    this.attribute = null;
+  }
 
-	public static enum AttributeChangeEvent {
-		ADD, CHANGE, REMOVE
-	};
+  public static enum AttributeChangeEvent {
+    ADD, CHANGE, REMOVE
+  };
 
-	/**
-	 * Called for each change in the attribute set. This method must be implemented
-	 * by sub-elements in order to send events to the graph listeners.
-	 * 
-	 * @param sourceId
-	 *            The source of the change.
-	 * @param timeId
-	 *            The source time of the change, for synchronization.
-	 * @param attribute
-	 *            The attribute name that changed.
-	 * @param event
-	 *            The type of event among ADD, CHANGE and REMOVE.
-	 * @param oldValue
-	 *            The old value of the attribute, null if the attribute was added.
-	 * @param newValue
-	 *            The new value of the attribute, null if the attribute is about to
-	 *            be removed.
-	 */
-	protected abstract void attributeChanged(String sourceId, long timeId, String attribute, AttributeChangeEvent event,
-			Object oldValue, Object newValue);
+  /**
+   * Called for each change in the attribute set. This method must be implemented
+   * by sub-elements in order to send events to the graph listeners.
+   * 
+   * @param sourceId
+   *          The source of the change.
+   * @param timeId
+   *          The source time of the change, for synchronization.
+   * @param attribute
+   *          The attribute name that changed.
+   * @param event
+   *          The type of event among ADD, CHANGE and REMOVE.
+   * @param oldValue
+   *          The old value of the attribute, null if the attribute was added.
+   * @param newValue
+   *          The new value of the attribute, null if the attribute is about to be
+   *          removed.
+   */
+  protected abstract void attributeChanged(String sourceId, long timeId, String attribute, AttributeChangeEvent event,
+      Object oldValue, Object newValue);
 }

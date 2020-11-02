@@ -50,11 +50,13 @@ import org.graphstream.util.parser.ParserFactory;
  * The standard extension for such files is ".net".
  */
 public class FileSourcePajek extends FileSourceParser {
-	public ParserFactory getNewParserFactory() {
-		return new ParserFactory() {
-			public Parser newParser(Reader reader) {
-				return new PajekParser(FileSourcePajek.this, reader);
-			}
-		};
-	}
+  @Override
+  public ParserFactory getNewParserFactory() {
+    return new ParserFactory() {
+      @Override
+      public Parser newParser(Reader reader) {
+        return new PajekParser(FileSourcePajek.this, reader);
+      }
+    };
+  }
 }

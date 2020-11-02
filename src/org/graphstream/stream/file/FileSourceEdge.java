@@ -81,138 +81,139 @@ import java.util.HashSet;
  * The usual file name extension for this format is ".edge".
  */
 public class FileSourceEdge extends FileSourceBase {
-	// Attribute
+  // Attribute
 
-	/**
-	 * Allocator for edge identifiers.
-	 */
-	protected int edgeid = 0;
+  /**
+   * Allocator for edge identifiers.
+   */
+  protected int edgeid = 0;
 
-	/**
-	 * By default, consider edges as undirected.
-	 */
-	protected boolean directed = false;
+  /**
+   * By default, consider edges as undirected.
+   */
+  protected boolean directed = false;
 
-	/**
-	 * Set of existing nodes (if nodes are declared).
-	 */
-	protected HashSet<String> nodes;
+  /**
+   * Set of existing nodes (if nodes are declared).
+   */
+  protected HashSet<String> nodes;
 
-	protected String graphName = "EDGE_";
+  protected String graphName = "EDGE_";
 
-	// Construction
+  // Construction
 
-	/**
-	 * New reader for the "edge" format.
-	 */
-	public FileSourceEdge() {
-		this(false);
-	}
+  /**
+   * New reader for the "edge" format.
+   */
+  public FileSourceEdge() {
+    this(false);
+  }
 
-	/**
-	 * New reader for the "edge" format.
-	 * 
-	 * @param edgesAreDirected
-	 *            If true (default=false) edges are considered directed.
-	 */
-	public FileSourceEdge(boolean edgesAreDirected) {
-		this(edgesAreDirected, true);
-	}
+  /**
+   * New reader for the "edge" format.
+   * 
+   * @param edgesAreDirected
+   *          If true (default=false) edges are considered directed.
+   */
+  public FileSourceEdge(boolean edgesAreDirected) {
+    this(edgesAreDirected, true);
+  }
 
-	/**
-	 * New reader for the "edge" format.
-	 * 
-	 * @param edgesAreDirected
-	 *            If true (default=false) edges are considered directed.
-	 * @param declareNodes
-	 *            If true (default=true) this reader outputs nodeAdded events.
-	 */
-	public FileSourceEdge(boolean edgesAreDirected, boolean declareNodes) {
-		directed = edgesAreDirected;
-		nodes = declareNodes ? new HashSet<String>() : null;
-	}
+  /**
+   * New reader for the "edge" format.
+   * 
+   * @param edgesAreDirected
+   *          If true (default=false) edges are considered directed.
+   * @param declareNodes
+   *          If true (default=true) this reader outputs nodeAdded events.
+   */
+  public FileSourceEdge(boolean edgesAreDirected, boolean declareNodes) {
+    directed = edgesAreDirected;
+    nodes = declareNodes ? new HashSet<String>() : null;
+  }
 
-	// Commands
+  // Commands
 
-	@Override
-	protected void continueParsingInInclude() throws IOException {
-		// Should not happen, EDGE files cannot be nested.
-	}
+  @Override
+  protected void continueParsingInInclude() throws IOException {
+    // Should not happen, EDGE files cannot be nested.
+  }
 
-	@Override
-	public boolean nextEvents() throws IOException {
-		String id1 = getWordOrNumberOrStringOrEolOrEof();
+  @Override
+  public boolean nextEvents() throws IOException {
+    String id1 = getWordOrNumberOrStringOrEolOrEof();
 
-		if (id1.equals("EOL")) {
-			// Empty line.
-		} else if (id1.equals("EOF")) {
-			return false;
-		} else {
-			declareNode(id1);
+    if (id1.equals("EOL")) {
+      // Empty line.
+    } else if (id1.equals("EOF")) {
+      return false;
+    } else {
+      declareNode(id1);
 
-			String id2 = getWordOrNumberOrStringOrEolOrEof();
+      String id2 = getWordOrNumberOrStringOrEolOrEof();
 
-			while (!id2.equals("EOL")) {
-				if (!id1.equals(id2)) {
-					String edgeId = Integer.toString(edgeid++);
+      while (!id2.equals("EOL")) {
+        if (!id1.equals(id2)) {
+          String edgeId = Integer.toString(edgeid++);
 
-					declareNode(id2);
-					sendEdgeAdded(graphName, edgeId, id1, id2, directed);
-				}
+          declareNode(id2);
+          sendEdgeAdded(graphName, edgeId, id1, id2, directed);
+        }
 
-				id2 = getWordOrNumberOrStringOrEolOrEof();
-			}
-		}
+        id2 = getWordOrNumberOrStringOrEolOrEof();
+      }
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	protected void declareNode(String id) {
-		if (nodes != null) {
-			if (!nodes.contains(id)) {
-				sendNodeAdded(graphName, id);
-				nodes.add(id);
-			}
-		}
-	}
+  protected void declareNode(String id) {
+    if (nodes != null) {
+      if (!nodes.contains(id)) {
+        sendNodeAdded(graphName, id);
+        nodes.add(id);
+      }
+    }
+  }
 
-	@Override
-	public void begin(String filename) throws IOException {
-		super.begin(filename);
-		init();
-	}
+  @Override
+  public void begin(String filename) throws IOException {
+    super.begin(filename);
+    init();
+  }
 
-	@Override
-	public void begin(URL url) throws IOException {
-		super.begin(url);
-		init();
-	}
+  @Override
+  public void begin(URL url) throws IOException {
+    super.begin(url);
+    init();
+  }
 
-	@Override
-	public void begin(InputStream stream) throws IOException {
-		super.begin(stream);
-		init();
-	}
+  @Override
+  public void begin(InputStream stream) throws IOException {
+    super.begin(stream);
+    init();
+  }
 
-	@Override
-	public void begin(Reader reader) throws IOException {
-		super.begin(reader);
-		init();
-	}
+  @Override
+  public void begin(Reader reader) throws IOException {
+    super.begin(reader);
+    init();
+  }
 
-	protected void init() throws IOException {
-		st.eolIsSignificant(true);
-		st.commentChar('#');
+  protected void init() throws IOException {
+    st.eolIsSignificant(true);
+    st.commentChar('#');
 
-		graphName = String.format("%s_%d", graphName, System.currentTimeMillis() + ((long) Math.random() * 10));
-	}
+    graphName = String.format("%s_%d", graphName, System.currentTimeMillis() + ((long) Math.random() * 10));
+  }
 
-	public boolean nextStep() throws IOException {
-		return nextEvents();
-	}
+  @Override
+  public boolean nextStep() throws IOException {
+    return nextEvents();
+  }
 
-	@Override
-	public void end() throws IOException {
-		super.end();
-	}
+  @Override
+  public void end() throws IOException {
+    super.end();
+  }
 }

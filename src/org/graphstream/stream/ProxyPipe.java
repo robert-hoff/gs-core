@@ -83,25 +83,25 @@ package org.graphstream.stream;
  * </p>
  */
 public interface ProxyPipe extends Pipe {
-	/**
-	 * Check if some events are pending and dispatch them to the registered outputs.
-	 */
-	void pump();
+  /**
+   * Check if some events are pending and dispatch them to the registered outputs.
+   */
+  void pump();
 
-	/**
-	 * Same as {@link #pump()} but try to block until new events were available.
-	 * Note that this feature will not be available on all proxy pipe implementation
-	 * and may throws an {@link java.lang.UnsupportedOperationException}. It can
-	 * throw an {@link java.lang.InterruptedException} if the current thread is
-	 * interrupted while proxy is waiting for events.
-	 */
-	void blockingPump() throws InterruptedException;
+  /**
+   * Same as {@link #pump()} but try to block until new events were available.
+   * Note that this feature will not be available on all proxy pipe implementation
+   * and may throws an {@link java.lang.UnsupportedOperationException}. It can
+   * throw an {@link java.lang.InterruptedException} if the current thread is
+   * interrupted while proxy is waiting for events.
+   */
+  void blockingPump() throws InterruptedException;
 
-	/**
-	 * Same as {@link #blockingPump()} but including a timeout delay.
-	 * 
-	 * @param timeout
-	 * @throws InterruptedException
-	 */
-	void blockingPump(long timeout) throws InterruptedException;
+  /**
+   * Same as {@link #blockingPump()} but including a timeout delay.
+   * 
+   * @param timeout
+   * @throws InterruptedException
+   */
+  void blockingPump(long timeout) throws InterruptedException;
 }

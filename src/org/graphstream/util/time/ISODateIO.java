@@ -133,170 +133,176 @@ import org.graphstream.util.time.ISODateComponent.TextComponent;
  */
 public class ISODateIO {
 
-	private static final ISODateComponent[] KNOWN_COMPONENTS = { ISODateComponent.ABBREVIATED_WEEKDAY_NAME,
-			ISODateComponent.FULL_WEEKDAY_NAME, ISODateComponent.ABBREVIATED_MONTH_NAME,
-			ISODateComponent.FULL_MONTH_NAME, ISODateComponent.LOCALE_DATE_AND_TIME, ISODateComponent.CENTURY,
-			ISODateComponent.DAY_OF_MONTH_2_DIGITS, ISODateComponent.DATE, ISODateComponent.DAY_OF_MONTH,
-			ISODateComponent.DATE_ISO8601, ISODateComponent.WEEK_BASED_YEAR_2_DIGITS,
-			ISODateComponent.WEEK_BASED_YEAR_4_DIGITS, ISODateComponent.ABBREVIATED_MONTH_NAME_ALIAS,
-			ISODateComponent.HOUR_OF_DAY, ISODateComponent.HOUR, ISODateComponent.DAY_OF_YEAR,
-			ISODateComponent.MILLISECOND, ISODateComponent.EPOCH, ISODateComponent.MONTH, ISODateComponent.MINUTE,
-			ISODateComponent.NEW_LINE, ISODateComponent.AM_PM, ISODateComponent.LOCALE_CLOCK_TIME_12_HOUR,
-			ISODateComponent.HOUR_AND_MINUTE, ISODateComponent.SECOND, ISODateComponent.TABULATION,
-			ISODateComponent.TIME_ISO8601, ISODateComponent.DAY_OF_WEEK_1_7, ISODateComponent.WEEK_OF_YEAR_FROM_SUNDAY,
-			ISODateComponent.WEEK_NUMBER_ISO8601, ISODateComponent.DAY_OF_WEEK_0_6,
-			ISODateComponent.WEEK_OF_YEAR_FROM_MONDAY, ISODateComponent.LOCALE_DATE_REPRESENTATION,
-			ISODateComponent.LOCALE_TIME_REPRESENTATION, ISODateComponent.YEAR_2_DIGITS, ISODateComponent.YEAR_4_DIGITS,
-			ISODateComponent.UTC_OFFSET, ISODateComponent.LOCALE_TIME_ZONE_NAME, ISODateComponent.PERCENT };
+  private static final ISODateComponent[] KNOWN_COMPONENTS = { ISODateComponent.ABBREVIATED_WEEKDAY_NAME,
+      ISODateComponent.FULL_WEEKDAY_NAME, ISODateComponent.ABBREVIATED_MONTH_NAME, ISODateComponent.FULL_MONTH_NAME,
+      ISODateComponent.LOCALE_DATE_AND_TIME, ISODateComponent.CENTURY, ISODateComponent.DAY_OF_MONTH_2_DIGITS,
+      ISODateComponent.DATE, ISODateComponent.DAY_OF_MONTH, ISODateComponent.DATE_ISO8601,
+      ISODateComponent.WEEK_BASED_YEAR_2_DIGITS, ISODateComponent.WEEK_BASED_YEAR_4_DIGITS,
+      ISODateComponent.ABBREVIATED_MONTH_NAME_ALIAS, ISODateComponent.HOUR_OF_DAY, ISODateComponent.HOUR,
+      ISODateComponent.DAY_OF_YEAR, ISODateComponent.MILLISECOND, ISODateComponent.EPOCH, ISODateComponent.MONTH,
+      ISODateComponent.MINUTE, ISODateComponent.NEW_LINE, ISODateComponent.AM_PM,
+      ISODateComponent.LOCALE_CLOCK_TIME_12_HOUR, ISODateComponent.HOUR_AND_MINUTE, ISODateComponent.SECOND,
+      ISODateComponent.TABULATION, ISODateComponent.TIME_ISO8601, ISODateComponent.DAY_OF_WEEK_1_7,
+      ISODateComponent.WEEK_OF_YEAR_FROM_SUNDAY, ISODateComponent.WEEK_NUMBER_ISO8601, ISODateComponent.DAY_OF_WEEK_0_6,
+      ISODateComponent.WEEK_OF_YEAR_FROM_MONDAY, ISODateComponent.LOCALE_DATE_REPRESENTATION,
+      ISODateComponent.LOCALE_TIME_REPRESENTATION, ISODateComponent.YEAR_2_DIGITS, ISODateComponent.YEAR_4_DIGITS,
+      ISODateComponent.UTC_OFFSET, ISODateComponent.LOCALE_TIME_ZONE_NAME, ISODateComponent.PERCENT };
 
-	/**
-	 * List of components, build from a string format. Some of these components can
-	 * just be text.
-	 */
-	protected LinkedList<ISODateComponent> components;
-	/**
-	 * The regular expression builds from the components.
-	 */
-	protected Pattern pattern;
+  /**
+   * List of components, build from a string format. Some of these components can
+   * just be text.
+   */
+  protected LinkedList<ISODateComponent> components;
+  /**
+   * The regular expression builds from the components.
+   */
+  protected Pattern pattern;
 
-	/**
-	 * Create a scanner with default format "%K".
-	 * 
-	 * @throws ParseException
-	 */
-	public ISODateIO() throws ParseException {
-		this("%K");
-	}
+  /**
+   * Create a scanner with default format "%K".
+   * 
+   * @throws ParseException
+   */
+  public ISODateIO() throws ParseException {
+    this("%K");
+  }
 
-	/**
-	 * Create a new scanner with a given format.
-	 * 
-	 * @param format
-	 *            format of the scanner.
-	 * @throws ParseException
-	 *             if bad directives found
-	 */
-	public ISODateIO(String format) throws ParseException {
-		setFormat(format);
-	}
+  /**
+   * Create a new scanner with a given format.
+   * 
+   * @param format
+   *          format of the scanner.
+   * @throws ParseException
+   *           if bad directives found
+   */
+  public ISODateIO(String format) throws ParseException {
+    setFormat(format);
+  }
 
-	/**
-	 * Get the current pattern used to parse timestamp.
-	 * 
-	 * @return a regular expression as a string
-	 */
-	public Pattern getPattern() {
-		return pattern;
-	}
+  /**
+   * Get the current pattern used to parse timestamp.
+   * 
+   * @return a regular expression as a string
+   */
+  public Pattern getPattern() {
+    return pattern;
+  }
 
-	/**
-	 * Build a list of component from a string.
-	 * 
-	 * @param format
-	 *            format of the scanner
-	 * @return a list of components found in the string format
-	 * @throws ParseException
-	 *             if invalid component found
-	 */
-	protected LinkedList<ISODateComponent> findComponents(String format) throws ParseException {
-		LinkedList<ISODateComponent> components = new LinkedList<ISODateComponent>();
-		int offset = 0;
+  /**
+   * Build a list of component from a string.
+   * 
+   * @param format
+   *          format of the scanner
+   * @return a list of components found in the string format
+   * @throws ParseException
+   *           if invalid component found
+   */
+  protected LinkedList<ISODateComponent> findComponents(String format) throws ParseException {
+    LinkedList<ISODateComponent> components = new LinkedList<ISODateComponent>();
+    int offset = 0;
 
-		while (offset < format.length()) {
-			if (format.charAt(offset) == '%') {
-				boolean found = false;
-				for (int i = 0; !found && i < KNOWN_COMPONENTS.length; i++) {
-					if (format.startsWith(KNOWN_COMPONENTS[i].getDirective(), offset)) {
-						found = true;
-						if (KNOWN_COMPONENTS[i].isAlias()) {
-							LinkedList<ISODateComponent> sub = findComponents(KNOWN_COMPONENTS[i].getReplacement());
-							components.addAll(sub);
-						} else
-							components.addLast(KNOWN_COMPONENTS[i]);
+    while (offset < format.length()) {
+      if (format.charAt(offset) == '%') {
+        boolean found = false;
+        for (int i = 0; !found && i < KNOWN_COMPONENTS.length; i++) {
+          if (format.startsWith(KNOWN_COMPONENTS[i].getDirective(), offset)) {
+            found = true;
+            if (KNOWN_COMPONENTS[i].isAlias()) {
+              LinkedList<ISODateComponent> sub = findComponents(KNOWN_COMPONENTS[i].getReplacement());
+              components.addAll(sub);
+            } else {
+              components.addLast(KNOWN_COMPONENTS[i]);
+            }
 
-						offset += KNOWN_COMPONENTS[i].getDirective().length();
-					}
-				}
-				if (!found)
-					throw new ParseException("unknown identifier", offset);
-			} else {
-				int from = offset;
-				while (offset < format.length() && format.charAt(offset) != '%')
-					offset++;
-				components.addLast(new TextComponent(format.substring(from, offset)));
-			}
-		}
+            offset += KNOWN_COMPONENTS[i].getDirective().length();
+          }
+        }
+        if (!found) {
+          throw new ParseException("unknown identifier", offset);
+        }
+      } else {
+        int from = offset;
+        while (offset < format.length() && format.charAt(offset) != '%') {
+          offset++;
+        }
+        components.addLast(new TextComponent(format.substring(from, offset)));
+      }
+    }
 
-		return components;
-	}
+    return components;
+  }
 
-	/**
-	 * Build a regular expression from the components of the scanner.
-	 */
-	protected void buildRegularExpression() {
-		String pattern = "";
+  /**
+   * Build a regular expression from the components of the scanner.
+   */
+  protected void buildRegularExpression() {
+    String pattern = "";
 
-		for (int i = 0; i < components.size(); i++) {
-			Object c = components.get(i);
-			String regexValue;
-			if (c instanceof ISODateComponent)
-				regexValue = ((ISODateComponent) c).getReplacement();
-			else
-				regexValue = c.toString();
+    for (int i = 0; i < components.size(); i++) {
+      Object c = components.get(i);
+      String regexValue;
+      if (c instanceof ISODateComponent) {
+        regexValue = ((ISODateComponent) c).getReplacement();
+      } else {
+        regexValue = c.toString();
+      }
 
-			pattern += "(" + regexValue + ")";
-		}
+      pattern += "(" + regexValue + ")";
+    }
 
-		this.pattern = Pattern.compile(pattern);
-	}
+    this.pattern = Pattern.compile(pattern);
+  }
 
-	/**
-	 * Set the format of this scanner.
-	 * 
-	 * @param format
-	 *            new format of the scanner
-	 * @throws ParseException
-	 *             if an error is found in the new format
-	 */
-	public void setFormat(String format) throws ParseException {
-		components = findComponents(format);
-		buildRegularExpression();
-	}
+  /**
+   * Set the format of this scanner.
+   * 
+   * @param format
+   *          new format of the scanner
+   * @throws ParseException
+   *           if an error is found in the new format
+   */
+  public void setFormat(String format) throws ParseException {
+    components = findComponents(format);
+    buildRegularExpression();
+  }
 
-	/**
-	 * Parse a string which should be in the scanner format. If not, null is
-	 * returned.
-	 * 
-	 * @param time
-	 *            timestamp in the scanner format
-	 * @return a calendar modeling the time value or null if invalid format
-	 */
-	public Calendar parse(String time) {
-		Calendar cal = Calendar.getInstance();
-		Matcher match = pattern.matcher(time);
+  /**
+   * Parse a string which should be in the scanner format. If not, null is
+   * returned.
+   * 
+   * @param time
+   *          timestamp in the scanner format
+   * @return a calendar modeling the time value or null if invalid format
+   */
+  public Calendar parse(String time) {
+    Calendar cal = Calendar.getInstance();
+    Matcher match = pattern.matcher(time);
 
-		if (match.matches()) {
-			for (int i = 0; i < components.size(); i++)
-				components.get(i).set(match.group(i + 1), cal);
-		} else
-			return null;
+    if (match.matches()) {
+      for (int i = 0; i < components.size(); i++) {
+        components.get(i).set(match.group(i + 1), cal);
+      }
+    } else {
+      return null;
+    }
 
-		return cal;
-	}
+    return cal;
+  }
 
-	/**
-	 * Convert a calendar into a string according to the format of this object.
-	 * 
-	 * @param calendar
-	 *            the calendar to convert
-	 * @return a string modeling the calendar.
-	 */
-	public String toString(Calendar calendar) {
-		StringBuffer buffer = new StringBuffer();
+  /**
+   * Convert a calendar into a string according to the format of this object.
+   * 
+   * @param calendar
+   *          the calendar to convert
+   * @return a string modeling the calendar.
+   */
+  public String toString(Calendar calendar) {
+    StringBuffer buffer = new StringBuffer();
 
-		for (int i = 0; i < components.size(); i++)
-			buffer.append(components.get(i).get(calendar));
+    for (int i = 0; i < components.size(); i++) {
+      buffer.append(components.get(i).get(calendar));
+    }
 
-		return buffer.toString();
-	}
+    return buffer.toString();
+  }
 }

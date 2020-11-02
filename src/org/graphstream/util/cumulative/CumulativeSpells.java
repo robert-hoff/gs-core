@@ -34,176 +34,184 @@ package org.graphstream.util.cumulative;
 import java.util.LinkedList;
 
 public class CumulativeSpells {
-	public static class Spell {
-		private double start;
-		private double end;
+  public static class Spell {
+    private double start;
+    private double end;
 
-		private boolean startOpen;
-		private boolean endOpen;
+    private boolean startOpen;
+    private boolean endOpen;
 
-		private boolean closed;
+    private boolean closed;
 
-		private Object data;
+    private Object data;
 
-		public Spell(double start, boolean startOpen, double end, boolean endOpen) {
-			this.start = start;
-			this.startOpen = startOpen;
-			this.end = end;
-			this.endOpen = endOpen;
+    public Spell(double start, boolean startOpen, double end, boolean endOpen) {
+      this.start = start;
+      this.startOpen = startOpen;
+      this.end = end;
+      this.endOpen = endOpen;
 
-			this.closed = false;
-		}
+      this.closed = false;
+    }
 
-		public Spell(double start, double end) {
-			this(start, false, end, false);
-		}
+    public Spell(double start, double end) {
+      this(start, false, end, false);
+    }
 
-		public Spell(double start) {
-			this(start, false, start, false);
-		}
+    public Spell(double start) {
+      this(start, false, start, false);
+    }
 
-		public double getStartDate() {
-			return start;
-		}
+    public double getStartDate() {
+      return start;
+    }
 
-		public double getEndDate() {
-			return end;
-		}
+    public double getEndDate() {
+      return end;
+    }
 
-		public boolean isStartOpen() {
-			return startOpen;
-		}
+    public boolean isStartOpen() {
+      return startOpen;
+    }
 
-		public boolean isEndOpen() {
-			return endOpen;
-		}
+    public boolean isEndOpen() {
+      return endOpen;
+    }
 
-		public boolean isStarted() {
-			return !Double.isNaN(start);
-		}
+    public boolean isStarted() {
+      return !Double.isNaN(start);
+    }
 
-		public boolean isEnded() {
-			return closed;
-		}
+    public boolean isEnded() {
+      return closed;
+    }
 
-		public void setStartOpen(boolean open) {
-			startOpen = open;
-		}
+    public void setStartOpen(boolean open) {
+      startOpen = open;
+    }
 
-		public void setEndOpen(boolean open) {
-			endOpen = open;
-		}
+    public void setEndOpen(boolean open) {
+      endOpen = open;
+    }
 
-		public Object getAttachedData() {
-			return data;
-		}
+    public Object getAttachedData() {
+      return data;
+    }
 
-		public void setAttachedData(Object data) {
-			this.data = data;
-		}
+    public void setAttachedData(Object data) {
+      this.data = data;
+    }
 
-		public String toString() {
-			String str = "";
+    @Override
+    public String toString() {
+      String str = "";
 
-			if (isStarted()) {
-				str += isStartOpen() ? "]" : "[";
-				str += start + "; ";
-			} else
-				str += "[...; ";
+      if (isStarted()) {
+        str += isStartOpen() ? "]" : "[";
+        str += start + "; ";
+      } else {
+        str += "[...; ";
+      }
 
-			if (isEnded()) {
-				str += end;
-				str += isEndOpen() ? "[" : "]";
-			} else
-				str += "...]";
+      if (isEnded()) {
+        str += end;
+        str += isEndOpen() ? "[" : "]";
+      } else {
+        str += "...]";
+      }
 
-			return str;
-		}
-	}
+      return str;
+    }
+  }
 
-	LinkedList<Spell> spells;
-	double currentDate;
+  LinkedList<Spell> spells;
+  double currentDate;
 
-	public CumulativeSpells() {
-		this.spells = new LinkedList<Spell>();
-		currentDate = Double.NaN;
-	}
+  public CumulativeSpells() {
+    this.spells = new LinkedList<Spell>();
+    currentDate = Double.NaN;
+  }
 
-	public Spell startSpell(double date) {
-		Spell s = new Spell(date);
-		spells.add(s);
+  public Spell startSpell(double date) {
+    Spell s = new Spell(date);
+    spells.add(s);
 
-		return s;
-	}
+    return s;
+  }
 
-	public void updateCurrentSpell(double date) {
-		if (spells.size() > 0 && !Double.isNaN(currentDate)) {
-			Spell s = spells.getLast();
+  public void updateCurrentSpell(double date) {
+    if (spells.size() > 0 && !Double.isNaN(currentDate)) {
+      Spell s = spells.getLast();
 
-			if (!s.closed)
-				s.end = currentDate;
-		}
+      if (!s.closed) {
+        s.end = currentDate;
+      }
+    }
 
-		currentDate = date;
-	}
+    currentDate = date;
+  }
 
-	public Spell closeSpell() {
-		if (spells.size() > 0) {
-			Spell s = spells.getLast();
+  public Spell closeSpell() {
+    if (spells.size() > 0) {
+      Spell s = spells.getLast();
 
-			if (!s.closed) {
-				s.closed = true;
-				return s;
-			}
-		}
+      if (!s.closed) {
+        s.closed = true;
+        return s;
+      }
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	public Spell getCurrentSpell() {
-		Spell s = spells.getLast();
+  public Spell getCurrentSpell() {
+    Spell s = spells.getLast();
 
-		if (s == null)
-			return null;
+    if (s == null) {
+      return null;
+    }
 
-		return s.closed ? null : s;
-	}
+    return s.closed ? null : s;
+  }
 
-	public Spell getSpell(int i) {
-		return spells.get(i);
-	}
+  public Spell getSpell(int i) {
+    return spells.get(i);
+  }
 
-	public int getSpellCount() {
-		return spells.size();
-	}
+  public int getSpellCount() {
+    return spells.size();
+  }
 
-	public Spell getOrCreateSpell(double date) {
-		Spell s = getCurrentSpell();
+  public Spell getOrCreateSpell(double date) {
+    Spell s = getCurrentSpell();
 
-		if (s == null)
-			s = startSpell(date);
+    if (s == null) {
+      s = startSpell(date);
+    }
 
-		return s;
-	}
+    return s;
+  }
 
-	public boolean isEternal() {
-		return spells.size() == 1 && !spells.get(0).isStarted() && !spells.get(0).isEnded();
-	}
+  public boolean isEternal() {
+    return spells.size() == 1 && !spells.get(0).isStarted() && !spells.get(0).isEnded();
+  }
 
-	public String toString() {
-		StringBuilder buffer = new StringBuilder();
+  @Override
+  public String toString() {
+    StringBuilder buffer = new StringBuilder();
 
-		buffer.append("{");
+    buffer.append("{");
 
-		for (int i = 0; i < spells.size(); i++) {
-			if (i > 0)
-				buffer.append(", ");
+    for (int i = 0; i < spells.size(); i++) {
+      if (i > 0) {
+        buffer.append(", ");
+      }
 
-			buffer.append(spells.get(i).toString());
-		}
+      buffer.append(spells.get(i).toString());
+    }
 
-		buffer.append("}");
+    buffer.append("}");
 
-		return buffer.toString();
-	}
+    return buffer.toString();
+  }
 }

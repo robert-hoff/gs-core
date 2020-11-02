@@ -29,60 +29,76 @@
  * @since 2017-11-08
  */
 package org.graphstream.util;
-
 import org.graphstream.graph.Graph;
 import org.graphstream.ui.view.Viewer;
 
+
+
 public interface Display {
-	/**
-	 * Try to get the default display according to the "org.graphstream.ui" property.
-	 * <p>
-	 * It will look for three class candidates:
-	 * 1. name defined in the property;
-	 * 2. #1 one with a ".util.Display" suffix;
-	 * 3. #2 one with a "org.graphstream.ui." prefix.
-	 * <p>
-	 * If the property is not set, or if no valid candidate can be found, a {@link MissingDisplayException} will be
-	 * thrown.
-	 *
-	 * @return the Display object linked to the UI property
-	 * @throws MissingDisplayException if no Display can be found
-	 */
-	static Display getDefault() throws MissingDisplayException {
-		String uiModule = System.getProperty("org.graphstream.ui");
+  /**
+   * Try to get the default display according to the "org.graphstream.ui" property.
+   * It will look for three class candidates: 1. name defined in the property; 2.
+   * #1 one with a ".util.Display" suffix; 3. #2 one with a "org.graphstream.ui."
+   * prefix.
+   * If the property is not set, or if no valid candidate can be found, a {@link MissingDisplayException} will be thrown.
+   * @return the Display object linked to the UI property
+   * @throws MissingDisplayException if no Display can be found
+   * s
+   */
+  static Display getDefault() throws MissingDisplayException {
+    String uiModule = System.getProperty("org.graphstream.ui");
 
-		if (uiModule == null) {
-			throw new MissingDisplayException("No UI package detected! "
-					+ "Please use System.setProperty(\"org.graphstream.ui\") for the selected package.");
-		} else {
-			Display display = null;
-			String[] candidates = { uiModule, uiModule + ".util.Display",
-					"org.graphstream.ui." + uiModule + ".util.Display" };
+    if (uiModule == null) {
+      throw new MissingDisplayException("ERROR! System.setProperty(\"org.graphstream.ui\") not set");
+    } else {
+      Display display = null;
+      String[] candidates = {uiModule, uiModule + ".util.Display", "org.graphstream.ui."+uiModule+".util.Display"};
+      // String[] candidates = {"org.graphstream.ui.swing.util.Display"};
 
-			for (String candidate : candidates) {
-				try {
-					Class<?> clazz = Class.forName(candidate);
-					Object object = clazz.newInstance();
+      // evaluates to:
+      // swing
+      // swing.util.Display
+      // org.graphstream.ui.swing.util.Display
 
-					if (object instanceof Display) {
-						display = (Display) object;
-						break;
-					}
-				} catch (ClassNotFoundException e) {
-					continue;
-				} catch (Exception e) {
-					throw new RuntimeException("Failed to create object", e);
-				}
-			}
+      // R: the weird thing is only the last entry does anything (org.graphstream.ui.swing.util.Display)
+      // so where do the other entries come from?
 
-			if (display == null) {
-				throw new MissingDisplayException("No valid display found. "
-						+ "Please check your System.setProperty(\"org.graphstream.ui\") statement.");
-			} else {
-				return display;
-			}
-		}
-	}
 
-	Viewer display(Graph graph, boolean autoLayout);
+      for (String candidate : candidates) {
+
+        try {
+          Class<?> clazz = Class.forName(candidate);
+          // Object object = clazz.newInstance();
+          // R: this is how to do things now:
+          Object object = clazz.getDeclaredConstructor().newInstance();
+          if (object instanceof Display) {
+            display = (Display) object;
+            break;
+          }
+        } catch (ClassNotFoundException e) {
+          continue;
+        } catch (Exception e) {
+          throw new RuntimeException("Failed to create object", e);
+        }
+      }
+      if (display == null) {
+        throw new MissingDisplayException("ERROR! check your System.setProperty(\"org.graphstream.ui\").");
+      } else {
+        return display;
+      }
+    }
+  }
+
+
+  Viewer display(Graph graph, boolean autoLayout);
+
 }
+
+
+
+
+
+
+
+
+

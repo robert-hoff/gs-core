@@ -36,7 +36,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface RMIAdapterOut extends Remote {
-	void register(String url) throws RemoteException;
+  void register(String url) throws RemoteException;
 
-	void unregister(String url) throws RemoteException;
+  void unregister(String url) throws RemoteException;
 }

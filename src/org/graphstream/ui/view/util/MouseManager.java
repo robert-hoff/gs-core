@@ -43,25 +43,25 @@ import org.graphstream.ui.view.View;
  * A global behavior for all mouse events on graphic elements.
  */
 public interface MouseManager {
-	/**
-	 * Make the manager active on the given graph and view.
-	 * 
-	 * @param graph
-	 *            The graph to control.
-	 * @param view
-	 *            The view to control.
-	 */
-	void init(GraphicGraph graph, View view);
+  /**
+   * Make the manager active on the given graph and view.
+   * 
+   * @param graph
+   *          The graph to control.
+   * @param view
+   *          The view to control.
+   */
+  void init(GraphicGraph graph, View view);
 
-	/**
-	 * Release the links between this manager and the view and the graph.
-	 */
-	void release();
+  /**
+   * Release the links between this manager and the view and the graph.
+   */
+  void release();
 
-	/**
-	 * Returns the set of InteractiveElements managed by the MouseManager
-	 *
-	 * @return the set of InteractiveElements managed by the MouseManager
-	 */
-	public EnumSet<InteractiveElement> getManagedTypes();
+  /**
+   * Returns the set of InteractiveElements managed by the MouseManager
+   *
+   * @return the set of InteractiveElements managed by the MouseManager
+   */
+  public EnumSet<InteractiveElement> getManagedTypes();
 }

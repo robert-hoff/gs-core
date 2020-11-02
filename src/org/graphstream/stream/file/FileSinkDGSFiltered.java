@@ -87,115 +87,145 @@ import java.util.Locale;
  */
 public class FileSinkDGSFiltered extends FileSinkBaseFiltered {
 
-	// Attribute
+  // Attribute
 
-	/**
-	 * A shortcut to the output.
-	 */
-	protected PrintWriter out;
-	protected String graphName = "";
+  /**
+   * A shortcut to the output.
+   */
+  protected PrintWriter out;
+  protected String graphName = "";
 
-	// Command
+  // Command
 
-	@Override
-	protected void outputHeader() throws IOException {
-		out = (PrintWriter) output;
-		out.printf("DGS004%n");
+  @Override
+  protected void outputHeader() throws IOException {
+    out = (PrintWriter) output;
+    out.printf("DGS004%n");
 
-		if (graphName.length() <= 0)
-			out.printf("null 0 0%n");
-		else
-			out.printf("\"%s\" 0 0%n", FileSinkDGSUtility.formatStringForQuoting(graphName));
-	}
+    if (graphName.length() <= 0) {
+      out.printf("null 0 0%n");
+    } else {
+      out.printf("\"%s\" 0 0%n", FileSinkDGSUtility.formatStringForQuoting(graphName));
+    }
+  }
 
-	@Override
-	protected void outputEndOfFile() throws IOException {
-		// NOP
-	}
+  @Override
+  protected void outputEndOfFile() throws IOException {
+    // NOP
+  }
 
-	public void edgeAttributeAdded(String graphId, long timeId, String edgeId, String attribute, Object value) {
-		if (noFilterEdgeAttributeAdded && !edgeAttributesFiltered.contains(attribute))
-			edgeAttributeChanged(graphId, timeId, edgeId, attribute, null, value);
-	}
+  @Override
+  public void edgeAttributeAdded(String graphId, long timeId, String edgeId, String attribute, Object value) {
+    if (noFilterEdgeAttributeAdded && !edgeAttributesFiltered.contains(attribute)) {
+      edgeAttributeChanged(graphId, timeId, edgeId, attribute, null, value);
+    }
+  }
 
-	public void edgeAttributeChanged(String graphId, long timeId, String edgeId, String attribute, Object oldValue,
-			Object newValue) {
-		if (noFilterEdgeAttributeChanged && !edgeAttributesFiltered.contains(attribute))
-			out.printf("ce \"%s\" %s%n", FileSinkDGSUtility.formatStringForQuoting(edgeId),
-					FileSinkDGSUtility.attributeString(attribute, newValue, false));
-	}
+  @Override
+  public void edgeAttributeChanged(String graphId, long timeId, String edgeId, String attribute, Object oldValue,
+      Object newValue) {
+    if (noFilterEdgeAttributeChanged && !edgeAttributesFiltered.contains(attribute)) {
+      out.printf("ce \"%s\" %s%n", FileSinkDGSUtility.formatStringForQuoting(edgeId),
+          FileSinkDGSUtility.attributeString(attribute, newValue, false));
+    }
+  }
 
-	public void edgeAttributeRemoved(String graphId, long timeId, String edgeId, String attribute) {
-		if (noFilterEdgeAttributeRemoved && !edgeAttributesFiltered.contains(attribute))
-			out.printf("ce \"%s\" %s%n", FileSinkDGSUtility.formatStringForQuoting(edgeId),
-					FileSinkDGSUtility.attributeString(attribute, null, true));
-	}
+  @Override
+  public void edgeAttributeRemoved(String graphId, long timeId, String edgeId, String attribute) {
+    if (noFilterEdgeAttributeRemoved && !edgeAttributesFiltered.contains(attribute)) {
+      out.printf("ce \"%s\" %s%n", FileSinkDGSUtility.formatStringForQuoting(edgeId),
+          FileSinkDGSUtility.attributeString(attribute, null, true));
+    }
+  }
 
-	public void graphAttributeAdded(String graphId, long timeId, String attribute, Object value) {
-		if (noFilterGraphAttributeAdded && !graphAttributesFiltered.contains(attribute))
-			graphAttributeChanged(graphId, timeId, attribute, null, value);
-	}
+  @Override
+  public void graphAttributeAdded(String graphId, long timeId, String attribute, Object value) {
+    if (noFilterGraphAttributeAdded && !graphAttributesFiltered.contains(attribute)) {
+      graphAttributeChanged(graphId, timeId, attribute, null, value);
+    }
+  }
 
-	public void graphAttributeChanged(String graphId, long timeId, String attribute, Object oldValue, Object newValue) {
-		if (noFilterGraphAttributeChanged && !graphAttributesFiltered.contains(attribute))
-			out.printf("cg %s%n", FileSinkDGSUtility.attributeString(attribute, newValue, false));
-	}
+  @Override
+  public void graphAttributeChanged(String graphId, long timeId, String attribute, Object oldValue, Object newValue) {
+    if (noFilterGraphAttributeChanged && !graphAttributesFiltered.contains(attribute)) {
+      out.printf("cg %s%n", FileSinkDGSUtility.attributeString(attribute, newValue, false));
+    }
+  }
 
-	public void graphAttributeRemoved(String graphId, long timeId, String attribute) {
-		if (noFilterGraphAttributeRemoved && !graphAttributesFiltered.contains(attribute))
-			out.printf("cg %s%n", FileSinkDGSUtility.attributeString(attribute, null, true));
-	}
+  @Override
+  public void graphAttributeRemoved(String graphId, long timeId, String attribute) {
+    if (noFilterGraphAttributeRemoved && !graphAttributesFiltered.contains(attribute)) {
+      out.printf("cg %s%n", FileSinkDGSUtility.attributeString(attribute, null, true));
+    }
+  }
 
-	public void nodeAttributeAdded(String graphId, long timeId, String nodeId, String attribute, Object value) {
-		if (noFilterNodeAttributeAdded && !nodeAttributesFiltered.contains(attribute))
-			nodeAttributeChanged(graphId, timeId, nodeId, attribute, null, value);
-	}
+  @Override
+  public void nodeAttributeAdded(String graphId, long timeId, String nodeId, String attribute, Object value) {
+    if (noFilterNodeAttributeAdded && !nodeAttributesFiltered.contains(attribute)) {
+      nodeAttributeChanged(graphId, timeId, nodeId, attribute, null, value);
+    }
+  }
 
-	public void nodeAttributeChanged(String graphId, long timeId, String nodeId, String attribute, Object oldValue,
-			Object newValue) {
-		if (noFilterNodeAttributeChanged && !nodeAttributesFiltered.contains(attribute))
-			out.printf("cn \"%s\" %s%n", FileSinkDGSUtility.formatStringForQuoting(nodeId),
-					FileSinkDGSUtility.attributeString(attribute, newValue, false));
-	}
+  @Override
+  public void nodeAttributeChanged(String graphId, long timeId, String nodeId, String attribute, Object oldValue,
+      Object newValue) {
+    if (noFilterNodeAttributeChanged && !nodeAttributesFiltered.contains(attribute)) {
+      out.printf("cn \"%s\" %s%n", FileSinkDGSUtility.formatStringForQuoting(nodeId),
+          FileSinkDGSUtility.attributeString(attribute, newValue, false));
+    }
+  }
 
-	public void nodeAttributeRemoved(String graphId, long timeId, String nodeId, String attribute) {
-		if (noFilterNodeAttributeRemoved && !nodeAttributesFiltered.contains(attribute))
-			out.printf("cn \"%s\" %s%n", FileSinkDGSUtility.formatStringForQuoting(nodeId),
-					FileSinkDGSUtility.attributeString(attribute, null, true));
-	}
+  @Override
+  public void nodeAttributeRemoved(String graphId, long timeId, String nodeId, String attribute) {
+    if (noFilterNodeAttributeRemoved && !nodeAttributesFiltered.contains(attribute)) {
+      out.printf("cn \"%s\" %s%n", FileSinkDGSUtility.formatStringForQuoting(nodeId),
+          FileSinkDGSUtility.attributeString(attribute, null, true));
+    }
+  }
 
-	public void edgeAdded(String graphId, long timeId, String edgeId, String fromNodeId, String toNodeId,
-			boolean directed) {
-		if (noFilterEdgeAdded) {
-			edgeId = FileSinkDGSUtility.formatStringForQuoting(edgeId);
-			fromNodeId = FileSinkDGSUtility.formatStringForQuoting(fromNodeId);
-			toNodeId = FileSinkDGSUtility.formatStringForQuoting(toNodeId);
-			out.printf("ae \"%s\" \"%s\" %s \"%s\"%n", edgeId, fromNodeId, directed ? ">" : "", toNodeId);
-		}
-	}
+  @Override
+  public void edgeAdded(String graphId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+      boolean directed) {
+    if (noFilterEdgeAdded) {
+      edgeId = FileSinkDGSUtility.formatStringForQuoting(edgeId);
+      fromNodeId = FileSinkDGSUtility.formatStringForQuoting(fromNodeId);
+      toNodeId = FileSinkDGSUtility.formatStringForQuoting(toNodeId);
+      out.printf("ae \"%s\" \"%s\" %s \"%s\"%n", edgeId, fromNodeId, directed ? ">" : "", toNodeId);
+    }
+  }
 
-	public void edgeRemoved(String graphId, long timeId, String edgeId) {
-		if (noFilterEdgeRemoved)
-			out.printf("de \"%s\"%n", FileSinkDGSUtility.formatStringForQuoting(edgeId));
-	}
+  @Override
+  public void edgeRemoved(String graphId, long timeId, String edgeId) {
+    if (noFilterEdgeRemoved) {
+      out.printf("de \"%s\"%n", FileSinkDGSUtility.formatStringForQuoting(edgeId));
+    }
+  }
 
-	public void graphCleared(String graphId, long timeId) {
-		if (noFilterGraphCleared)
-			out.printf("cl%n");
-	}
+  @Override
+  public void graphCleared(String graphId, long timeId) {
+    if (noFilterGraphCleared) {
+      out.printf("cl%n");
+    }
+  }
 
-	public void nodeAdded(String graphId, long timeId, String nodeId) {
-		if (noFilterNodeAdded)
-			out.printf("an \"%s\"%n", FileSinkDGSUtility.formatStringForQuoting(nodeId));
-	}
+  @Override
+  public void nodeAdded(String graphId, long timeId, String nodeId) {
+    if (noFilterNodeAdded) {
+      out.printf("an \"%s\"%n", FileSinkDGSUtility.formatStringForQuoting(nodeId));
+    }
+  }
 
-	public void nodeRemoved(String graphId, long timeId, String nodeId) {
-		if (noFilterNodeRemoved)
-			out.printf("dn \"%s\"%n", FileSinkDGSUtility.formatStringForQuoting(nodeId));
-	}
+  @Override
+  public void nodeRemoved(String graphId, long timeId, String nodeId) {
+    if (noFilterNodeRemoved) {
+      out.printf("dn \"%s\"%n", FileSinkDGSUtility.formatStringForQuoting(nodeId));
+    }
+  }
 
-	public void stepBegins(String graphId, long timeId, double step) {
-		if (noFilterStepBegins)
-			out.printf(Locale.US, "st %f%n", step);
-	}
+  @Override
+  public void stepBegins(String graphId, long timeId, double step) {
+    if (noFilterStepBegins) {
+      out.printf(Locale.US, "st %f%n", step);
+    }
+  }
 }

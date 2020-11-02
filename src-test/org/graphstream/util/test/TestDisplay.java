@@ -32,57 +32,57 @@ import org.junit.Test;
 import static org.graphstream.util.Display.getDefault;
 
 public class TestDisplay {
-	public void checkDisplay(String uiModule) {
-		System.setProperty("org.graphstream.ui", uiModule);
+  public void checkDisplay(String uiModule) {
+    System.setProperty("org.graphstream.ui", uiModule);
 
-		try {
-			org.graphstream.util.Display d = getDefault();
+    try {
+      org.graphstream.util.Display d = getDefault();
 
-			Assert.assertNotNull(d);
-			Assert.assertTrue(d instanceof Display);
-		} catch (Exception e) {
-			Assert.fail();
-		}
-	}
+      Assert.assertNotNull(d);
+      Assert.assertTrue(d instanceof Display);
+    } catch (Exception e) {
+      Assert.fail();
+    }
+  }
 
-	@Test
-	public void testDisplayLoadingByClassName() {
-		checkDisplay(Display.class.getName());
-	}
+  @Test
+  public void testDisplayLoadingByClassName() {
+    checkDisplay(Display.class.getName());
+  }
 
-	@Test
-	public void testDisplayLoadingByPackageName() {
-		checkDisplay("org.graphstream.ui.test");
-	}
+  @Test
+  public void testDisplayLoadingByPackageName() {
+    checkDisplay("org.graphstream.ui.test");
+  }
 
-	@Test
-	public void testDisplayLoadingByModuleName() {
-		checkDisplay("test");
-	}
+  @Test
+  public void testDisplayLoadingByModuleName() {
+    checkDisplay("test");
+  }
 
-	@Test
-	public void testMissingDisplayExceptionIfPropertyNotSet() {
-		System.clearProperty("org.graphstream.ui");
+  @Test
+  public void testMissingDisplayExceptionIfPropertyNotSet() {
+    System.clearProperty("org.graphstream.ui");
 
-		try {
-			getDefault();
-		} catch (MissingDisplayException e) {
-			Assert.assertTrue(e.getMessage().startsWith("No UI package detected!"));
-		} catch (Exception e) {
-			Assert.fail();
-		}
-	}
+    try {
+      getDefault();
+    } catch (MissingDisplayException e) {
+      Assert.assertTrue(e.getMessage().startsWith("No UI package detected!"));
+    } catch (Exception e) {
+      Assert.fail();
+    }
+  }
 
-	@Test
-	public void testMissingDisplayExceptionIfNoValidCandidate() {
-		System.setProperty("org.graphstream.ui", TestDisplay.class.getName());
+  @Test
+  public void testMissingDisplayExceptionIfNoValidCandidate() {
+    System.setProperty("org.graphstream.ui", TestDisplay.class.getName());
 
-		try {
-			getDefault();
-		} catch (MissingDisplayException e) {
-			Assert.assertTrue(e.getMessage().startsWith("No valid display found."));
-		} catch (Exception e) {
-			Assert.fail();
-		}
-	}
+    try {
+      getDefault();
+    } catch (MissingDisplayException e) {
+      Assert.assertTrue(e.getMessage().startsWith("No valid display found."));
+    } catch (Exception e) {
+      Assert.fail();
+    }
+  }
 }

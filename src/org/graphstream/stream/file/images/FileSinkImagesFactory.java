@@ -30,5 +30,5 @@ import org.graphstream.stream.file.FileSinkImages;
  * Define a provider for FileSinkImages.
  */
 public interface FileSinkImagesFactory {
-	FileSinkImages createFileSinkImages();
+  FileSinkImages createFileSinkImages();
 }

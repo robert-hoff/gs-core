@@ -46,165 +46,179 @@ import org.graphstream.stream.file.gexf.GEXF;
 import org.graphstream.stream.file.gexf.SmartXMLWriter;
 
 public class FileSinkGEXF2 extends PipeBase implements FileSink {
-	class Context {
-		GEXF gexf;
-		Writer output;
-		SmartXMLWriter stream;
-		boolean closeStreamAtEnd;
-	}
+  class Context {
+    GEXF gexf;
+    Writer output;
+    SmartXMLWriter stream;
+    boolean closeStreamAtEnd;
+  }
 
-	Context currentContext;
+  Context currentContext;
 
-	Context createContext(String fileName) throws IOException {
-		FileWriter w = new FileWriter(fileName);
-		Context ctx = createContext(w);
-		ctx.closeStreamAtEnd = true;
+  Context createContext(String fileName) throws IOException {
+    FileWriter w = new FileWriter(fileName);
+    Context ctx = createContext(w);
+    ctx.closeStreamAtEnd = true;
 
-		return ctx;
-	}
+    return ctx;
+  }
 
-	Context createContext(OutputStream output) throws IOException {
-		OutputStreamWriter w = new OutputStreamWriter(output);
-		return createContext(w);
-	}
+  Context createContext(OutputStream output) throws IOException {
+    OutputStreamWriter w = new OutputStreamWriter(output);
+    return createContext(w);
+  }
 
-	Context createContext(Writer w) throws IOException {
-		Context ctx = new Context();
+  Context createContext(Writer w) throws IOException {
+    Context ctx = new Context();
 
-		ctx.output = w;
-		ctx.closeStreamAtEnd = false;
-		ctx.gexf = new GEXF();
+    ctx.output = w;
+    ctx.closeStreamAtEnd = false;
+    ctx.gexf = new GEXF();
 
-		try {
-			ctx.stream = new SmartXMLWriter(w, true);
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
+    try {
+      ctx.stream = new SmartXMLWriter(w, true);
+    } catch (Exception e) {
+      throw new IOException(e);
+    }
 
-		return ctx;
-	}
+    return ctx;
+  }
 
-	protected void export(Context ctx, Graph g) throws IOException {
-		ctx.gexf.disable(GEXF.Extension.DYNAMICS);
+  protected void export(Context ctx, Graph g) throws IOException {
+    ctx.gexf.disable(GEXF.Extension.DYNAMICS);
 
-		GraphReplay replay = new GraphReplay("replay");
-		replay.addSink(ctx.gexf);
-		replay.replay(g);
+    GraphReplay replay = new GraphReplay("replay");
+    replay.addSink(ctx.gexf);
+    replay.replay(g);
 
-		try {
-			ctx.gexf.export(ctx.stream);
-			ctx.stream.close();
+    try {
+      ctx.gexf.export(ctx.stream);
+      ctx.stream.close();
 
-			if (ctx.closeStreamAtEnd)
-				ctx.output.close();
-		} catch (XMLStreamException e) {
-			throw new IOException(e);
-		}
-	}
+      if (ctx.closeStreamAtEnd) {
+        ctx.output.close();
+      }
+    } catch (XMLStreamException e) {
+      throw new IOException(e);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.FileSink#writeAll(org.graphstream.graph.Graph ,
-	 * java.lang.String)
-	 */
-	public void writeAll(Graph graph, String fileName) throws IOException {
-		Context ctx = createContext(fileName);
-		export(ctx, graph);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.FileSink#writeAll(org.graphstream.graph.Graph ,
+   * java.lang.String)
+   */
+  @Override
+  public void writeAll(Graph graph, String fileName) throws IOException {
+    Context ctx = createContext(fileName);
+    export(ctx, graph);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.FileSink#writeAll(org.graphstream.graph.Graph ,
-	 * java.io.OutputStream)
-	 */
-	public void writeAll(Graph graph, OutputStream stream) throws IOException {
-		Context ctx = createContext(stream);
-		export(ctx, graph);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.FileSink#writeAll(org.graphstream.graph.Graph ,
+   * java.io.OutputStream)
+   */
+  @Override
+  public void writeAll(Graph graph, OutputStream stream) throws IOException {
+    Context ctx = createContext(stream);
+    export(ctx, graph);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.FileSink#writeAll(org.graphstream.graph.Graph ,
-	 * java.io.Writer)
-	 */
-	public void writeAll(Graph graph, Writer writer) throws IOException {
-		Context ctx = createContext(writer);
-		export(ctx, graph);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.FileSink#writeAll(org.graphstream.graph.Graph ,
+   * java.io.Writer)
+   */
+  @Override
+  public void writeAll(Graph graph, Writer writer) throws IOException {
+    Context ctx = createContext(writer);
+    export(ctx, graph);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSink#begin(java.lang.String)
-	 */
-	public void begin(String fileName) throws IOException {
-		if (currentContext != null)
-			throw new IOException("cannot call begin() twice without calling end() before.");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSink#begin(java.lang.String)
+   */
+  @Override
+  public void begin(String fileName) throws IOException {
+    if (currentContext != null) {
+      throw new IOException("cannot call begin() twice without calling end() before.");
+    }
 
-		currentContext = createContext(fileName);
-		addSink(currentContext.gexf);
-	}
+    currentContext = createContext(fileName);
+    addSink(currentContext.gexf);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSink#begin(java.io.OutputStream)
-	 */
-	public void begin(OutputStream stream) throws IOException {
-		if (currentContext != null)
-			throw new IOException("cannot call begin() twice without calling end() before.");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSink#begin(java.io.OutputStream)
+   */
+  @Override
+  public void begin(OutputStream stream) throws IOException {
+    if (currentContext != null) {
+      throw new IOException("cannot call begin() twice without calling end() before.");
+    }
 
-		currentContext = createContext(stream);
-		addSink(currentContext.gexf);
-	}
+    currentContext = createContext(stream);
+    addSink(currentContext.gexf);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSink#begin(java.io.Writer)
-	 */
-	public void begin(Writer writer) throws IOException {
-		if (currentContext != null)
-			throw new IOException("cannot call begin() twice without calling end() before.");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSink#begin(java.io.Writer)
+   */
+  @Override
+  public void begin(Writer writer) throws IOException {
+    if (currentContext != null) {
+      throw new IOException("cannot call begin() twice without calling end() before.");
+    }
 
-		currentContext = createContext(writer);
-		addSink(currentContext.gexf);
-	}
+    currentContext = createContext(writer);
+    addSink(currentContext.gexf);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSink#flush()
-	 */
-	public void flush() throws IOException {
-		if (currentContext != null)
-			currentContext.stream.flush();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSink#flush()
+   */
+  @Override
+  public void flush() throws IOException {
+    if (currentContext != null) {
+      currentContext.stream.flush();
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSink#end()
-	 */
-	public void end() throws IOException {
-		removeSink(currentContext.gexf);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSink#end()
+   */
+  @Override
+  public void end() throws IOException {
+    removeSink(currentContext.gexf);
 
-		try {
-			currentContext.gexf.export(currentContext.stream);
-			currentContext.stream.close();
+    try {
+      currentContext.gexf.export(currentContext.stream);
+      currentContext.stream.close();
 
-			if (currentContext.closeStreamAtEnd)
-				currentContext.output.close();
-		} catch (XMLStreamException e) {
-			throw new IOException(e);
-		}
+      if (currentContext.closeStreamAtEnd) {
+        currentContext.output.close();
+      }
+    } catch (XMLStreamException e) {
+      throw new IOException(e);
+    }
 
-		currentContext = null;
-	}
+    currentContext = null;
+  }
 }

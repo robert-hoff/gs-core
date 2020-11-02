@@ -36,6 +36,6 @@ package org.graphstream.ui.view.camera;
  * element, not the style group and define the basic geometry of the shape.
  */
 public interface Skeleton {
-	public static String attributeName = "ui.j2dsk";
+  public static String attributeName = "ui.j2dsk";
 
 }

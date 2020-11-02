@@ -36,12 +36,12 @@ import java.io.Reader;
  * Factory to create parser.
  */
 public interface ParserFactory {
-	/**
-	 * Create a new parser from a reader.
-	 * 
-	 * @param reader
-	 *            stream to be parsed
-	 * @return a parser
-	 */
-	Parser newParser(Reader reader);
+  /**
+   * Create a new parser from a reader.
+   * 
+   * @param reader
+   *          stream to be parsed
+   * @return a parser
+   */
+  Parser newParser(Reader reader);
 }

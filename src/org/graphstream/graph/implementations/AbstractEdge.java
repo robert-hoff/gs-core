@@ -52,100 +52,104 @@ import org.graphstream.stream.SourceBase.ElementType;
  */
 public class AbstractEdge extends AbstractElement implements Edge {
 
-	// *** Fields ***
+  // *** Fields ***
 
-	/**
-	 * The source node
-	 */
-	protected AbstractNode source;
+  /**
+   * The source node
+   */
+  protected AbstractNode source;
 
-	/**
-	 * The target node
-	 */
-	protected AbstractNode target;
+  /**
+   * The target node
+   */
+  protected AbstractNode target;
 
-	/**
-	 * Is this edge directed ?
-	 */
-	protected boolean directed;
+  /**
+   * Is this edge directed ?
+   */
+  protected boolean directed;
 
-	/**
-	 * The graph to which this edge belongs
-	 */
-	protected AbstractGraph graph;
+  /**
+   * The graph to which this edge belongs
+   */
+  protected AbstractGraph graph;
 
-	// *** Constructors ***
+  // *** Constructors ***
 
-	/**
-	 * Constructs a new edge. This constructor copies the parameters into the
-	 * corresponding fields.
-	 * 
-	 * @param id
-	 *            Unique identifier of this edge.
-	 * @param source
-	 *            Source node.
-	 * @param target
-	 *            Target node.
-	 * @param directed
-	 *            Indicates if the edge is directed.
-	 */
-	protected AbstractEdge(String id, AbstractNode source, AbstractNode target, boolean directed) {
-		super(id);
-		assert source != null && target != null : "An edge cannot have null endpoints";
-		this.source = source;
-		this.target = target;
-		this.directed = directed;
-		this.graph = (AbstractGraph) source.getGraph();
-	}
+  /**
+   * Constructs a new edge. This constructor copies the parameters into the
+   * corresponding fields.
+   * 
+   * @param id
+   *          Unique identifier of this edge.
+   * @param source
+   *          Source node.
+   * @param target
+   *          Target node.
+   * @param directed
+   *          Indicates if the edge is directed.
+   */
+  protected AbstractEdge(String id, AbstractNode source, AbstractNode target, boolean directed) {
+    super(id);
+    assert source != null && target != null : "An edge cannot have null endpoints";
+    this.source = source;
+    this.target = target;
+    this.directed = directed;
+    this.graph = (AbstractGraph) source.getGraph();
+  }
 
-	// *** Inherited from AbstractElement ***
+  // *** Inherited from AbstractElement ***
 
-	@Override
-	protected void attributeChanged(AttributeChangeEvent event, String attribute, Object oldValue, Object newValue) {
-		graph.listeners.sendAttributeChangedEvent(id, ElementType.EDGE, attribute, event, oldValue, newValue);
-	}
+  @Override
+  protected void attributeChanged(AttributeChangeEvent event, String attribute, Object oldValue, Object newValue) {
+    graph.listeners.sendAttributeChangedEvent(id, ElementType.EDGE, attribute, event, oldValue, newValue);
+  }
 
-	@Override
-	public String toString() {
-		return String.format("%s[%s-%s%s]", getId(), source, directed ? ">" : "-", target);
-	}
+  @Override
+  public String toString() {
+    return String.format("%s[%s-%s%s]", getId(), source, directed ? ">" : "-", target);
+  }
 
-	// *** Inherited from Edge ***
+  // *** Inherited from Edge ***
 
-	@Override
-	public Node getNode0() {
-		return source;
-	}
+  @Override
+  public Node getNode0() {
+    return source;
+  }
 
-	@Override
-	public Node getNode1() {
-		return target;
-	}
+  @Override
+  public Node getNode1() {
+    return target;
+  }
 
-	@Override
-	public Node getOpposite(Node node) {
-		if (node == source)
-			return target;
-		if (node == target)
-			return source;
-		return null;
-	}
+  @Override
+  public Node getOpposite(Node node) {
+    if (node == source) {
+      return target;
+    }
+    if (node == target) {
+      return source;
+    }
+    return null;
+  }
 
-	@Override
-	public Node getSourceNode() {
-		return source;
-	}
+  @Override
+  public Node getSourceNode() {
+    return source;
+  }
 
-	@Override
-	public Node getTargetNode() {
-		return target;
-	}
+  @Override
+  public Node getTargetNode() {
+    return target;
+  }
 
-	public boolean isDirected() {
-		return directed;
-	}
+  @Override
+  public boolean isDirected() {
+    return directed;
+  }
 
-	public boolean isLoop() {
-		return source == target;
-	}
+  @Override
+  public boolean isLoop() {
+    return source == target;
+  }
 }

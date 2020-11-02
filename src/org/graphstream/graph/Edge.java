@@ -43,86 +43,86 @@ package org.graphstream.graph;
  * @since July 12 2007
  */
 public interface Edge extends Element {
-	/**
-	 * Is the edge directed ?.
-	 *
-	 * @return True if the edge is directed.
-	 */
-	boolean isDirected();
+  /**
+   * Is the edge directed ?.
+   *
+   * @return True if the edge is directed.
+   */
+  boolean isDirected();
 
-	/**
-	 * Does the source and target of this edge identify the same node ?.
-	 *
-	 * @return True if this edge is a loop.
-	 */
-	boolean isLoop();
+  /**
+   * Does the source and target of this edge identify the same node ?.
+   *
+   * @return True if this edge is a loop.
+   */
+  boolean isLoop();
 
-	/**
-	 * First node of the edge.
-	 * <p>
-	 * This is equivalent to the {@link #getSourceNode()} method, but may be clearer
-	 * in the source code if the graph you are using is not directed.
-	 * </p>
-	 *
-	 * @return The first node of the edge.
-	 * @see #getNode1()
-	 * @see #getSourceNode()
-	 */
-	Node getNode0();
+  /**
+   * First node of the edge.
+   * <p>
+   * This is equivalent to the {@link #getSourceNode()} method, but may be clearer
+   * in the source code if the graph you are using is not directed.
+   * </p>
+   *
+   * @return The first node of the edge.
+   * @see #getNode1()
+   * @see #getSourceNode()
+   */
+  Node getNode0();
 
-	/**
-	 * Second node of the edge.
-	 * <p>
-	 * This is equivalent to the {@link #getTargetNode()} method, but may be clearer
-	 * in the source code if the graph you are using is not directed.
-	 * </p>
-	 *
-	 * @return The second node of the edge.
-	 * @see #getNode0()
-	 * @see #getTargetNode()
-	 */
-	Node getNode1();
+  /**
+   * Second node of the edge.
+   * <p>
+   * This is equivalent to the {@link #getTargetNode()} method, but may be clearer
+   * in the source code if the graph you are using is not directed.
+   * </p>
+   *
+   * @return The second node of the edge.
+   * @see #getNode0()
+   * @see #getTargetNode()
+   */
+  Node getNode1();
 
-	/**
-	 * Start node.
-	 * <p>
-	 * When the edge is directed this is the source node, in this case you can get
-	 * the opposite node using {@link #getTargetNode()}. This is equivalent to the
-	 * {@link #getNode0()} method but may be clearer in the source code if the graph
-	 * you are using is directed.
-	 * </p>
-	 *
-	 * @return The origin node of the edge.
-	 * @see #getNode0()
-	 * @see #getTargetNode()
-	 */
-	Node getSourceNode();
+  /**
+   * Start node.
+   * <p>
+   * When the edge is directed this is the source node, in this case you can get
+   * the opposite node using {@link #getTargetNode()}. This is equivalent to the
+   * {@link #getNode0()} method but may be clearer in the source code if the graph
+   * you are using is directed.
+   * </p>
+   *
+   * @return The origin node of the edge.
+   * @see #getNode0()
+   * @see #getTargetNode()
+   */
+  Node getSourceNode();
 
-	/**
-	 * End node.
-	 * <p>
-	 * When the edge is directed this is the target node, in this case you can get
-	 * the opposite node using {@link #getSourceNode()}. This is equivalent to the
-	 * {@link #getNode1()} method but may be clearer in the source code if the graph
-	 * you are using is directed.
-	 * </p>
-	 *
-	 * @return The destination node of the edge.
-	 * @see #getNode1()
-	 * @see #getSourceNode()
-	 */
-	Node getTargetNode();
+  /**
+   * End node.
+   * <p>
+   * When the edge is directed this is the target node, in this case you can get
+   * the opposite node using {@link #getSourceNode()}. This is equivalent to the
+   * {@link #getNode1()} method but may be clearer in the source code if the graph
+   * you are using is directed.
+   * </p>
+   *
+   * @return The destination node of the edge.
+   * @see #getNode1()
+   * @see #getSourceNode()
+   */
+  Node getTargetNode();
 
-	/**
-	 * When knowing one node and one edge of this node, this method return the node
-	 * at the other end of the edge.
-	 * <p>
-	 * Return null if the given node is not at any end of the edge.
-	 * </p>
-	 *
-	 * @param node
-	 *            The node we search the opposite of.
-	 * @return the opposite node of the given node.
-	 */
-	Node getOpposite(Node node);
+  /**
+   * When knowing one node and one edge of this node, this method return the node
+   * at the other end of the edge.
+   * <p>
+   * Return null if the given node is not at any end of the edge.
+   * </p>
+   *
+   * @param node
+   *          The node we search the opposite of.
+   * @return the opposite node of the given node.
+   */
+  Node getOpposite(Node node);
 }

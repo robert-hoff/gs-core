@@ -35,52 +35,55 @@ import java.util.LinkedList;
 import javax.xml.stream.XMLStreamException;
 
 public class GEXFSpells implements GEXFElement {
-	GEXF root;
-	LinkedList<GEXFSpell> spells;
+  GEXF root;
+  LinkedList<GEXFSpell> spells;
 
-	public GEXFSpells(GEXF root) {
-		this.root = root;
-		this.spells = new LinkedList<GEXFSpell>();
-	}
+  public GEXFSpells(GEXF root) {
+    this.root = root;
+    this.spells = new LinkedList<GEXFSpell>();
+  }
 
-	public void start() {
-		double date = root.step;
+  public void start() {
+    double date = root.step;
 
-		if (spells.size() == 0 || spells.getLast().closed) {
-			GEXFSpell spell = new GEXFSpell(root);
-			spell.start = date;
+    if (spells.size() == 0 || spells.getLast().closed) {
+      GEXFSpell spell = new GEXFSpell(root);
+      spell.start = date;
 
-			spells.add(spell);
-		}
-	}
+      spells.add(spell);
+    }
+  }
 
-	public void end() {
-		double date = root.step;
+  public void end() {
+    double date = root.step;
 
-		if (spells.size() > 0 && !spells.getLast().closed) {
-			GEXFSpell spell = spells.getLast();
+    if (spells.size() > 0 && !spells.getLast().closed) {
+      GEXFSpell spell = spells.getLast();
 
-			spell.end = date;
-			spell.closed = true;
-		}
-	}
+      spell.end = date;
+      spell.closed = true;
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		if (spells.size() == 0)
-			return;
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    if (spells.size() == 0) {
+      return;
+    }
 
-		stream.startElement("spells");
+    stream.startElement("spells");
 
-		for (int i = 0; i < spells.size(); i++)
-			spells.get(i).export(stream);
+    for (int i = 0; i < spells.size(); i++) {
+      spells.get(i).export(stream);
+    }
 
-		stream.endElement(); // SPELLS
-	}
+    stream.endElement(); // SPELLS
+  }
 }

@@ -39,116 +39,127 @@ import javax.xml.stream.XMLStreamException;
 import org.graphstream.stream.SinkAdapter;
 
 public class GEXFEdges extends SinkAdapter implements GEXFElement {
-	GEXF root;
-	HashMap<String, GEXFEdge> edges;
+  GEXF root;
+  HashMap<String, GEXFEdge> edges;
 
-	public GEXFEdges(GEXF root) {
-		this.root = root;
-		this.edges = new HashMap<String, GEXFEdge>();
+  public GEXFEdges(GEXF root) {
+    this.root = root;
+    this.edges = new HashMap<String, GEXFEdge>();
 
-		root.addSink(this);
-	}
+    root.addSink(this);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
-	 * .file.gexf.SmartXMLWriter)
-	 */
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		stream.startElement("edges");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+   * .file.gexf.SmartXMLWriter)
+   */
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    stream.startElement("edges");
 
-		for (GEXFEdge edge : edges.values())
-			edge.export(stream);
+    for (GEXFEdge edge : edges.values()) {
+      edge.export(stream);
+    }
 
-		stream.endElement(); // EDGES
-	}
+    stream.endElement(); // EDGES
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.SinkAdapter#edgeAdded(java.lang.String, long,
-	 * java.lang.String, java.lang.String, java.lang.String, boolean)
-	 */
-	public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
-			boolean directed) {
-		GEXFEdge edge = edges.get(edgeId);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.SinkAdapter#edgeAdded(java.lang.String, long,
+   * java.lang.String, java.lang.String, java.lang.String, boolean)
+   */
+  @Override
+  public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+      boolean directed) {
+    GEXFEdge edge = edges.get(edgeId);
 
-		if (edge == null) {
-			edge = new GEXFEdge(root, edgeId, fromNodeId, toNodeId, directed);
-			edges.put(edgeId, edge);
-		}
+    if (edge == null) {
+      edge = new GEXFEdge(root, edgeId, fromNodeId, toNodeId, directed);
+      edges.put(edgeId, edge);
+    }
 
-		edge.spells.start();
-	}
+    edge.spells.start();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.SinkAdapter#edgeRemoved(java.lang.String, long,
-	 * java.lang.String)
-	 */
-	public void edgeRemoved(String sourceId, long timeId, String edgeId) {
-		GEXFEdge edge = edges.get(edgeId);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.SinkAdapter#edgeRemoved(java.lang.String, long,
+   * java.lang.String)
+   */
+  @Override
+  public void edgeRemoved(String sourceId, long timeId, String edgeId) {
+    GEXFEdge edge = edges.get(edgeId);
 
-		if (edge == null) {
-			System.err.printf("edge removed but not added\n");
-			return;
-		}
+    if (edge == null) {
+      System.err.printf("edge removed but not added\n");
+      return;
+    }
 
-		edge.spells.end();
-	}
+    edge.spells.end();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.SinkAdapter#graphCleared(java.lang.String, long)
-	 */
-	public void graphCleared(String sourceId, long timeId) {
-		for (GEXFEdge edge : edges.values())
-			edge.spells.end();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.SinkAdapter#graphCleared(java.lang.String, long)
+   */
+  @Override
+  public void graphCleared(String sourceId, long timeId) {
+    for (GEXFEdge edge : edges.values()) {
+      edge.spells.end();
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.SinkAdapter#edgeAttributeAdded(java.lang.String,
-	 * long, java.lang.String, java.lang.String, java.lang.Object)
-	 */
-	public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
-		GEXFEdge edge = edges.get(edgeId);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.SinkAdapter#edgeAttributeAdded(java.lang.String,
+   * long, java.lang.String, java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
+    GEXFEdge edge = edges.get(edgeId);
 
-		if (("ui.label".equals(attribute) || "label".equals(attribute)) && value != null)
-			edge.label = value.toString();
+    if (("ui.label".equals(attribute) || "label".equals(attribute)) && value != null) {
+      edge.label = value.toString();
+    }
 
-		if ("weight".equals("attribute") && value != null && value instanceof Number)
-			edge.weight = ((Number) value).doubleValue();
+    if ("weight".equals("attribute") && value != null && value instanceof Number) {
+      edge.weight = ((Number) value).doubleValue();
+    }
 
-		edge.attvalues.attributeUpdated(root.getEdgeAttribute(attribute), value);
-	}
+    edge.attvalues.attributeUpdated(root.getEdgeAttribute(attribute), value);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.SinkAdapter#edgeAttributeChanged(java.lang.String,
-	 * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
-			Object newValue) {
-		edgeAttributeAdded(sourceId, timeId, edgeId, attribute, newValue);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.SinkAdapter#edgeAttributeChanged(java.lang.String,
+   * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
+   */
+  @Override
+  public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
+      Object newValue) {
+    edgeAttributeAdded(sourceId, timeId, edgeId, attribute, newValue);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.graphstream.stream.SinkAdapter#edgeAttributeRemoved(java.lang.String,
-	 * long, java.lang.String, java.lang.String)
-	 */
-	public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
-		GEXFEdge edge = edges.get(edgeId);
-		edge.attvalues.attributeUpdated(root.getNodeAttribute(attribute), null);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.graphstream.stream.SinkAdapter#edgeAttributeRemoved(java.lang.String,
+   * long, java.lang.String, java.lang.String)
+   */
+  @Override
+  public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
+    GEXFEdge edge = edges.get(edgeId);
+    edge.attvalues.attributeUpdated(root.getNodeAttribute(attribute), null);
+  }
 }

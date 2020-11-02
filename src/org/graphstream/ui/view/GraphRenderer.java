@@ -58,128 +58,128 @@ import java.util.EnumSet;
  * </p>
  */
 public interface GraphRenderer<S, G> {
-	// Initialisation
+  // Initialisation
 
-	void open(GraphicGraph graph, S drawingSurface);
+  void open(GraphicGraph graph, S drawingSurface);
 
-	void close();
+  void close();
 
-	// Access
+  // Access
 
-	View createDefaultView(Viewer viewer, String id);
+  View createDefaultView(Viewer viewer, String id);
 
-	/**
-	 * Get a camera object to provide control commands on the view.
-	 * 
-	 * @return a Camera instance
-	 */
-	Camera getCamera();
+  /**
+   * Get a camera object to provide control commands on the view.
+   * 
+   * @return a Camera instance
+   */
+  Camera getCamera();
 
-	/**
-	 * Search for the first GraphicElement among the specified types (precedence:
-	 * node, edge, sprite) that contains the point at coordinates (x, y).
-	 *
-	 * @param types
-	 *            The types to check
-	 * @param x
-	 *            The point abscissa.
-	 * @param y
-	 *            The point ordinate.
-	 * @return The first GraphicElement among the specified types at the given
-	 *         coordinates or null if nothing found.
-	 */
-	GraphicElement findGraphicElementAt(EnumSet<InteractiveElement> types, double x, double y);
+  /**
+   * Search for the first GraphicElement among the specified types (precedence:
+   * node, edge, sprite) that contains the point at coordinates (x, y).
+   *
+   * @param types
+   *          The types to check
+   * @param x
+   *          The point abscissa.
+   * @param y
+   *          The point ordinate.
+   * @return The first GraphicElement among the specified types at the given
+   *         coordinates or null if nothing found.
+   */
+  GraphicElement findGraphicElementAt(EnumSet<InteractiveElement> types, double x, double y);
 
-	/**
-	 * Search for all the graphic elements of the specified types contained inside
-	 * the rectangle (x1,y1)-(x2,y2).
-	 *
-	 * @param types
-	 *            The types to check
-	 * @param x1
-	 *            The rectangle lowest point abscissa.
-	 * @param y1
-	 *            The rectangle lowest point ordinate.
-	 * @param x2
-	 *            The rectangle highest point abscissa.
-	 * @param y2
-	 *            The rectangle highest point ordinate.
-	 * @return The set of GraphicElements in the given rectangle.
-	 */
-	Collection<GraphicElement> allGraphicElementsIn(EnumSet<InteractiveElement> types, double x1, double y1, double x2,
-			double y2);
+  /**
+   * Search for all the graphic elements of the specified types contained inside
+   * the rectangle (x1,y1)-(x2,y2).
+   *
+   * @param types
+   *          The types to check
+   * @param x1
+   *          The rectangle lowest point abscissa.
+   * @param y1
+   *          The rectangle lowest point ordinate.
+   * @param x2
+   *          The rectangle highest point abscissa.
+   * @param y2
+   *          The rectangle highest point ordinate.
+   * @return The set of GraphicElements in the given rectangle.
+   */
+  Collection<GraphicElement> allGraphicElementsIn(EnumSet<InteractiveElement> types, double x1, double y1, double x2,
+      double y2);
 
-	// Command
+  // Command
 
-	/**
-	 * Redisplay or update the graph.
-	 */
-	void render(G g, int x, int y, int width, int height);
+  /**
+   * Redisplay or update the graph.
+   */
+  void render(G g, int x, int y, int width, int height);
 
-	/**
-	 * Called by the mouse manager to specify where a node and sprite selection
-	 * started.
-	 * 
-	 * @param x1
-	 *            The selection start abscissa.
-	 * @param y1
-	 *            The selection start ordinate.
-	 */
-	void beginSelectionAt(double x1, double y1);
+  /**
+   * Called by the mouse manager to specify where a node and sprite selection
+   * started.
+   * 
+   * @param x1
+   *          The selection start abscissa.
+   * @param y1
+   *          The selection start ordinate.
+   */
+  void beginSelectionAt(double x1, double y1);
 
-	/**
-	 * The selection already started grows toward position (x, y).
-	 * 
-	 * @param x
-	 *            The new end selection abscissa.
-	 * @param y
-	 *            The new end selection ordinate.
-	 */
-	void selectionGrowsAt(double x, double y);
+  /**
+   * The selection already started grows toward position (x, y).
+   * 
+   * @param x
+   *          The new end selection abscissa.
+   * @param y
+   *          The new end selection ordinate.
+   */
+  void selectionGrowsAt(double x, double y);
 
-	/**
-	 * Called by the mouse manager to specify where a node and spite selection
-	 * stopped.
-	 * 
-	 * @param x2
-	 *            The selection stop abscissa.
-	 * @param y2
-	 *            The selection stop ordinate.
-	 */
-	void endSelectionAt(double x2, double y2);
+  /**
+   * Called by the mouse manager to specify where a node and spite selection
+   * stopped.
+   * 
+   * @param x2
+   *          The selection stop abscissa.
+   * @param y2
+   *          The selection stop ordinate.
+   */
+  void endSelectionAt(double x2, double y2);
 
-	/**
-	 * Force an element to move at the given location in pixels.
-	 * 
-	 * @param element
-	 *            The element.
-	 * @param x
-	 *            The requested position abscissa in pixels.
-	 * @param y
-	 *            The requested position ordinate in pixels.
-	 */
-	void moveElementAtPx(GraphicElement element, double x, double y);
+  /**
+   * Force an element to move at the given location in pixels.
+   * 
+   * @param element
+   *          The element.
+   * @param x
+   *          The requested position abscissa in pixels.
+   * @param y
+   *          The requested position ordinate in pixels.
+   */
+  void moveElementAtPx(GraphicElement element, double x, double y);
 
-	void screenshot(String filename, int width, int height);
+  void screenshot(String filename, int width, int height);
 
-	/**
-	 * Set a layer renderer that will be called each time the graph needs to be
-	 * redrawn before the graph is rendered. Pass "null" to remove the layer
-	 * renderer.
-	 * 
-	 * @param renderer
-	 *            The renderer (or null to remove it).
-	 */
-	void setBackLayerRenderer(LayerRenderer<G> renderer);
+  /**
+   * Set a layer renderer that will be called each time the graph needs to be
+   * redrawn before the graph is rendered. Pass "null" to remove the layer
+   * renderer.
+   * 
+   * @param renderer
+   *          The renderer (or null to remove it).
+   */
+  void setBackLayerRenderer(LayerRenderer<G> renderer);
 
-	/**
-	 * Set a layer renderer that will be called each time the graph needs to be
-	 * redrawn after the graph is rendered. Pass "null" to remove the layer
-	 * renderer.
-	 * 
-	 * @param renderer
-	 *            The renderer (or null to remove it).
-	 */
-	void setForeLayoutRenderer(LayerRenderer<G> renderer);
+  /**
+   * Set a layer renderer that will be called each time the graph needs to be
+   * redrawn after the graph is rendered. Pass "null" to remove the layer
+   * renderer.
+   * 
+   * @param renderer
+   *          The renderer (or null to remove it).
+   */
+  void setForeLayoutRenderer(LayerRenderer<G> renderer);
 
 }

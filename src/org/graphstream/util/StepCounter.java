@@ -41,57 +41,58 @@ import org.graphstream.stream.file.FileSourceFactory;
  * Count the step of a stream.
  */
 public class StepCounter extends SinkAdapter {
-	/**
-	 * Count step contains in a file.
-	 * 
-	 * @param path
-	 *            path to the file
-	 * @return count of step event in the file
-	 * @throws IOException
-	 * @see org.graphstream.stream.file.FileSourceFactory
-	 */
-	public static int countStepInFile(String path) throws IOException {
-		StepCounter counter = new StepCounter();
-		FileSource source = FileSourceFactory.sourceFor(path);
+  /**
+   * Count step contains in a file.
+   * 
+   * @param path
+   *          path to the file
+   * @return count of step event in the file
+   * @throws IOException
+   * @see org.graphstream.stream.file.FileSourceFactory
+   */
+  public static int countStepInFile(String path) throws IOException {
+    StepCounter counter = new StepCounter();
+    FileSource source = FileSourceFactory.sourceFor(path);
 
-		source.addElementSink(counter);
-		source.readAll(path);
+    source.addElementSink(counter);
+    source.readAll(path);
 
-		return counter.getStepCount();
-	}
+    return counter.getStepCount();
+  }
 
-	protected int step;
+  protected int step;
 
-	/**
-	 * Default constructor. Count is set to zero.
-	 */
-	public StepCounter() {
-		reset();
-	}
+  /**
+   * Default constructor. Count is set to zero.
+   */
+  public StepCounter() {
+    reset();
+  }
 
-	/**
-	 * Reset the step count to zero.
-	 */
-	public void reset() {
-		step = 0;
-	}
+  /**
+   * Reset the step count to zero.
+   */
+  public void reset() {
+    step = 0;
+  }
 
-	/**
-	 * Get the step count.
-	 * 
-	 * @return the count of step
-	 */
-	public int getStepCount() {
-		return step;
-	}
+  /**
+   * Get the step count.
+   * 
+   * @return the count of step
+   */
+  public int getStepCount() {
+    return step;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.SinkAdapter#stepBegins(java.lang.String, long,
-	 * double)
-	 */
-	public void stepBegins(String sourceId, long timeId, double time) {
-		step++;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.SinkAdapter#stepBegins(java.lang.String, long,
+   * double)
+   */
+  @Override
+  public void stepBegins(String sourceId, long timeId, double time) {
+    step++;
+  }
 }

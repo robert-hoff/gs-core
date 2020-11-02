@@ -34,55 +34,58 @@ package org.graphstream.stream.file.gexf;
 import javax.xml.stream.XMLStreamException;
 
 public class GEXFGraph implements GEXFElement {
-	GEXF root;
+  GEXF root;
 
-	DefaultEdgeType defaultEdgeType;
-	IDType idType;
-	Mode mode;
+  DefaultEdgeType defaultEdgeType;
+  IDType idType;
+  Mode mode;
 
-	GEXFAttributes nodesAttributes;
-	GEXFAttributes edgesAttributes;
-	GEXFElement nodes;
-	GEXFElement edges;
+  GEXFAttributes nodesAttributes;
+  GEXFAttributes edgesAttributes;
+  GEXFElement nodes;
+  GEXFElement edges;
 
-	public GEXFGraph(GEXF root) {
-		this(root, Mode.DYNAMIC);
-	}
+  public GEXFGraph(GEXF root) {
+    this(root, Mode.DYNAMIC);
+  }
 
-	public GEXFGraph(GEXF root, Mode mode) {
-		this.root = root;
+  public GEXFGraph(GEXF root, Mode mode) {
+    this.root = root;
 
-		this.defaultEdgeType = DefaultEdgeType.UNDIRECTED;
-		this.idType = IDType.STRING;
-		this.mode = mode;
+    this.defaultEdgeType = DefaultEdgeType.UNDIRECTED;
+    this.idType = IDType.STRING;
+    this.mode = mode;
 
-		nodesAttributes = new GEXFAttributes(root, ClassType.NODE);
-		edgesAttributes = new GEXFAttributes(root, ClassType.EDGE);
-		nodes = new GEXFNodes(root);
-		edges = new GEXFEdges(root);
-	}
+    nodesAttributes = new GEXFAttributes(root, ClassType.NODE);
+    edgesAttributes = new GEXFAttributes(root, ClassType.EDGE);
+    nodes = new GEXFNodes(root);
+    edges = new GEXFEdges(root);
+  }
 
-	public void export(SmartXMLWriter stream) throws XMLStreamException {
-		Mode realMode = mode;
+  @Override
+  public void export(SmartXMLWriter stream) throws XMLStreamException {
+    Mode realMode = mode;
 
-		if (!root.isExtensionEnable(Extension.DYNAMICS))
-			realMode = Mode.STATIC;
+    if (!root.isExtensionEnable(Extension.DYNAMICS)) {
+      realMode = Mode.STATIC;
+    }
 
-		stream.startElement("graph");
+    stream.startElement("graph");
 
-		stream.stream.writeAttribute("idtype", idType.qname);
-		stream.stream.writeAttribute("mode", realMode.qname);
-		stream.stream.writeAttribute("defaultedgetype", defaultEdgeType.qname);
+    stream.stream.writeAttribute("idtype", idType.qname);
+    stream.stream.writeAttribute("mode", realMode.qname);
+    stream.stream.writeAttribute("defaultedgetype", defaultEdgeType.qname);
 
-		if (root.isExtensionEnable(Extension.DYNAMICS))
-			stream.stream.writeAttribute("timeformat", root.getTimeFormat().qname);
+    if (root.isExtensionEnable(Extension.DYNAMICS)) {
+      stream.stream.writeAttribute("timeformat", root.getTimeFormat().qname);
+    }
 
-		nodesAttributes.export(stream);
-		edgesAttributes.export(stream);
-		nodes.export(stream);
-		edges.export(stream);
+    nodesAttributes.export(stream);
+    edgesAttributes.export(stream);
+    nodes.export(stream);
+    edges.export(stream);
 
-		stream.endElement(); // GRAPH
-	}
+    stream.endElement(); // GRAPH
+  }
 
 }

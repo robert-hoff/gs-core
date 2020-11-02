@@ -38,13 +38,13 @@ package org.graphstream.stream;
  * @since 19 Sept. 2004
  */
 public class GraphParseException extends Exception {
-	private static final long serialVersionUID = 8469350631709220693L;
+  private static final long serialVersionUID = 8469350631709220693L;
 
-	public GraphParseException() {
-		super("graph parse error");
-	}
+  public GraphParseException() {
+    super("graph parse error");
+  }
 
-	public GraphParseException(String message) {
-		super(message);
-	}
+  public GraphParseException(String message) {
+    super(message);
+  }
 }

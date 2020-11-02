@@ -38,21 +38,21 @@ import java.util.stream.Stream;
  * 
  */
 public interface Structure {
-	/**
-	 * Number of nodes in this graph.
-	 * 
-	 * @return The number of nodes.
-	 */
-	int getNodeCount();
+  /**
+   * Number of nodes in this graph.
+   * 
+   * @return The number of nodes.
+   */
+  int getNodeCount();
 
-	/**
-	 * Number of edges in this graph.
-	 * 
-	 * @return The number of edges.
-	 */
-	int getEdgeCount();
+  /**
+   * Number of edges in this graph.
+   * 
+   * @return The number of edges.
+   */
+  int getEdgeCount();
 
-	Stream<Node> nodes();
+  Stream<Node> nodes();
 
-	Stream<Edge> edges();
+  Stream<Edge> edges();
 }

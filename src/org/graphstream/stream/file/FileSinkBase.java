@@ -39,9 +39,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 
 /**
  * Base implementation for graph output to files.
@@ -81,198 +79,211 @@ import org.graphstream.graph.Node;
  * </p>
  */
 public abstract class FileSinkBase implements FileSink {
-	// Attribute
+  // Attribute
 
-	/**
-	 * The output.
-	 */
-	protected Writer output;
+  /**
+   * The output.
+   */
+  protected Writer output;
 
-	// Command
+  // Command
 
-	public void writeAll(Graph graph, String fileName) throws IOException {
-		begin(fileName);
-		exportGraph(graph);
-		end();
-	}
+  @Override
+  public void writeAll(Graph graph, String fileName) throws IOException {
+    begin(fileName);
+    exportGraph(graph);
+    end();
+  }
 
-	public void writeAll(Graph graph, OutputStream stream) throws IOException {
-		begin(stream);
-		exportGraph(graph);
-		end();
-	}
+  @Override
+  public void writeAll(Graph graph, OutputStream stream) throws IOException {
+    begin(stream);
+    exportGraph(graph);
+    end();
+  }
 
-	public void writeAll(Graph graph, Writer writer) throws IOException {
-		begin(writer);
-		exportGraph(graph);
-		end();
-	}
+  @Override
+  public void writeAll(Graph graph, Writer writer) throws IOException {
+    begin(writer);
+    exportGraph(graph);
+    end();
+  }
 
-	/**
-	 * Echo each element and attribute of the graph to the actual output.
-	 * <p>
-	 * The elements are echoed as add events (add node, add edge, add attribute).
-	 * This method guarantees there are no change or delete events.
-	 *
-	 * @param graph
-	 *            The graph to export.
-	 */
-	protected void exportGraph(Graph graph) {
-		final String graphId = graph.getId();
-		final AtomicLong timeId = new AtomicLong(0);
+  /**
+   * Echo each element and attribute of the graph to the actual output.
+   * <p>
+   * The elements are echoed as add events (add node, add edge, add attribute).
+   * This method guarantees there are no change or delete events.
+   *
+   * @param graph
+   *          The graph to export.
+   */
+  protected void exportGraph(Graph graph) {
+    final String graphId = graph.getId();
+    final AtomicLong timeId = new AtomicLong(0);
 
-		graph.attributeKeys()
-				.forEach(key -> graphAttributeAdded(graphId, timeId.getAndIncrement(), key, graph.getAttribute(key)));
+    graph.attributeKeys()
+    .forEach(key -> graphAttributeAdded(graphId, timeId.getAndIncrement(), key, graph.getAttribute(key)));
 
-		graph.nodes().forEach(node -> {
-			String nodeId = node.getId();
-			nodeAdded(graphId, timeId.getAndIncrement(), nodeId);
+    graph.nodes().forEach(node -> {
+      String nodeId = node.getId();
+      nodeAdded(graphId, timeId.getAndIncrement(), nodeId);
 
-			node.attributeKeys().forEach(
-					key -> nodeAttributeAdded(graphId, timeId.getAndIncrement(), nodeId, key, node.getAttribute(key)));
-		});
+      node.attributeKeys()
+      .forEach(key -> nodeAttributeAdded(graphId, timeId.getAndIncrement(), nodeId, key, node.getAttribute(key)));
+    });
 
-		graph.edges().forEach(edge -> {
-			String edgeId = edge.getId();
-			edgeAdded(graphId, timeId.getAndIncrement(), edgeId, edge.getNode0().getId(), edge.getNode1().getId(),
-					edge.isDirected());
+    graph.edges().forEach(edge -> {
+      String edgeId = edge.getId();
+      edgeAdded(graphId, timeId.getAndIncrement(), edgeId, edge.getNode0().getId(), edge.getNode1().getId(),
+          edge.isDirected());
 
-			edge.attributeKeys().forEach(
-					key -> edgeAttributeAdded(graphId, timeId.getAndIncrement(), edgeId, key, edge.getAttribute(key)));
-		});
-	}
+      edge.attributeKeys()
+      .forEach(key -> edgeAttributeAdded(graphId, timeId.getAndIncrement(), edgeId, key, edge.getAttribute(key)));
+    });
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSink#begin(java.lang.String)
-	 */
-	public void begin(String fileName) throws IOException {
-		if (output != null)
-			throw new IOException("cannot call begin() twice without calling end() before.");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSink#begin(java.lang.String)
+   */
+  @Override
+  public void begin(String fileName) throws IOException {
+    if (output != null) {
+      throw new IOException("cannot call begin() twice without calling end() before.");
+    }
 
-		output = createWriter(fileName);
+    output = createWriter(fileName);
 
-		outputHeader();
-	}
+    outputHeader();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSink#begin(java.io.OutputStream)
-	 */
-	public void begin(OutputStream stream) throws IOException {
-		if (output != null)
-			throw new IOException("cannot call begin() twice without calling end() before.");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSink#begin(java.io.OutputStream)
+   */
+  @Override
+  public void begin(OutputStream stream) throws IOException {
+    if (output != null) {
+      throw new IOException("cannot call begin() twice without calling end() before.");
+    }
 
-		output = createWriter(stream);
+    output = createWriter(stream);
 
-		outputHeader();
-	}
+    outputHeader();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSink#begin(java.io.Writer)
-	 */
-	public void begin(Writer writer) throws IOException {
-		if (output != null)
-			throw new IOException("cannot call begin() twice without calling end() before.");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSink#begin(java.io.Writer)
+   */
+  @Override
+  public void begin(Writer writer) throws IOException {
+    if (output != null) {
+      throw new IOException("cannot call begin() twice without calling end() before.");
+    }
 
-		output = createWriter(writer);
+    output = createWriter(writer);
 
-		outputHeader();
-	}
+    outputHeader();
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSink#flush()
-	 */
-	public void flush() throws IOException {
-		if (output != null)
-			output.flush();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSink#flush()
+   */
+  @Override
+  public void flush() throws IOException {
+    if (output != null) {
+      output.flush();
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSink#end()
-	 */
-	public void end() throws IOException {
-		outputEndOfFile();
-		output.flush();
-		output.close();
-		output = null;
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSink#end()
+   */
+  @Override
+  public void end() throws IOException {
+    outputEndOfFile();
+    output.flush();
+    output.close();
+    output = null;
+  }
 
-	/**
-	 * Method called at start just after the {@link #output} field is created. Use
-	 * it to output the header of the file.
-	 *
-	 * @throws IOException
-	 *             If any I/O error occurs.
-	 */
-	protected abstract void outputHeader() throws IOException;
+  /**
+   * Method called at start just after the {@link #output} field is created. Use
+   * it to output the header of the file.
+   *
+   * @throws IOException
+   *           If any I/O error occurs.
+   */
+  protected abstract void outputHeader() throws IOException;
 
-	/**
-	 * Method called at the end just before the {@link #output} field is flushed and
-	 * closed. Use it to output any information that closes the file.
-	 *
-	 * @throws IOException
-	 *             If any I/O error occurs.
-	 */
-	protected abstract void outputEndOfFile() throws IOException;
+  /**
+   * Method called at the end just before the {@link #output} field is flushed and
+   * closed. Use it to output any information that closes the file.
+   *
+   * @throws IOException
+   *           If any I/O error occurs.
+   */
+  protected abstract void outputEndOfFile() throws IOException;
 
-	/**
-	 * Create a a writer from a file name. Override this method if the default
-	 * PrintWriter does not suits your needs. This method is called by
-	 * {@link #begin(String)} and {@link #writeAll(Graph, String)}.
-	 *
-	 * @param fileName
-	 *            Name of the file to output to.
-	 * @return A new writer.
-	 * @throws IOException
-	 *             If any I/O error occurs.
-	 */
-	protected Writer createWriter(String fileName) throws IOException {
-		return new PrintWriter(fileName);
-	}
+  /**
+   * Create a a writer from a file name. Override this method if the default
+   * PrintWriter does not suits your needs. This method is called by
+   * {@link #begin(String)} and {@link #writeAll(Graph, String)}.
+   *
+   * @param fileName
+   *          Name of the file to output to.
+   * @return A new writer.
+   * @throws IOException
+   *           If any I/O error occurs.
+   */
+  protected Writer createWriter(String fileName) throws IOException {
+    return new PrintWriter(fileName);
+  }
 
-	/**
-	 * Create a writer from an existing output stream. Override this method if the
-	 * default PrintWriter does not suits your needs. This method is called by
-	 * {@link #begin(OutputStream)} and {@link #writeAll(Graph, OutputStream)}. This
-	 * method does not create an output stream if the given stream is already
-	 * instance of PrintStream.
-	 *
-	 * @param stream
-	 *            An already existing output stream.
-	 * @return A new writer.
-	 * @throws IOException
-	 *             If any I/O error occurs.
-	 */
-	protected Writer createWriter(OutputStream stream) throws IOException {
-		return new PrintWriter(stream);
-	}
+  /**
+   * Create a writer from an existing output stream. Override this method if the
+   * default PrintWriter does not suits your needs. This method is called by
+   * {@link #begin(OutputStream)} and {@link #writeAll(Graph, OutputStream)}. This
+   * method does not create an output stream if the given stream is already
+   * instance of PrintStream.
+   *
+   * @param stream
+   *          An already existing output stream.
+   * @return A new writer.
+   * @throws IOException
+   *           If any I/O error occurs.
+   */
+  protected Writer createWriter(OutputStream stream) throws IOException {
+    return new PrintWriter(stream);
+  }
 
-	/**
-	 * Create a writer from an existing writer. Override this method if the default
-	 * PrintWriter does not suits your needs. This method is called by
-	 * {@link #begin(Writer)} and {@link #writeAll(Graph, Writer)}. This method does
-	 * not create a new writer if the given writer is already instance of
-	 * PrintWriter.
-	 *
-	 * @param writer
-	 *            An already existing writer.
-	 * @return A new writer.
-	 * @throws IOException
-	 *             If any I/O error occurs.
-	 */
-	protected Writer createWriter(Writer writer) throws IOException {
-		if (writer instanceof PrintWriter)
-			return writer;
+  /**
+   * Create a writer from an existing writer. Override this method if the default
+   * PrintWriter does not suits your needs. This method is called by
+   * {@link #begin(Writer)} and {@link #writeAll(Graph, Writer)}. This method does
+   * not create a new writer if the given writer is already instance of
+   * PrintWriter.
+   *
+   * @param writer
+   *          An already existing writer.
+   * @return A new writer.
+   * @throws IOException
+   *           If any I/O error occurs.
+   */
+  protected Writer createWriter(Writer writer) throws IOException {
+    if (writer instanceof PrintWriter) {
+      return writer;
+    }
 
-		return new PrintWriter(writer);
-	}
+    return new PrintWriter(writer);
+  }
 }

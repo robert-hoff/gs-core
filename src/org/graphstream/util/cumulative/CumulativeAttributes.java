@@ -36,103 +36,109 @@ import java.util.HashMap;
 import org.graphstream.util.cumulative.CumulativeSpells.Spell;
 
 public class CumulativeAttributes {
-	boolean nullAttributesAreErrors;
-	HashMap<String, CumulativeSpells> data;
-	double date;
+  boolean nullAttributesAreErrors;
+  HashMap<String, CumulativeSpells> data;
+  double date;
 
-	public CumulativeAttributes(double date) {
-		data = new HashMap<String, CumulativeSpells>();
-	}
+  public CumulativeAttributes(double date) {
+    data = new HashMap<String, CumulativeSpells>();
+  }
 
-	public Object get(String key) {
-		CumulativeSpells o = data.get(key);
+  public Object get(String key) {
+    CumulativeSpells o = data.get(key);
 
-		if (o != null) {
-			Spell s = o.getCurrentSpell();
-			return s == null ? null : s.getAttachedData();
-		}
+    if (o != null) {
+      Spell s = o.getCurrentSpell();
+      return s == null ? null : s.getAttachedData();
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	public Object getAny(String key) {
-		CumulativeSpells o = data.get(key);
+  public Object getAny(String key) {
+    CumulativeSpells o = data.get(key);
 
-		if (o != null) {
-			Spell s = o.getSpell(0);
-			return s == null ? null : s.getAttachedData();
-		}
+    if (o != null) {
+      Spell s = o.getSpell(0);
+      return s == null ? null : s.getAttachedData();
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	public Iterable<String> getAttributes() {
-		return data.keySet();
-	}
+  public Iterable<String> getAttributes() {
+    return data.keySet();
+  }
 
-	@SuppressWarnings("unchecked")
-	public Iterable<Spell> getAttributeSpells(String key) {
-		CumulativeSpells o = data.get(key);
+  @SuppressWarnings("unchecked")
+  public Iterable<Spell> getAttributeSpells(String key) {
+    CumulativeSpells o = data.get(key);
 
-		if (o != null)
-			return Collections.unmodifiableList(o.spells);
+    if (o != null) {
+      return Collections.unmodifiableList(o.spells);
+    }
 
-		return Collections.EMPTY_LIST;
-	}
+    return Collections.EMPTY_LIST;
+  }
 
-	public int getAttributesCount() {
-		return data.size();
-	}
+  public int getAttributesCount() {
+    return data.size();
+  }
 
-	public void set(String key, Object value) {
-		CumulativeSpells spells = data.get(key);
+  public void set(String key, Object value) {
+    CumulativeSpells spells = data.get(key);
 
-		if (spells == null) {
-			spells = new CumulativeSpells();
-			data.put(key, spells);
-		}
+    if (spells == null) {
+      spells = new CumulativeSpells();
+      data.put(key, spells);
+    }
 
-		Spell s = spells.closeSpell();
+    Spell s = spells.closeSpell();
 
-		if (s != null)
-			s.setEndOpen(true);
+    if (s != null) {
+      s.setEndOpen(true);
+    }
 
-		s = spells.startSpell(date);
-		s.setAttachedData(value);
-	}
+    s = spells.startSpell(date);
+    s.setAttachedData(value);
+  }
 
-	public void remove(String key) {
-		CumulativeSpells spells = data.get(key);
+  public void remove(String key) {
+    CumulativeSpells spells = data.get(key);
 
-		if (spells == null)
-			return;
+    if (spells == null) {
+      return;
+    }
 
-		spells.closeSpell();
-	}
+    spells.closeSpell();
+  }
 
-	public void remove() {
-		for (CumulativeSpells spells : data.values())
-			spells.closeSpell();
-	}
+  public void remove() {
+    for (CumulativeSpells spells : data.values()) {
+      spells.closeSpell();
+    }
+  }
 
-	public void updateDate(double date) {
-		this.date = date;
+  public void updateDate(double date) {
+    this.date = date;
 
-		for (CumulativeSpells spells : data.values())
-			spells.updateCurrentSpell(date);
-	}
+    for (CumulativeSpells spells : data.values()) {
+      spells.updateCurrentSpell(date);
+    }
+  }
 
-	public String toString() {
-		StringBuilder buffer = new StringBuilder();
+  @Override
+  public String toString() {
+    StringBuilder buffer = new StringBuilder();
 
-		buffer.append("(");
+    buffer.append("(");
 
-		for (String key : data.keySet()) {
-			buffer.append(key).append(":").append(data.get(key));
-		}
+    for (String key : data.keySet()) {
+      buffer.append(key).append(":").append(data.get(key));
+    }
 
-		buffer.append(")");
+    buffer.append(")");
 
-		return buffer.toString();
-	}
+    return buffer.toString();
+  }
 }

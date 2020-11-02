@@ -40,70 +40,72 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 public class SmartXMLWriter {
-	public final XMLStreamWriter stream;
+  public final XMLStreamWriter stream;
 
-	boolean smart;
-	int depth;
-	LinkedList<Integer> childrenCount;
+  boolean smart;
+  int depth;
+  LinkedList<Integer> childrenCount;
 
-	public SmartXMLWriter(Writer output, boolean smart) throws XMLStreamException, FactoryConfigurationError {
-		stream = XMLOutputFactory.newFactory().createXMLStreamWriter(output);
-		stream.writeStartDocument("UTF-8", "1.0");
+  public SmartXMLWriter(Writer output, boolean smart) throws XMLStreamException, FactoryConfigurationError {
+    stream = XMLOutputFactory.newFactory().createXMLStreamWriter(output);
+    stream.writeStartDocument("UTF-8", "1.0");
 
-		this.smart = smart;
-		this.depth = 0;
-		this.childrenCount = new LinkedList<Integer>();
-		this.childrenCount.add(0);
-	}
+    this.smart = smart;
+    this.depth = 0;
+    this.childrenCount = new LinkedList<Integer>();
+    this.childrenCount.add(0);
+  }
 
-	public void startElement(String name) throws XMLStreamException {
-		if (smart) {
-			stream.writeCharacters("\n");
+  public void startElement(String name) throws XMLStreamException {
+    if (smart) {
+      stream.writeCharacters("\n");
 
-			for (int i = 0; i < depth; i++)
-				stream.writeCharacters(" ");
-		}
+      for (int i = 0; i < depth; i++) {
+        stream.writeCharacters(" ");
+      }
+    }
 
-		childrenCount.set(0, childrenCount.get(0) + 1);
-		childrenCount.addFirst(0);
+    childrenCount.set(0, childrenCount.get(0) + 1);
+    childrenCount.addFirst(0);
 
-		stream.writeStartElement(name);
-		depth++;
-	}
+    stream.writeStartElement(name);
+    depth++;
+  }
 
-	public void endElement() throws XMLStreamException {
-		depth--;
+  public void endElement() throws XMLStreamException {
+    depth--;
 
-		boolean leaf = (childrenCount.pop() == 0);
+    boolean leaf = (childrenCount.pop() == 0);
 
-		if (smart && !leaf) {
-			stream.writeCharacters("\n");
+    if (smart && !leaf) {
+      stream.writeCharacters("\n");
 
-			for (int i = 0; i < depth; i++)
-				stream.writeCharacters(" ");
-		}
+      for (int i = 0; i < depth; i++) {
+        stream.writeCharacters(" ");
+      }
+    }
 
-		stream.writeEndElement();
-	}
+    stream.writeEndElement();
+  }
 
-	public void leafWithText(String name, String content) throws XMLStreamException {
-		startElement(name);
-		stream.writeCharacters(content);
-		endElement();
-	}
+  public void leafWithText(String name, String content) throws XMLStreamException {
+    startElement(name);
+    stream.writeCharacters(content);
+    endElement();
+  }
 
-	public void flush() {
-		try {
-			stream.flush();
-		} catch (XMLStreamException e) {
-			// Ignored
-		}
-	}
+  public void flush() {
+    try {
+      stream.flush();
+    } catch (XMLStreamException e) {
+      // Ignored
+    }
+  }
 
-	public void close() throws XMLStreamException {
-		stream.writeEndDocument();
-		stream.flush();
+  public void close() throws XMLStreamException {
+    stream.writeEndDocument();
+    stream.flush();
 
-		stream.close();
-	}
+    stream.close();
+  }
 }

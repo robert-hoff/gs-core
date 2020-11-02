@@ -45,75 +45,83 @@ import org.graphstream.graph.Node;
  */
 
 public class SingleNode extends AdjacencyListNode {
-	protected static class TwoEdges {
-		protected AbstractEdge in, out;
-	}
+  protected static class TwoEdges {
+    protected AbstractEdge in, out;
+  }
 
-	protected HashMap<AbstractNode, TwoEdges> neighborMap;
+  protected HashMap<AbstractNode, TwoEdges> neighborMap;
 
-	// *** Constructor ***
+  // *** Constructor ***
 
-	protected SingleNode(AbstractGraph graph, String id) {
-		super(graph, id);
-		neighborMap = new HashMap<AbstractNode, TwoEdges>(4 * INITIAL_EDGE_CAPACITY / 3 + 1);
-	}
+  protected SingleNode(AbstractGraph graph, String id) {
+    super(graph, id);
+    neighborMap = new HashMap<AbstractNode, TwoEdges>(4 * INITIAL_EDGE_CAPACITY / 3 + 1);
+  }
 
-	// *** Helpers ***
+  // *** Helpers ***
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected <T extends Edge> T locateEdge(Node opposite, char type) {
-		TwoEdges ee = neighborMap.get(opposite);
+  @SuppressWarnings("unchecked")
+  @Override
+  protected <T extends Edge> T locateEdge(Node opposite, char type) {
+    TwoEdges ee = neighborMap.get(opposite);
 
-		if (ee == null)
-			return null;
+    if (ee == null) {
+      return null;
+    }
 
-		if (type == IO_EDGE)
-			return (T) (ee.in == null ? ee.out : ee.in);
+    if (type == IO_EDGE) {
+      return (T) (ee.in == null ? ee.out : ee.in);
+    }
 
-		return (T) (type == I_EDGE ? ee.in : ee.out);
-	}
+    return (T) (type == I_EDGE ? ee.in : ee.out);
+  }
 
-	@Override
-	protected void removeEdge(int i) {
-		AbstractNode opposite = (AbstractNode) edges[i].getOpposite(this);
-		TwoEdges ee = neighborMap.get(opposite);
-		char type = edgeType(edges[i]);
-		if (type != O_EDGE)
-			ee.in = null;
-		if (type != I_EDGE)
-			ee.out = null;
-		if (ee.in == null && ee.out == null)
-			neighborMap.remove(opposite);
-		super.removeEdge(i);
-	}
+  @Override
+  protected void removeEdge(int i) {
+    AbstractNode opposite = (AbstractNode) edges[i].getOpposite(this);
+    TwoEdges ee = neighborMap.get(opposite);
+    char type = edgeType(edges[i]);
+    if (type != O_EDGE) {
+      ee.in = null;
+    }
+    if (type != I_EDGE) {
+      ee.out = null;
+    }
+    if (ee.in == null && ee.out == null) {
+      neighborMap.remove(opposite);
+    }
+    super.removeEdge(i);
+  }
 
-	// *** Callbacks ***
+  // *** Callbacks ***
 
-	@Override
-	protected boolean addEdgeCallback(AbstractEdge edge) {
-		AbstractNode opposite = (AbstractNode) edge.getOpposite(this);
-		TwoEdges ee = neighborMap.get(opposite);
-		if (ee == null)
-			ee = new TwoEdges();
-		char type = edgeType(edge);
-		if (type != O_EDGE) {
-			if (ee.in != null)
-				return false;
-			ee.in = edge;
-		}
-		if (type != I_EDGE) {
-			if (ee.out != null)
-				return false;
-			ee.out = edge;
-		}
-		neighborMap.put(opposite, ee);
-		return super.addEdgeCallback(edge);
-	}
+  @Override
+  protected boolean addEdgeCallback(AbstractEdge edge) {
+    AbstractNode opposite = (AbstractNode) edge.getOpposite(this);
+    TwoEdges ee = neighborMap.get(opposite);
+    if (ee == null) {
+      ee = new TwoEdges();
+    }
+    char type = edgeType(edge);
+    if (type != O_EDGE) {
+      if (ee.in != null) {
+        return false;
+      }
+      ee.in = edge;
+    }
+    if (type != I_EDGE) {
+      if (ee.out != null) {
+        return false;
+      }
+      ee.out = edge;
+    }
+    neighborMap.put(opposite, ee);
+    return super.addEdgeCallback(edge);
+  }
 
-	@Override
-	protected void clearCallback() {
-		neighborMap.clear();
-		super.clearCallback();
-	}
+  @Override
+  protected void clearCallback() {
+    neighborMap.clear();
+    super.clearCallback();
+  }
 }

@@ -119,29 +119,32 @@ import org.graphstream.util.parser.ParserFactory;
  */
 public class FileSourceGML extends FileSourceParser {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSourceParser#nextStep()
-	 */
-	public boolean nextStep() throws IOException {
-		try {
-			return ((GMLParser) parser).step();
-		} catch (ParseException e) {
-			throw new IOException(e);
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSourceParser#nextStep()
+   */
+  @Override
+  public boolean nextStep() throws IOException {
+    try {
+      return ((GMLParser) parser).step();
+    } catch (ParseException e) {
+      throw new IOException(e);
+    }
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.graphstream.stream.file.FileSourceParser#getNewParserFactory()
-	 */
-	public ParserFactory getNewParserFactory() {
-		return new ParserFactory() {
-			public Parser newParser(Reader reader) {
-				return new GMLParser(FileSourceGML.this, reader);
-			}
-		};
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.graphstream.stream.file.FileSourceParser#getNewParserFactory()
+   */
+  @Override
+  public ParserFactory getNewParserFactory() {
+    return new ParserFactory() {
+      @Override
+      public Parser newParser(Reader reader) {
+        return new GMLParser(FileSourceGML.this, reader);
+      }
+    };
+  }
 }
